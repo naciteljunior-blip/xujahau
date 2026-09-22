@@ -32,7 +32,7 @@ export const DEFAULT_INPUTS: CalcInputs = {
   duracaoHoras: 3,
   tarifaEnergiaKwh: 1.1,
   potenciaImpressoraW: 200,
-  desgasteImpressora: 0,
+  desgasteImpressora: 2,
   falhaPercent: 0,
   embalagem: 0,
   maoDeObra: 10,

@@ -6,3 +6,12 @@ export interface SavedPeca {
   criadoEm: number
   inputs: CalcInputs
 }
+
+export interface Filamento {
+  id: string
+  marca: string
+  modelo: string
+  cor?: string
+  precoKg: number
+  criadoEm: number
+}
