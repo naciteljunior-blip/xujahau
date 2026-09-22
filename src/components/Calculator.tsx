@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { calcular, formatBRL, DEFAULT_INPUTS, type CalcInputs } from '../lib/calc'
 import { NumberField } from './NumberField'
 import { CostBreakdownBar } from './CostBreakdownBar'
@@ -15,8 +15,14 @@ export function Calculator({ onSave, initial, loadedFrom, filamentos }: Calculat
   const [inputs, setInputs] = useState<CalcInputs>(initial ?? DEFAULT_INPUTS)
   const [nome, setNome] = useState(loadedFrom?.nome ?? '')
   const [filamentoId, setFilamentoId] = useState('')
+  const [salvo, setSalvo] = useState(false)
 
   const result = useMemo(() => calcular(inputs), [inputs])
+
+  // Qualquer alteração nos dados (após um salvamento) libera o botão de novo.
+  useEffect(() => {
+    setSalvo(false)
+  }, [inputs, nome])
 
   function set<K extends keyof CalcInputs>(key: K, value: number) {
     setInputs((prev) => ({ ...prev, [key]: value }))
@@ -29,8 +35,10 @@ export function Calculator({ onSave, initial, loadedFrom, filamentos }: Calculat
   }
 
   function handleSave() {
+    if (salvo) return
     const nomeFinal = nome.trim() || `Peça ${new Date().toLocaleDateString('pt-BR')}`
     onSave(nomeFinal, inputs)
+    setSalvo(true)
   }
 
   return (
@@ -225,11 +233,38 @@ export function Calculator({ onSave, initial, loadedFrom, filamentos }: Calculat
               />
               <button
                 onClick={handleSave}
-                className="shrink-0 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 active:bg-brand-800"
+                disabled={salvo}
+                className={`flex shrink-0 items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white shadow-sm transition disabled:cursor-not-allowed ${
+                  salvo
+                    ? 'animate-save-pop bg-emerald-600'
+                    : 'bg-brand-600 hover:bg-brand-700 active:bg-brand-800'
+                }`}
               >
-                Salvar
+                {salvo ? (
+                  <>
+                    <svg
+                      className="h-4 w-4 animate-check-in"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M4 10.5l4 4 8-9" />
+                    </svg>
+                    Salvo
+                  </>
+                ) : (
+                  'Salvar'
+                )}
               </button>
             </div>
+            {salvo && (
+              <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
+                Peça salva! Altere algum dado para salvar de novo.
+              </p>
+            )}
           </section>
         </div>
       </div>
