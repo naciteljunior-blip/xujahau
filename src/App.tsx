@@ -45,12 +45,27 @@ export default function App() {
     setTab('calculadora')
   }
 
+  function handleUpdatePeca(id: string, nome: string, inputs: CalcInputs) {
+    setPecas((prev) => prev.map((p) => (p.id === id ? { ...p, nome, inputs } : p)))
+    setCarregada((prev) => (prev && prev.id === id ? { ...prev, nome, inputs } : prev))
+  }
+
+  function handleNovaPeca() {
+    setCarregada(null)
+    setResetKey((k) => k + 1)
+  }
+
   function handleDelete(id: string) {
     setPecas((prev) => prev.filter((p) => p.id !== id))
+    setCarregada((prev) => (prev?.id === id ? null : prev))
   }
 
   function handleAddFilamento(filamento: Omit<Filamento, 'id' | 'criadoEm'>) {
     setFilamentos((prev) => [...prev, { ...filamento, id: crypto.randomUUID(), criadoEm: Date.now() }])
+  }
+
+  function handleUpdateFilamento(id: string, filamento: Omit<Filamento, 'id' | 'criadoEm'>) {
+    setFilamentos((prev) => prev.map((f) => (f.id === id ? { ...f, ...filamento } : f)))
   }
 
   function handleDeleteFilamento(id: string) {
@@ -95,13 +110,20 @@ export default function App() {
           <Calculator
             key={resetKey}
             onSave={handleSave}
+            onUpdate={handleUpdatePeca}
+            onNovaPeca={handleNovaPeca}
             initial={carregada?.inputs}
             loadedFrom={carregada}
             filamentos={filamentos}
           />
         )}
         {tab === 'filamentos' && (
-          <Filaments filamentos={filamentos} onAdd={handleAddFilamento} onDelete={handleDeleteFilamento} />
+          <Filaments
+            filamentos={filamentos}
+            onAdd={handleAddFilamento}
+            onUpdate={handleUpdateFilamento}
+            onDelete={handleDeleteFilamento}
+          />
         )}
         {tab === 'historico' && <History pecas={pecas} onLoad={handleLoad} onDelete={handleDelete} />}
       </main>

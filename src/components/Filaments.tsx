@@ -5,30 +5,60 @@ import type { Filamento } from '../types'
 interface FilamentsProps {
   filamentos: Filamento[]
   onAdd: (filamento: Omit<Filamento, 'id' | 'criadoEm'>) => void
+  onUpdate: (id: string, filamento: Omit<Filamento, 'id' | 'criadoEm'>) => void
   onDelete: (id: string) => void
 }
 
-export function Filaments({ filamentos, onAdd, onDelete }: FilamentsProps) {
+export function Filaments({ filamentos, onAdd, onUpdate, onDelete }: FilamentsProps) {
   const [marca, setMarca] = useState('')
   const [modelo, setModelo] = useState('')
   const [cor, setCor] = useState('')
   const [precoKg, setPrecoKg] = useState<number>(0)
+  const [editingId, setEditingId] = useState<string | null>(null)
 
-  function handleAdd() {
-    if (!marca.trim() || precoKg <= 0) return
-    onAdd({ marca: marca.trim(), modelo: modelo.trim(), cor: cor.trim() || undefined, precoKg })
+  function limpar() {
     setMarca('')
     setModelo('')
     setCor('')
     setPrecoKg(0)
+    setEditingId(null)
+  }
+
+  function handleAdd() {
+    if (!marca.trim() || precoKg <= 0) return
+    const dados = { marca: marca.trim(), modelo: modelo.trim(), cor: cor.trim() || undefined, precoKg }
+    if (editingId) {
+      onUpdate(editingId, dados)
+    } else {
+      onAdd(dados)
+    }
+    limpar()
+  }
+
+  function handleEdit(f: Filamento) {
+    setEditingId(f.id)
+    setMarca(f.marca)
+    setModelo(f.modelo)
+    setCor(f.cor ?? '')
+    setPrecoKg(f.precoKg)
   }
 
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-brand-700 dark:text-brand-400">
-          Cadastrar filamento
-        </h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-brand-700 dark:text-brand-400">
+            {editingId ? 'Editando filamento' : 'Cadastrar filamento'}
+          </h2>
+          {editingId && (
+            <button
+              onClick={limpar}
+              className="text-xs font-medium text-slate-400 underline-offset-2 hover:text-brand-600 hover:underline dark:text-slate-500 dark:hover:text-brand-400"
+            >
+              Cancelar edição
+            </button>
+          )}
+        </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <TextField label="Marca" placeholder="Ex: 3D Fila" value={marca} onChange={setMarca} />
           <TextField label="Modelo" placeholder="Ex: PLA Premium" value={modelo} onChange={setModelo} />
@@ -54,7 +84,7 @@ export function Filaments({ filamentos, onAdd, onDelete }: FilamentsProps) {
           disabled={!marca.trim() || precoKg <= 0}
           className="mt-4 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 active:bg-brand-800 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          Adicionar filamento
+          {editingId ? 'Salvar alterações' : 'Adicionar filamento'}
         </button>
       </section>
 
@@ -82,7 +112,16 @@ export function Filaments({ filamentos, onAdd, onDelete }: FilamentsProps) {
                 <div className="flex shrink-0 items-center gap-3">
                   <span className="font-semibold text-brand-700 dark:text-brand-400">{formatBRL(f.precoKg)}/kg</span>
                   <button
-                    onClick={() => onDelete(f.id)}
+                    onClick={() => handleEdit(f)}
+                    className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-brand-500 hover:text-brand-700 dark:border-slate-700 dark:text-slate-300 dark:hover:border-brand-500 dark:hover:text-brand-400"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => {
+                      onDelete(f.id)
+                      if (editingId === f.id) limpar()
+                    }}
                     className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-rose-400 hover:text-rose-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-rose-400 dark:hover:text-rose-400"
                   >
                     Excluir

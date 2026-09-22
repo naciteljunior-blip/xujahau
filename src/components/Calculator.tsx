@@ -6,12 +6,14 @@ import type { Filamento, SavedPeca } from '../types'
 
 interface CalculatorProps {
   onSave: (nome: string, inputs: CalcInputs) => void
+  onUpdate: (id: string, nome: string, inputs: CalcInputs) => void
+  onNovaPeca: () => void
   initial?: CalcInputs
   loadedFrom?: SavedPeca | null
   filamentos: Filamento[]
 }
 
-export function Calculator({ onSave, initial, loadedFrom, filamentos }: CalculatorProps) {
+export function Calculator({ onSave, onUpdate, onNovaPeca, initial, loadedFrom, filamentos }: CalculatorProps) {
   const [inputs, setInputs] = useState<CalcInputs>(initial ?? DEFAULT_INPUTS)
   const [nome, setNome] = useState(loadedFrom?.nome ?? '')
   const [filamentoId, setFilamentoId] = useState('')
@@ -37,7 +39,11 @@ export function Calculator({ onSave, initial, loadedFrom, filamentos }: Calculat
   function handleSave() {
     if (salvo) return
     const nomeFinal = nome.trim() || `Peça ${new Date().toLocaleDateString('pt-BR')}`
-    onSave(nomeFinal, inputs)
+    if (loadedFrom) {
+      onUpdate(loadedFrom.id, nomeFinal, inputs)
+    } else {
+      onSave(nomeFinal, inputs)
+    }
     setSalvo(true)
   }
 
@@ -220,9 +226,25 @@ export function Calculator({ onSave, initial, loadedFrom, filamentos }: Calculat
           </section>
 
           <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
-              Salvar peça
-            </h3>
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                {loadedFrom ? 'Editando peça' : 'Salvar peça'}
+              </h3>
+              {loadedFrom && (
+                <button
+                  onClick={onNovaPeca}
+                  className="text-xs font-medium text-slate-400 underline-offset-2 hover:text-brand-600 hover:underline dark:text-slate-500 dark:hover:text-brand-400"
+                >
+                  Cancelar e começar nova peça
+                </button>
+              )}
+            </div>
+            {loadedFrom && (
+              <p className="mb-3 text-xs text-slate-400 dark:text-slate-500">
+                Alterando os dados de <span className="font-medium text-slate-600 dark:text-slate-300">{loadedFrom.nome}</span>.
+                Salvar aqui atualiza essa peça (não cria uma nova).
+              </p>
+            )}
             <div className="flex gap-2">
               <input
                 type="text"
@@ -253,8 +275,10 @@ export function Calculator({ onSave, initial, loadedFrom, filamentos }: Calculat
                     >
                       <path d="M4 10.5l4 4 8-9" />
                     </svg>
-                    Salvo
+                    {loadedFrom ? 'Atualizado' : 'Salvo'}
                   </>
+                ) : loadedFrom ? (
+                  'Atualizar peça'
                 ) : (
                   'Salvar'
                 )}
@@ -262,7 +286,7 @@ export function Calculator({ onSave, initial, loadedFrom, filamentos }: Calculat
             </div>
             {salvo && (
               <p className="mt-2 text-xs text-slate-400 dark:text-slate-500">
-                Peça salva! Altere algum dado para salvar de novo.
+                {loadedFrom ? 'Peça atualizada!' : 'Peça salva!'} Altere algum dado para salvar de novo.
               </p>
             )}
           </section>
