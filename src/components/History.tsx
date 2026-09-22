@@ -43,7 +43,7 @@ export function History({ pecas, onLoad, onDelete }: HistoryProps) {
                   onClick={() => onLoad(peca)}
                   className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-brand-500 hover:text-brand-700 dark:border-slate-700 dark:text-slate-300 dark:hover:border-brand-500 dark:hover:text-brand-400"
                 >
-                  Carregar
+                  Editar
                 </button>
                 <button
                   onClick={() => onDelete(peca.id)}
