@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Calculator } from './components/Calculator'
 import { History } from './components/History'
+import { Filaments } from './components/Filaments'
 import { useLocalStorage } from './hooks/useLocalStorage'
-import type { SavedPeca } from './types'
+import type { Filamento, SavedPeca } from './types'
 import type { CalcInputs } from './lib/calc'
 
-type Tab = 'calculadora' | 'historico'
+type Tab = 'calculadora' | 'filamentos' | 'historico'
 
 function useTheme() {
   const [dark, setDark] = useLocalStorage<boolean>(
@@ -23,6 +24,7 @@ function useTheme() {
 export default function App() {
   const [tab, setTab] = useState<Tab>('calculadora')
   const [pecas, setPecas] = useLocalStorage<SavedPeca[]>('pecas-3d', [])
+  const [filamentos, setFilamentos] = useLocalStorage<Filamento[]>('filamentos-3d', [])
   const [dark, setDark] = useTheme()
   const [carregada, setCarregada] = useState<SavedPeca | null>(null)
   const [resetKey, setResetKey] = useState(0)
@@ -45,6 +47,14 @@ export default function App() {
 
   function handleDelete(id: string) {
     setPecas((prev) => prev.filter((p) => p.id !== id))
+  }
+
+  function handleAddFilamento(filamento: Omit<Filamento, 'id' | 'criadoEm'>) {
+    setFilamentos((prev) => [...prev, { ...filamento, id: crypto.randomUUID(), criadoEm: Date.now() }])
+  }
+
+  function handleDeleteFilamento(id: string) {
+    setFilamentos((prev) => prev.filter((f) => f.id !== id))
   }
 
   return (
@@ -73,16 +83,27 @@ export default function App() {
           <TabButton active={tab === 'calculadora'} onClick={() => setTab('calculadora')}>
             Calculadora
           </TabButton>
+          <TabButton active={tab === 'filamentos'} onClick={() => setTab('filamentos')}>
+            Filamentos {filamentos.length > 0 && `(${filamentos.length})`}
+          </TabButton>
           <TabButton active={tab === 'historico'} onClick={() => setTab('historico')}>
             Peças salvas {pecas.length > 0 && `(${pecas.length})`}
           </TabButton>
         </nav>
 
-        {tab === 'calculadora' ? (
-          <Calculator key={resetKey} onSave={handleSave} initial={carregada?.inputs} loadedFrom={carregada} />
-        ) : (
-          <History pecas={pecas} onLoad={handleLoad} onDelete={handleDelete} />
+        {tab === 'calculadora' && (
+          <Calculator
+            key={resetKey}
+            onSave={handleSave}
+            initial={carregada?.inputs}
+            loadedFrom={carregada}
+            filamentos={filamentos}
+          />
         )}
+        {tab === 'filamentos' && (
+          <Filaments filamentos={filamentos} onAdd={handleAddFilamento} onDelete={handleDeleteFilamento} />
+        )}
+        {tab === 'historico' && <History pecas={pecas} onLoad={handleLoad} onDelete={handleDelete} />}
       </main>
 
       <footer className="mx-auto max-w-5xl px-4 pb-8 text-center text-xs text-slate-400 dark:text-slate-600">
