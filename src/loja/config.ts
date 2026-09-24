@@ -43,7 +43,7 @@ export const produtos: Produto[] = [
     categoria: 'Confeitaria',
     preco: 21.9,
     precoOriginal: 32,
-    emoji: '🍒',
+    fotos: ['kit-hanami-1.jpg', 'kit-hanami-2.jpg', 'kit-hanami-3.jpg', 'kit-hanami-4.jpg'],
     detalhes: `Kit Carimbos Marcadores para Doces Tema Cerejeira Hanami (6 Unidades)
 
 O que você recebe: 1 Kit contendo 6 carimbos com estampas diferentes no tema Cerejeira/Hanami (Cereja, Flor de Cerejeira, Laço, Árvore, Cesta e Corações) na cor Rosa-claro.
