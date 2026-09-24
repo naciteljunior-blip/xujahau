@@ -10,85 +10,34 @@ export type Produto = {
   /** Nome do arquivo dentro de `public/produtos/` (ex.: 'vaso.jpg'). Sem foto, usa o emoji. */
   imagem?: string
   emoji: string
-  /** Links deste produto nos marketplaces (opcional). */
+  /** Links deste produto em outros sites (opcional). */
   links?: { nome: string; url: string }[]
 }
 
+export type Marketplace = { nome: string; url: string; cor: string }
+
 export const loja = {
-  nome: 'Minha Loja 3D',
+  nome: 'Think Lab',
   slogan: 'Peças impressas em 3D com carinho, do jeitinho que você precisa.',
-  /** Número com código do país e DDD, só números. Ex.: 55 + 11 + 912345678 */
-  whatsapp: '5511999999999',
+  /** Número com código do país e DDD, só números. */
+  whatsapp: '5511916133318',
   cidade: 'Enviamos para todo o Brasil',
-  instagram: '', // ex.: 'https://instagram.com/minhaloja3d'
-  marketplaces: [
-    { nome: 'Shopee', url: 'https://shopee.com.br/', cor: 'bg-orange-500 hover:bg-orange-600' },
-    { nome: 'Mercado Livre', url: 'https://www.mercadolivre.com.br/', cor: 'bg-yellow-400 hover:bg-yellow-500 !text-slate-900' },
-    { nome: 'Elo7', url: 'https://www.elo7.com.br/', cor: 'bg-teal-600 hover:bg-teal-700' },
-  ],
+  instagram: '', // ex.: 'https://instagram.com/thinklab'
+  /** Vazio = a seção de marketplaces não aparece. Ex.: { nome: 'Shopee', url: '...', cor: 'bg-orange-500 hover:bg-orange-600' } */
+  marketplaces: [] as Marketplace[],
 }
 
-export const produtos: Produto[] = [
+/*
+  Enquanto a lista estiver vazia, a página mostra um aviso convidando o cliente a chamar no WhatsApp.
+  Exemplo de produto:
   {
     id: 'vaso-geometrico',
     nome: 'Vaso Geométrico',
     descricao: 'Ideal para suculentas e pequenas plantas. Várias cores.',
     categoria: 'Decoração',
-    preco: 34.9,
+    preco: 34.9,          // sem preço = "Sob consulta"
+    imagem: 'vaso.jpg',   // arquivo em public/produtos/ (opcional)
     emoji: '🪴',
   },
-  {
-    id: 'chaveiro-personalizado',
-    nome: 'Chaveiro Personalizado',
-    descricao: 'Com o nome ou a logo que você quiser.',
-    categoria: 'Personalizados',
-    preco: 12.9,
-    emoji: '🔑',
-  },
-  {
-    id: 'suporte-celular',
-    nome: 'Suporte para Celular',
-    descricao: 'Firme e leve, perfeito para mesa de trabalho ou cozinha.',
-    categoria: 'Utilidades',
-    preco: 24.9,
-    emoji: '📱',
-  },
-  {
-    id: 'organizador-mesa',
-    nome: 'Organizador de Mesa',
-    descricao: 'Para canetas, clipes e objetos pequenos. Tudo no lugar.',
-    categoria: 'Utilidades',
-    preco: 39.9,
-    emoji: '🗂️',
-  },
-  {
-    id: 'miniatura',
-    nome: 'Miniatura Colecionável',
-    descricao: 'Personagens e bonecos com acabamento caprichado.',
-    categoria: 'Decoração',
-    preco: 49.9,
-    emoji: '🧸',
-  },
-  {
-    id: 'topo-de-bolo',
-    nome: 'Topo de Bolo',
-    descricao: 'Com nome e idade, para deixar a festa ainda mais especial.',
-    categoria: 'Personalizados',
-    preco: 29.9,
-    emoji: '🎂',
-  },
-  {
-    id: 'brinde-empresa',
-    nome: 'Brinde com a Logo da Empresa',
-    descricao: 'Chaveiros, porta-cartões e peças com a sua marca.',
-    categoria: 'Personalizados',
-    emoji: '🏢',
-  },
-  {
-    id: 'peca-sob-medida',
-    nome: 'Peça Sob Medida',
-    descricao: 'Precisa de uma peça de reposição ou um projeto único? Fale com a gente.',
-    categoria: 'Sob medida',
-    emoji: '🛠️',
-  },
-]
+*/
+export const produtos: Produto[] = []

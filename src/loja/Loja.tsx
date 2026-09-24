@@ -11,6 +11,7 @@ const formatarPreco = (valor: number) =>
   valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
 
 const msgGeral = `Olá! Vim pelo site da ${loja.nome} e gostaria de mais informações.`
+const msgEncomenda = `Olá! Vim pelo site da ${loja.nome} e gostaria de encomendar uma peça 3D.`
 const msgEmpresa = `Olá! Vim pelo site da ${loja.nome} e gostaria de um orçamento para a minha empresa.
 
 Empresa:
@@ -106,30 +107,48 @@ export default function Loja() {
             <h2 id="titulo-produtos" className="text-center text-3xl font-extrabold text-slate-900">
               Nossos produtos
             </h2>
-            <p className="mt-2 text-center text-slate-600">Não achou o que procura? Fazemos sob encomenda!</p>
+            {produtos.length === 0 ? (
+              <div className="mx-auto mt-8 max-w-2xl rounded-3xl bg-gradient-to-br from-brand-50 via-white to-amber-50 p-8 text-center ring-1 ring-stone-200 md:p-12">
+                <span className="text-6xl" aria-hidden>🛠️</span>
+                <h3 className="mt-4 text-2xl font-bold text-slate-900">Nossa vitrine está sendo montada</h3>
+                <p className="mt-3 text-slate-600">
+                  Em breve você verá nossos produtos aqui. Mas já dá para fazer o seu pedido: conte o que você
+                  precisa pelo WhatsApp e a gente faz sob encomenda!
+                </p>
+                <BotaoWhatsApp href={linkWhatsApp(msgEncomenda)} className="mt-6 w-full sm:w-auto">
+                  Fazer um pedido
+                </BotaoWhatsApp>
+              </div>
+            ) : (
+              <>
+                <p className="mt-2 text-center text-slate-600">Não achou o que procura? Fazemos sob encomenda!</p>
 
-            <div role="group" aria-label="Filtrar por categoria" className="mt-8 flex flex-wrap justify-center gap-2">
-              {categorias.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setCategoria(c)}
-                  aria-pressed={categoria === c}
-                  className={`min-h-12 rounded-full px-5 text-base font-semibold transition focus-visible:outline focus-visible:outline-4 focus-visible:outline-brand-300 ${
-                    categoria === c
-                      ? 'bg-brand-600 text-white shadow'
-                      : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
-                  }`}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
+                {categorias.length > 2 && (
+                <div role="group" aria-label="Filtrar por categoria" className="mt-8 flex flex-wrap justify-center gap-2">
+                  {categorias.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setCategoria(c)}
+                      aria-pressed={categoria === c}
+                      className={`min-h-12 rounded-full px-5 text-base font-semibold transition focus-visible:outline focus-visible:outline-4 focus-visible:outline-brand-300 ${
+                        categoria === c
+                          ? 'bg-brand-600 text-white shadow'
+                          : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+                )}
 
-            <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {visiveis.map((p) => (
-                <CartaoProduto key={p.id} produto={p} />
-              ))}
-            </ul>
+                <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {visiveis.map((p) => (
+                    <CartaoProduto key={p.id} produto={p} />
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         </section>
 
