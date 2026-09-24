@@ -87,6 +87,9 @@ Material: Fabricado em plástico PETG de alta qualidade por meio de impressão 3
 Características da Impressão 3D (Aviso Importante): Por se tratar de um produto produzido com tecnologia de impressão 3D, podem ocorrer sutis variações de tonalidade, textura superficial, mínimos detalhes de acabamento e marcas (linhas) características do processo de fabricação. Tais particularidades são exclusividades da tecnologia 3D e não configuram defeito.
 
 Manutenção e Limpeza: Para preservar a integridade da peça, realize a limpeza apenas com um pano seco, levemente umedecido ou espanador. Não utilize produtos químicos, não mergulhe em água e evite a exposição direta e prolongada ao sol ou a altas temperaturas.`,
-    caracteristicas: [['Cor', 'Branco']],
+    caracteristicas: [
+      ['Cor', 'Branco'],
+      ['Material', 'PETG'],
+    ],
   },
 ]
