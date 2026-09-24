@@ -144,4 +144,34 @@ Por não exigir montagem, o uso é simples e direto, ideal para quem deseja incl
       ['Cor', 'Branco'],
     ],
   },
+  {
+    id: 'papai-noel-croche',
+    nome: 'Papai Noel Decorativo Natal Enfeite Estilo Crochê Natalino',
+    descricao: 'Papai Noel com textura de crochê e tamanho compacto. O mais esperado do Natal!',
+    categoria: 'Decoração',
+    preco: 32.9,
+    precoOriginal: 59.9,
+    fotos: ['papai-noel-1.jpg', 'papai-noel-2.jpg', 'papai-noel-3.jpg'],
+    detalhes: `Papai Noel Decorativo Natalino Estilo Crochê em 3D
+
+O que você recebe: 1 Peça decorativa de Papai Noel com acabamento texturizado inspirado no efeito de crochê, embalada cuidadosamente em plástico-bolha e caixa para máxima proteção durante o transporte. (Atenção: O produto é estritamente decorativo e não possui nenhum componente elétrico ou eletrônico.)
+
+Indicação de Uso: Com design de tamanho compacto, é a escolha perfeita para agregar charme, elegância e o espírito natalino a mesas, aparadores, estantes, prateleiras, escritórios e demais composições temáticas.
+
+Dimensões e Cores: A peça possui aproximadamente 7 cm de altura e 5 cm de largura. Produzida na paleta clássica (vermelho, branco, bege e preto), não havendo opção de personalização de cores.
+
+Material: Fabricado em plástico PETG de alta qualidade por meio de impressão 3D, garantindo maior resistência mecânica e longa durabilidade à peça.
+
+Características da Impressão 3D (Aviso Importante): Por se tratar de um produto fabricado com tecnologia de impressão 3D, podem ocorrer sutis linhas ou variações características do processo produtivo. Esses detalhes não configuram defeito, mas sim particularidades que compõem o acabamento exclusivo da peça.
+
+Manutenção e Cuidados: Para conservar o seu produto por mais tempo, evite quedas e impactos. Realize a limpeza delicadamente utilizando apenas um pano seco ou levemente úmido. Não exponha a peça à luz solar direta ou a altas temperaturas.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Modelo', 'Papai Noel'],
+      ['Cor', 'Vermelho'],
+      ['Altura x Largura x Comprimento', '7 cm x 5 cm x 4 cm'],
+      ['Tipo', 'Boneco de plástico estilo crochê'],
+      ['Material', 'PETG'],
+    ],
+  },
 ]
