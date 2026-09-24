@@ -74,7 +74,8 @@ Aviso legal
     nome: 'Boneco De Neve Estilo Crochê Decoração Natal',
     descricao: 'Peça decorativa com textura que imita crochê. Charme e aconchego para o seu Natal.',
     categoria: 'Decoração',
-    preco: 23.9,
+    preco: 34.95,
+    precoOriginal: 69.9,
     fotos: ['boneco-neve-1.jpg', 'boneco-neve-2.jpg', 'boneco-neve-3.jpg', 'boneco-neve-4.jpg'],
     detalhes: `Boneco de Neve Decorativo Natalino Estilo Crochê em 3D
 

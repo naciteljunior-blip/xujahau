@@ -263,7 +263,7 @@ export default function Loja() {
 
 const percentualDesconto = (p: Produto) =>
   p.preco && p.precoOriginal && p.precoOriginal > p.preco
-    ? Math.floor((1 - p.preco / p.precoOriginal) * 100)
+    ? Math.floor((1 - p.preco / p.precoOriginal) * 100 + 1e-9)
     : 0
 
 const mensagemProduto = (p: Produto) =>
