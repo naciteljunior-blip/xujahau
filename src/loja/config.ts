@@ -35,6 +35,7 @@ export const loja = {
 }
 
 /* Enquanto a lista estiver vazia, a página mostra um aviso convidando o cliente a chamar no WhatsApp. */
+// Carimbos: a cor é sempre aleatória (descrição e característica 'Cor e padrão: Aleatório').
 export const produtos: Produto[] = [
   {
     id: 'kit-carimbos-hanami',
@@ -46,7 +47,7 @@ export const produtos: Produto[] = [
     fotos: ['kit-hanami-1.jpg', 'kit-hanami-2.jpg', 'kit-hanami-3.jpg', 'kit-hanami-4.jpg'],
     detalhes: `Kit Carimbos Marcadores para Doces Tema Cerejeira Hanami (6 Unidades)
 
-O que você recebe: 1 Kit contendo 6 carimbos com estampas diferentes no tema Cerejeira/Hanami (Cereja, Flor de Cerejeira, Laço, Árvore, Cesta e Corações) na cor Rosa-claro.
+O que você recebe: 1 Kit contendo 6 carimbos com estampas diferentes no tema Cerejeira/Hanami (Cereja, Flor de Cerejeira, Laço, Árvore, Cesta e Corações) em cor aleatória.
 
 Indicação de Uso: Ferramenta ideal para personalizar brigadeiros, doces finos, pasta americana, lembrancinhas e produções artesanais temáticas.
 
