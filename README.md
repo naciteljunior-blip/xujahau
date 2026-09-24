@@ -1,4 +1,20 @@
-# Calculadora de Custo 3D
+# Loja 3D + Calculadora de Custo
+
+- **Página principal (`/`)**: loja para os clientes verem os produtos e comprarem pelo WhatsApp (pessoas e empresas) ou pelos marketplaces.
+- **Calculadora (`/#calculadora`)**: ferramenta interna, sem nenhum link na loja.
+
+## Personalizando a loja
+
+Tudo fica em `src/loja/config.ts`:
+
+- `whatsapp`: seu número só com números, com 55 + DDD (ex.: `5511912345678`)
+- `nome`, `slogan`, `cidade`, `instagram`
+- `marketplaces`: links da sua loja na Shopee, Mercado Livre, Elo7 etc.
+- `produtos`: nome, descrição, categoria, preço (sem preço = "Sob consulta") e links do produto nos marketplaces
+
+Fotos: coloque os arquivos em `public/produtos/` e informe o nome em `imagem` (ex.: `imagem: 'vaso.jpg'`). Sem foto, o produto mostra o emoji.
+
+## Calculadora de Custo 3D
 
 App web para calcular o custo e o preço de venda sugerido de impressões 3D, baseado na planilha de precificação usada como referência (filamento, energia, mão de obra e margem de lucro).
 
