@@ -36,6 +36,7 @@ export const loja = {
 
 /* Enquanto a lista estiver vazia, a página mostra um aviso convidando o cliente a chamar no WhatsApp. */
 // Carimbos: a cor é sempre aleatória (descrição e característica 'Cor e padrão: Aleatório').
+// Marca: sempre N97 em todos os produtos.
 export const produtos: Produto[] = [
   {
     id: 'kit-carimbos-hanami',
@@ -67,6 +68,62 @@ Aviso legal
       ['Material do carimbo', 'Plástico'],
       ['É para uso de forma quente', 'Não'],
       ['É livre de BPA', 'Sim'],
+    ],
+  },
+  {
+    id: 'boneco-de-neve-croche',
+    nome: 'Boneco De Neve Estilo Crochê Decoração Natal',
+    descricao: 'Peça decorativa com textura que imita crochê. Charme e aconchego para o seu Natal.',
+    categoria: 'Decoração',
+    preco: 34.95,
+    precoOriginal: 69.9,
+    fotos: ['boneco-neve-1.jpg', 'boneco-neve-2.jpg', 'boneco-neve-3.jpg', 'boneco-neve-4.jpg'],
+    detalhes: `Boneco de Neve Decorativo Natalino Estilo Crochê em 3D
+
+O que você recebe: 1 Peça decorativa de Boneco de Neve com design exclusivo simulando a textura de crochê.
+
+Indicação de Uso: Peça perfeita para agregar charme, originalidade e um toque divertido e acolhedor à sua decoração natalina.
+
+Material: Fabricado em plástico PETG de alta qualidade por meio de impressão 3D, garantindo resistência mecânica e durabilidade à peça.
+
+Características da Impressão 3D (Aviso Importante): Por se tratar de um produto produzido com tecnologia de impressão 3D, podem ocorrer sutis variações de tonalidade, textura superficial, mínimos detalhes de acabamento e marcas (linhas) características do processo de fabricação. Tais particularidades são exclusividades da tecnologia 3D e não configuram defeito.
+
+Manutenção e Limpeza: Para preservar a integridade da peça, realize a limpeza apenas com um pano seco, levemente umedecido ou espanador. Não utilize produtos químicos, não mergulhe em água e evite a exposição direta e prolongada ao sol ou a altas temperaturas.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor', 'Branco'],
+      ['Material', 'PETG'],
+    ],
+  },
+  {
+    id: 'fantasminha-coracao',
+    nome: 'Enfeite Fantasminha Com Coração Para Decoração',
+    descricao: 'Fantasminha com textura de tricô segurando um coração. Fofo para enfeitar qualquer cantinho.',
+    categoria: 'Decoração',
+    preco: 32.9,
+    precoOriginal: 69.9,
+    fotos: ['fantasminha-1.jpg', 'fantasminha-2.jpg', 'fantasminha-3.jpg'],
+    detalhes: `Enfeite Fantasminha com Coração Estilo Tricô em 3D
+
+O que você recebe: 1 Peça decorativa de Fantasminha segurando um coração, com design exclusivo simulando a textura de tricô.
+
+Indicação de Uso: Peça perfeita para deixar estantes, mesas, escrivaninhas e prateleiras mais fofas e aconchegantes. Também é uma ótima opção de presente.
+
+Tamanho: Aproximadamente 5,6 cm x 5,8 cm x 6 cm (comprimento x largura x altura).
+
+Material: Fabricado em plástico PLA por meio de impressão 3D.
+
+Características da Impressão 3D (Aviso Importante): Por se tratar de um produto produzido com tecnologia de impressão 3D, podem ocorrer sutis variações de tonalidade, textura superficial, mínimos detalhes de acabamento e marcas (linhas) características do processo de fabricação. Tais particularidades são exclusividades da tecnologia 3D e não configuram defeito.
+
+Manutenção e Limpeza: Para preservar a integridade da peça, realize a limpeza apenas com um pano seco, levemente umedecido ou espanador. Não utilize produtos químicos, não mergulhe em água e evite a exposição direta e prolongada ao sol ou a altas temperaturas.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Modelo', 'Escultura'],
+      ['Personagem', 'Fantasminha'],
+      ['Cor', 'Branco'],
+      ['Comprimento x Largura x Altura', '5,6 cm x 5,8 cm x 6 cm'],
+      ['Temática da escultura', 'Fantasma'],
+      ['Material', 'PLA'],
     ],
   },
 ]
