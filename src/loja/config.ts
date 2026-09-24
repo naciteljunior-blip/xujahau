@@ -3,13 +3,20 @@
 export type Produto = {
   id: string
   nome: string
+  /** Texto curto que aparece no cartão do produto. */
   descricao: string
   categoria: string
   /** Preço em reais. Deixe `undefined` para mostrar "Sob consulta". */
   preco?: number
-  /** Nome do arquivo dentro de `public/produtos/` (ex.: 'vaso.jpg'). Sem foto, usa o emoji. */
-  imagem?: string
-  emoji: string
+  /** Preço antes do desconto. Quando preenchido, aparece riscado com o selo "% OFF". */
+  precoOriginal?: number
+  /** Arquivos dentro de `public/produtos/` (ex.: ['vaso.jpg']). A primeira é a capa. Sem foto, usa o emoji. */
+  fotos?: string[]
+  emoji?: string
+  /** Descrição completa, mostrada em "Ver detalhes". Separe parágrafos com uma linha em branco. */
+  detalhes?: string
+  /** Tabela de características, mostrada em "Ver detalhes". */
+  caracteristicas?: [string, string][]
   /** Links deste produto em outros sites (opcional). */
   links?: { nome: string; url: string }[]
 }
@@ -27,17 +34,39 @@ export const loja = {
   marketplaces: [] as Marketplace[],
 }
 
-/*
-  Enquanto a lista estiver vazia, a página mostra um aviso convidando o cliente a chamar no WhatsApp.
-  Exemplo de produto:
+/* Enquanto a lista estiver vazia, a página mostra um aviso convidando o cliente a chamar no WhatsApp. */
+// Carimbos: a cor é sempre aleatória (descrição e característica 'Cor e padrão: Aleatório').
+export const produtos: Produto[] = [
   {
-    id: 'vaso-geometrico',
-    nome: 'Vaso Geométrico',
-    descricao: 'Ideal para suculentas e pequenas plantas. Várias cores.',
-    categoria: 'Decoração',
-    preco: 34.9,          // sem preço = "Sob consulta"
-    imagem: 'vaso.jpg',   // arquivo em public/produtos/ (opcional)
-    emoji: '🪴',
+    id: 'kit-carimbos-hanami',
+    nome: 'Kit Carimbos Brigadeiro Docinho Cerejeira Hanami Cereja',
+    descricao: '6 carimbos para personalizar brigadeiros e doces finos no tema Cerejeira/Hanami.',
+    categoria: 'Confeitaria',
+    preco: 21.9,
+    precoOriginal: 32,
+    fotos: ['kit-hanami-1.jpg', 'kit-hanami-2.jpg', 'kit-hanami-3.jpg', 'kit-hanami-4.jpg'],
+    detalhes: `Kit Carimbos Marcadores para Doces Tema Cerejeira Hanami (6 Unidades)
+
+O que você recebe: 1 Kit contendo 6 carimbos com estampas diferentes no tema Cerejeira/Hanami (Cereja, Flor de Cerejeira, Laço, Árvore, Cesta e Corações) em cor aleatória.
+
+Indicação de Uso: Ferramenta ideal para personalizar brigadeiros, doces finos, pasta americana, lembrancinhas e produções artesanais temáticas.
+
+Benefícios para a Produção: Estrutura firme e de fácil manuseio que assegura marcações precisas e uniformes, facilitando a padronização e elevando o nível de acabamento profissional da sua vitrine de doces.
+
+Manutenção e Limpeza: Superfície com acabamento impecável, facilitando a higienização. Recomenda-se lavar exclusivamente com água fria e sabão neutro para preservar a integridade dos detalhes.
+
+Aviso legal
+É livre de BPA.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Modelo', 'Marcador Doce'],
+      ['Formato de venda', 'Kit'],
+      ['Quantidade de carimbos', '6'],
+      ['Cor e padrão', 'Aleatório'],
+      ['Material do cabo', 'Plástico'],
+      ['Material do carimbo', 'Plástico'],
+      ['É para uso de forma quente', 'Não'],
+      ['É livre de BPA', 'Sim'],
+    ],
   },
-*/
-export const produtos: Produto[] = []
+]
