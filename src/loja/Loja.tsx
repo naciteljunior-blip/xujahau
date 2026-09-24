@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { loja, produtos, type Produto } from './config'
 
 const base = import.meta.env.BASE_URL
@@ -261,34 +261,49 @@ export default function Loja() {
   )
 }
 
+const percentualDesconto = (p: Produto) =>
+  p.preco && p.precoOriginal && p.precoOriginal > p.preco
+    ? Math.floor((1 - p.preco / p.precoOriginal) * 100)
+    : 0
+
+const mensagemProduto = (p: Produto) =>
+  `Olá! Tenho interesse no produto *${p.nome}*${p.preco ? ` (${formatarPreco(p.preco)})` : ''}. Pode me passar mais informações?`
+
 function CartaoProduto({ produto: p }: { produto: Produto }) {
-  const mensagem = `Olá! Tenho interesse no produto *${p.nome}*${
-    p.preco ? ` (${formatarPreco(p.preco)})` : ''
-  }. Pode me passar mais informações?`
+  const dialogRef = useRef<HTMLDialogElement>(null)
+  const temDetalhes = Boolean(p.detalhes || p.caracteristicas?.length || (p.fotos?.length ?? 0) > 1)
 
   return (
     <li className="flex flex-col overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 transition hover:-translate-y-1 hover:shadow-xl">
-      <div className="relative flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-brand-100 via-white to-amber-100">
-        {p.imagem ? (
-          <img src={`${base}produtos/${p.imagem}`} alt={p.nome} loading="lazy" className="h-full w-full object-cover" />
-        ) : (
-          <span className="text-8xl drop-shadow-sm" role="img" aria-label={p.nome}>
-            {p.emoji}
-          </span>
-        )}
+      <button
+        type="button"
+        onClick={() => temDetalhes && dialogRef.current?.showModal()}
+        tabIndex={temDetalhes ? 0 : -1}
+        aria-label={temDetalhes ? `Ver detalhes de ${p.nome}` : undefined}
+        className={`relative block ${temDetalhes ? 'cursor-pointer' : 'cursor-default'}`}
+      >
+        <FotoProduto produto={p} />
         <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-sm font-semibold text-slate-700 shadow-sm">
           {p.categoria}
         </span>
-      </div>
+        <SeloDesconto produto={p} className="absolute right-4 top-4" />
+      </button>
       <div className="flex flex-1 flex-col p-6">
-        <h3 className="text-2xl font-bold text-slate-900">{p.nome}</h3>
+        <h3 className="text-xl font-bold leading-snug text-slate-900">{p.nome}</h3>
         <p className="mt-2 flex-1 text-slate-600">{p.descricao}</p>
-        <p className="mt-4 text-3xl font-extrabold text-slate-900">
-          {p.preco ? formatarPreco(p.preco) : <span className="text-2xl text-slate-500">Sob consulta</span>}
-        </p>
-        <BotaoWhatsApp href={linkWhatsApp(mensagem)} className="mt-4 w-full">
+        <Preco produto={p} className="mt-4" />
+        <BotaoWhatsApp href={linkWhatsApp(mensagemProduto(p))} className="mt-4 w-full">
           {p.preco ? 'Comprar pelo WhatsApp' : 'Pedir orçamento'}
         </BotaoWhatsApp>
+        {temDetalhes && (
+          <button
+            type="button"
+            onClick={() => dialogRef.current?.showModal()}
+            className="mt-3 min-h-12 rounded-2xl border-2 border-slate-300 font-bold text-slate-700 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+          >
+            Ver detalhes
+          </button>
+        )}
         {p.links && p.links.length > 0 && (
           <div className="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-1 text-base">
             {p.links.map((l) => (
@@ -299,7 +314,128 @@ function CartaoProduto({ produto: p }: { produto: Produto }) {
           </div>
         )}
       </div>
+      {temDetalhes && <DetalhesProduto produto={p} dialogRef={dialogRef} />}
     </li>
+  )
+}
+
+function FotoProduto({ produto: p, foto }: { produto: Produto; foto?: string }) {
+  const arquivo = foto ?? p.fotos?.[0]
+  return (
+    <div className="flex aspect-[4/3] items-center justify-center overflow-hidden bg-gradient-to-br from-brand-100 via-white to-amber-100">
+      {arquivo ? (
+        <img src={`${base}produtos/${arquivo}`} alt={p.nome} loading="lazy" className="h-full w-full bg-white object-contain" />
+      ) : (
+        <span className="text-8xl drop-shadow-sm" role="img" aria-label={p.nome}>
+          {p.emoji ?? '📦'}
+        </span>
+      )}
+    </div>
+  )
+}
+
+function SeloDesconto({ produto, className = '' }: { produto: Produto; className?: string }) {
+  const pct = percentualDesconto(produto)
+  if (!pct) return null
+  return (
+    <span className={`rounded-full bg-brand-600 px-3 py-1 text-base font-extrabold text-white shadow ${className}`}>
+      {pct}% OFF
+    </span>
+  )
+}
+
+function Preco({ produto: p, className = '' }: { produto: Produto; className?: string }) {
+  if (!p.preco) return <p className={`text-2xl font-extrabold text-slate-500 ${className}`}>Sob consulta</p>
+  const pct = percentualDesconto(p)
+  return (
+    <div className={className}>
+      {pct > 0 && (
+        <p className="text-lg text-slate-500">
+          <span className="sr-only">De </span>
+          <s>{formatarPreco(p.precoOriginal!)}</s>
+          <span className="sr-only"> por</span>
+        </p>
+      )}
+      <p className="text-3xl font-extrabold text-slate-900">{formatarPreco(p.preco)}</p>
+    </div>
+  )
+}
+
+function DetalhesProduto({ produto: p, dialogRef }: { produto: Produto; dialogRef: React.RefObject<HTMLDialogElement> }) {
+  const [fotoAtual, setFotoAtual] = useState(0)
+  const fotos = p.fotos ?? []
+  const fechar = () => dialogRef.current?.close()
+
+  return (
+    <dialog
+      ref={dialogRef}
+      aria-label={p.nome}
+      onClick={(e) => e.target === e.currentTarget && fechar()}
+      className="m-auto w-[calc(100%-2rem)] max-w-3xl rounded-3xl bg-white p-0 text-lg text-slate-800 shadow-2xl backdrop:bg-slate-900/60"
+    >
+      <div className="sticky top-0 z-10 flex justify-end bg-white/90 p-3 backdrop-blur">
+        <button
+          type="button"
+          onClick={fechar}
+          className="min-h-12 rounded-2xl bg-stone-100 px-5 font-bold text-slate-700 hover:bg-stone-200 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400"
+        >
+          ✕ Fechar
+        </button>
+      </div>
+      <div className="grid gap-6 px-6 pb-8 md:grid-cols-2">
+        <div>
+          <div className="relative overflow-hidden rounded-2xl ring-1 ring-stone-200">
+            <FotoProduto produto={p} foto={fotos[fotoAtual]} />
+            <SeloDesconto produto={p} className="absolute right-3 top-3" />
+          </div>
+          {fotos.length > 1 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {fotos.map((f, i) => (
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => setFotoAtual(i)}
+                  aria-label={`Foto ${i + 1}`}
+                  aria-pressed={i === fotoAtual}
+                  className={`h-16 w-16 overflow-hidden rounded-xl bg-white ring-2 ${i === fotoAtual ? 'ring-brand-600' : 'ring-stone-200'}`}
+                >
+                  <img src={`${base}produtos/${f}`} alt="" className="h-full w-full object-contain" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="flex flex-col">
+          <p className="text-sm font-bold uppercase tracking-wide text-brand-700">{p.categoria}</p>
+          <h3 className="mt-1 text-2xl font-extrabold leading-snug text-slate-900">{p.nome}</h3>
+          <Preco produto={p} className="mt-4" />
+          <BotaoWhatsApp href={linkWhatsApp(mensagemProduto(p))} className="mt-5 w-full">
+            {p.preco ? 'Comprar pelo WhatsApp' : 'Pedir orçamento'}
+          </BotaoWhatsApp>
+        </div>
+        {p.detalhes && (
+          <div className="space-y-4 text-slate-700 md:col-span-2">
+            <h4 className="text-xl font-bold text-slate-900">Descrição</h4>
+            {p.detalhes.split(/\n\s*\n/).map((par, i) => (
+              <p key={i} className="whitespace-pre-line">{par}</p>
+            ))}
+          </div>
+        )}
+        {p.caracteristicas && p.caracteristicas.length > 0 && (
+          <div className="md:col-span-2">
+            <h4 className="text-xl font-bold text-slate-900">Características</h4>
+            <dl className="mt-3 overflow-hidden rounded-2xl ring-1 ring-stone-200">
+              {p.caracteristicas.map(([k, v], i) => (
+                <div key={k} className={`grid grid-cols-2 gap-4 px-5 py-3 ${i % 2 === 0 ? 'bg-stone-50' : 'bg-white'}`}>
+                  <dt className="font-semibold text-slate-600">{k}</dt>
+                  <dd className="text-slate-900">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        )}
+      </div>
+    </dialog>
   )
 }
 
