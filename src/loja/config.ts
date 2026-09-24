@@ -126,4 +126,22 @@ Manutenção e Limpeza: Para preservar a integridade da peça, realize a limpeza
       ['Material', 'PLA'],
     ],
   },
+  {
+    id: 'jesus-cristo-miniatura',
+    nome: 'Jesus Cristo Miniatura Decorativa',
+    descricao: 'Miniatura com traço delicado para mesas, prateleiras, nichos e cantinhos de oração.',
+    categoria: 'Decoração',
+    preco: 25.9,
+    precoOriginal: 49.9,
+    fotos: ['jesus-miniatura-1.jpg', 'jesus-miniatura-2.jpg', 'jesus-miniatura-3.jpg'],
+    detalhes: `Esta miniatura decorativa de Jesus Cristo foi pensada para compor ambientes com um toque religioso e sereno. A peça em plástico, na cor branca, valoriza a decoração com uma presença discreta e respeitosa.
+
+Por não exigir montagem, o uso é simples e direto, ideal para quem deseja incluir um elemento de devoção em mesas, prateleiras, nichos ou espaços de oração. Como não segue um realismo detalhado, o visual favorece uma leitura mais leve e decorativa.
+
+É uma escolha interessante para casas, capelas particulares, cantos de oração e ambientes que pedem um detalhe de fé com visual limpo. Também pode atender pessoas que buscam uma miniatura decorativa com temática cristã e presença visual delicada.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor', 'Branco'],
+    ],
+  },
 ]
