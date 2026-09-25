@@ -1,6 +1,6 @@
 # Loja 3D + Calculadora de Custo
 
-- **Página principal (`/`)**: loja para os clientes verem os produtos e comprarem pelo WhatsApp (pessoas e empresas) ou pelos marketplaces.
+- **Página principal (`/`)**: loja para os clientes verem os produtos, montarem um carrinho e enviarem o pedido pelo WhatsApp. Antes de enviar, o cliente informa nome, endereço (o CEP preenche rua, bairro, cidade e estado via ViaCEP) e forma de pagamento; a mensagem chega com itens, subtotal, taxa de entrega fixa (`taxaEntrega` em `src/loja/config.ts`) e total. Carrinho e dados de entrega ficam salvos no navegador do cliente.
 - **Calculadora (`/#calculadora`)**: ferramenta interna, sem nenhum link na loja.
 
 ## Personalizando a loja
@@ -10,6 +10,7 @@ Tudo fica em `src/loja/config.ts`:
 - `whatsapp`: seu número só com números, com 55 + DDD (ex.: `5511912345678`)
 - `nome`, `slogan`, `cidade`, `instagram`
 - `marketplaces`: links da sua loja na Shopee, Mercado Livre, Elo7 etc.
+- `iconesCategorias`: emoji de cada categoria nos botões de filtro (acima do carrossel e da lista de produtos)
 - `produtos`: nome, descrição, categoria, preço (sem preço = "Sob consulta") e links do produto nos marketplaces
 
 Fotos: coloque os arquivos em `public/produtos/` e informe o nome em `imagem` (ex.: `imagem: 'vaso.jpg'`). Sem foto, o produto mostra o emoji.

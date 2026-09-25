@@ -23,6 +23,12 @@ export type Produto = {
 
 export type Marketplace = { nome: string; url: string; cor: string }
 
+/** Ícone de cada categoria nos botões de filtro. Categoria sem ícone aparece só com o nome. */
+export const iconesCategorias: Record<string, string> = {
+  Confeitaria: '🧁',
+  Decoração: '🎄',
+}
+
 export const loja = {
   nome: 'Think Lab',
   slogan: 'Peças impressas em 3D com carinho, do jeitinho que você precisa.',
@@ -30,6 +36,9 @@ export const loja = {
   whatsapp: '5511916133318',
   cidade: 'Enviamos para todo o Brasil',
   instagram: '', // ex.: 'https://instagram.com/thinklab'
+  /** Taxa fixa de entrega em reais, somada ao total do carrinho. */
+  taxaEntrega: 10,
+  formasPagamento: ['Pix', 'Cartão de crédito', 'Boleto'],
   /** Vazio = a seção de marketplaces não aparece. Ex.: { nome: 'Shopee', url: '...', cor: 'bg-orange-500 hover:bg-orange-600' } */
   marketplaces: [] as Marketplace[],
 }
@@ -124,6 +133,54 @@ Manutenção e Limpeza: Para preservar a integridade da peça, realize a limpeza
       ['Comprimento x Largura x Altura', '5,6 cm x 5,8 cm x 6 cm'],
       ['Temática da escultura', 'Fantasma'],
       ['Material', 'PLA'],
+    ],
+  },
+  {
+    id: 'jesus-cristo-miniatura',
+    nome: 'Jesus Cristo Miniatura Decorativa',
+    descricao: 'Miniatura com traço delicado para mesas, prateleiras, nichos e cantinhos de oração.',
+    categoria: 'Decoração',
+    preco: 25.9,
+    precoOriginal: 49.9,
+    fotos: ['jesus-miniatura-1.jpg', 'jesus-miniatura-2.jpg', 'jesus-miniatura-3.jpg'],
+    detalhes: `Esta miniatura decorativa de Jesus Cristo foi pensada para compor ambientes com um toque religioso e sereno. A peça em plástico, na cor branca, valoriza a decoração com uma presença discreta e respeitosa.
+
+Por não exigir montagem, o uso é simples e direto, ideal para quem deseja incluir um elemento de devoção em mesas, prateleiras, nichos ou espaços de oração. Como não segue um realismo detalhado, o visual favorece uma leitura mais leve e decorativa.
+
+É uma escolha interessante para casas, capelas particulares, cantos de oração e ambientes que pedem um detalhe de fé com visual limpo. Também pode atender pessoas que buscam uma miniatura decorativa com temática cristã e presença visual delicada.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor', 'Branco'],
+    ],
+  },
+  {
+    id: 'papai-noel-croche',
+    nome: 'Papai Noel Decorativo Natal Enfeite Estilo Crochê Natalino',
+    descricao: 'Papai Noel com textura de crochê e tamanho compacto. O mais esperado do Natal!',
+    categoria: 'Decoração',
+    preco: 32.9,
+    precoOriginal: 59.9,
+    fotos: ['papai-noel-1.jpg', 'papai-noel-2.jpg', 'papai-noel-3.jpg'],
+    detalhes: `Papai Noel Decorativo Natalino Estilo Crochê em 3D
+
+O que você recebe: 1 Peça decorativa de Papai Noel com acabamento texturizado inspirado no efeito de crochê, embalada cuidadosamente em plástico-bolha e caixa para máxima proteção durante o transporte. (Atenção: O produto é estritamente decorativo e não possui nenhum componente elétrico ou eletrônico.)
+
+Indicação de Uso: Com design de tamanho compacto, é a escolha perfeita para agregar charme, elegância e o espírito natalino a mesas, aparadores, estantes, prateleiras, escritórios e demais composições temáticas.
+
+Dimensões e Cores: A peça possui aproximadamente 7 cm de altura e 5 cm de largura. Produzida na paleta clássica (vermelho, branco, bege e preto), não havendo opção de personalização de cores.
+
+Material: Fabricado em plástico PETG de alta qualidade por meio de impressão 3D, garantindo maior resistência mecânica e longa durabilidade à peça.
+
+Características da Impressão 3D (Aviso Importante): Por se tratar de um produto fabricado com tecnologia de impressão 3D, podem ocorrer sutis linhas ou variações características do processo produtivo. Esses detalhes não configuram defeito, mas sim particularidades que compõem o acabamento exclusivo da peça.
+
+Manutenção e Cuidados: Para conservar o seu produto por mais tempo, evite quedas e impactos. Realize a limpeza delicadamente utilizando apenas um pano seco ou levemente úmido. Não exponha a peça à luz solar direta ou a altas temperaturas.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Modelo', 'Papai Noel'],
+      ['Cor', 'Vermelho'],
+      ['Altura x Largura x Comprimento', '7 cm x 5 cm x 4 cm'],
+      ['Tipo', 'Boneco de plástico estilo crochê'],
+      ['Material', 'PETG'],
     ],
   },
 ]

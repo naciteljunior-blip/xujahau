@@ -1,14 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { loja, produtos, type Produto } from './config'
-
-const base = import.meta.env.BASE_URL
-
-function linkWhatsApp(mensagem: string) {
-  return `https://wa.me/${loja.whatsapp}?text=${encodeURIComponent(mensagem)}`
-}
-
-const formatarPreco = (valor: number) =>
-  valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+import { useLocalStorage } from '../hooks/useLocalStorage'
+import Carrinho from './Carrinho'
+import { BotaoWhatsApp, IconeCarrinho, IconeWhatsApp } from './componentes'
+import { iconesCategorias, loja, produtos, type Produto } from './config'
+import { base, centavos, formatarPreco, linkWhatsApp, QTD_MAXIMA, type ItemCarrinho } from './util'
 
 const msgGeral = `Olá! Vim pelo site da ${loja.nome} e gostaria de mais informações.`
 const msgEncomenda = `Olá! Vim pelo site da ${loja.nome} e gostaria de encomendar uma peça 3D.`
@@ -24,13 +19,34 @@ export default function Loja() {
   const categorias = useMemo(() => ['Todos', ...new Set(produtos.map((p) => p.categoria))], [])
   const visiveis = categoria === 'Todos' ? produtos : produtos.filter((p) => p.categoria === categoria)
 
+  const [carrinho, setCarrinho] = useLocalStorage<Record<string, number>>('thinklab-carrinho', {})
+  const carrinhoRef = useRef<HTMLDialogElement>(null)
+  const itens: ItemCarrinho[] = produtos
+    .filter((p) => p.preco && Number.isInteger(carrinho[p.id]) && carrinho[p.id] > 0)
+    .map((p) => ({ produto: p, quantidade: Math.min(carrinho[p.id], QTD_MAXIMA) }))
+  const totalItens = itens.reduce((soma, i) => soma + i.quantidade, 0)
+  const totalCentavos = itens.reduce((soma, i) => soma + centavos(i.produto.preco!) * i.quantidade, 0)
+
+  const alterarQuantidade = (id: string, delta: number) =>
+    setCarrinho((atual) => {
+      const nova = Math.min((Number.isInteger(atual[id]) ? atual[id] : 0) + delta, QTD_MAXIMA)
+      const copia = { ...atual }
+      if (nova > 0) copia[id] = nova
+      else delete copia[id]
+      return copia
+    })
+  const abrirCarrinho = () => carrinhoRef.current?.showModal()
+  const noCarrinho = (id: string) => itens.find((i) => i.produto.id === id)?.quantidade ?? 0
+
+  const [detalhe, setDetalhe] = useState<Produto | null>(null)
+
   useEffect(() => {
     document.documentElement.classList.remove('dark')
     document.title = `${loja.nome} — Produtos impressos em 3D`
   }, [])
 
   return (
-    <div className="min-h-screen bg-stone-50 text-lg text-slate-800">
+    <div className={`min-h-screen bg-stone-50 text-lg text-slate-800 ${totalItens > 0 ? 'pb-24' : ''}`}>
       <a href="#produtos" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:p-3">
         Pular para os produtos
       </a>
@@ -46,13 +62,38 @@ export default function Loja() {
             <a href="#empresas" className="hover:text-brand-700">Para empresas</a>
             <a href="#duvidas" className="hover:text-brand-700">Dúvidas</a>
           </nav>
-          <BotaoWhatsApp href={linkWhatsApp(msgGeral)} tamanho="pequeno">
-            WhatsApp
-          </BotaoWhatsApp>
+          <div className="flex items-center gap-2">
+            <BotaoWhatsApp href={linkWhatsApp(msgGeral)} tamanho="pequeno" className="hidden sm:inline-flex">
+              WhatsApp
+            </BotaoWhatsApp>
+            <button
+              type="button"
+              onClick={abrirCarrinho}
+              aria-label={`Abrir carrinho, ${totalItens} ${totalItens === 1 ? 'item' : 'itens'}`}
+              className="relative inline-flex min-h-11 items-center gap-2 rounded-2xl bg-slate-900 px-4 text-base font-bold text-white shadow-md transition hover:bg-slate-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+            >
+              <IconeCarrinho className="h-5 w-5" />
+              Carrinho
+              {totalItens > 0 && (
+                <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-brand-500 px-1.5 text-sm font-extrabold">
+                  {totalItens}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
       <main>
+        {produtos.length > 0 && (
+          <section aria-label="Destaques" className="border-b border-stone-200 bg-white pb-3 pt-5">
+            {categorias.length > 2 && (
+              <FiltroCategorias categorias={categorias} ativa={categoria} onEscolher={setCategoria} className="mx-auto max-w-6xl px-4" />
+            )}
+            <Carrossel key={categoria} itens={visiveis} onAbrir={setDetalhe} />
+          </section>
+        )}
+
         <section id="inicio" className="relative overflow-hidden bg-gradient-to-b from-brand-50 to-stone-50">
           <Decoracao />
           <div className="relative mx-auto max-w-6xl px-4 py-16 text-center md:py-24">
@@ -84,8 +125,8 @@ export default function Loja() {
           </h2>
           <ol className="mt-8 grid gap-5 md:grid-cols-3">
             {[
-              ['👀', 'Escolha', 'Veja os produtos abaixo e escolha o que você gostou.'],
-              ['💬', 'Chame no WhatsApp', 'Toque no botão verde. A mensagem já vai pronta.'],
+              ['🛒', 'Escolha', 'Toque em “Adicionar ao carrinho” nos produtos que você gostou.'],
+              ['💬', 'Envie pelo WhatsApp', 'Abra o carrinho e toque no botão verde. O pedido já vai pronto, com o total.'],
               ['🚚', 'Receba', 'Combinamos o pagamento e a entrega com você.'],
             ].map(([icone, titulo, texto], i) => (
               <li key={titulo} className="flex items-start gap-4 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
@@ -124,27 +165,19 @@ export default function Loja() {
                 <p className="mt-2 text-center text-slate-600">Não achou o que procura? Fazemos sob encomenda!</p>
 
                 {categorias.length > 2 && (
-                <div role="group" aria-label="Filtrar por categoria" className="mt-8 flex flex-wrap justify-center gap-2">
-                  {categorias.map((c) => (
-                    <button
-                      key={c}
-                      onClick={() => setCategoria(c)}
-                      aria-pressed={categoria === c}
-                      className={`min-h-12 rounded-full px-5 text-base font-semibold transition focus-visible:outline focus-visible:outline-4 focus-visible:outline-brand-300 ${
-                        categoria === c
-                          ? 'bg-brand-600 text-white shadow'
-                          : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
-                      }`}
-                    >
-                      {c}
-                    </button>
-                  ))}
-                </div>
+                  <FiltroCategorias categorias={categorias} ativa={categoria} onEscolher={setCategoria} className="mt-8" />
                 )}
 
                 <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {visiveis.map((p) => (
-                    <CartaoProduto key={p.id} produto={p} />
+                    <CartaoProduto
+                      key={p.id}
+                      produto={p}
+                      noCarrinho={noCarrinho(p.id)}
+                      onAdicionar={() => alterarQuantidade(p.id, 1)}
+                      onVerCarrinho={abrirCarrinho}
+                      onVerDetalhes={() => setDetalhe(p)}
+                    />
                   ))}
                 </ul>
               </>
@@ -211,9 +244,9 @@ export default function Loja() {
             </h2>
             <div className="mt-8 space-y-3">
               {[
-                ['Como faço para pagar?', 'Aceitamos Pix, cartão e boleto. Combinamos tudo pelo WhatsApp, com calma.'],
+                ['Como faço para pagar?', 'Você escolhe Pix, cartão de crédito ou boleto ao finalizar o pedido no carrinho. Depois confirmamos tudo pelo WhatsApp, com calma.'],
                 ['Quanto tempo demora?', 'A maioria das peças fica pronta em poucos dias. O prazo exato informamos no atendimento.'],
-                ['Vocês entregam na minha cidade?', 'Enviamos para todo o Brasil pelos Correios ou transportadora.'],
+                ['Vocês entregam na minha cidade?', `Enviamos para todo o Brasil. A entrega custa ${formatarPreco(loja.taxaEntrega)}, valor fixo.`],
                 ['Posso escolher a cor ou personalizar?', 'Sim! Temos várias cores e fazemos peças com nome, logo ou do tamanho que você precisar.'],
               ].map(([pergunta, resposta]) => (
                 <details key={pergunta} className="group rounded-2xl bg-stone-50 ring-1 ring-stone-200 open:bg-brand-50/60">
@@ -248,15 +281,114 @@ export default function Loja() {
         <p className="mt-4 text-sm">© {new Date().getFullYear()} · Todos os direitos reservados</p>
       </footer>
 
-      <a
-        href={linkWhatsApp(msgGeral)}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Conversar no WhatsApp"
-        className="fixed bottom-5 right-5 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl ring-4 ring-white transition hover:scale-105 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+      {totalItens > 0 ? (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-white/95 p-3 backdrop-blur">
+          <button
+            type="button"
+            onClick={abrirCarrinho}
+            className="mx-auto flex min-h-14 w-full max-w-xl items-center justify-between gap-3 rounded-2xl bg-slate-900 px-5 text-lg font-bold text-white shadow-lg transition hover:bg-slate-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+          >
+            <span className="flex items-center gap-3">
+              <IconeCarrinho className="h-6 w-6" />
+              <span>
+                Ver carrinho ({totalItens})<span className="sr-only"> {totalItens === 1 ? 'item' : 'itens'}</span>
+              </span>
+            </span>
+            <span>{formatarPreco(totalCentavos / 100)}</span>
+          </button>
+        </div>
+      ) : (
+        <a
+          href={linkWhatsApp(msgGeral)}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Conversar no WhatsApp"
+          className="fixed bottom-5 right-5 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl ring-4 ring-white transition hover:scale-105 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+        >
+          <IconeWhatsApp className="h-9 w-9" />
+        </a>
+      )}
+
+      {detalhe && (
+        <DetalhesProduto
+          key={detalhe.id}
+          produto={detalhe}
+          noCarrinho={noCarrinho(detalhe.id)}
+          onAdicionar={() => alterarQuantidade(detalhe.id, 1)}
+          onVerCarrinho={abrirCarrinho}
+          onFechar={() => setDetalhe(null)}
+        />
+      )}
+
+      <Carrinho
+        dialogRef={carrinhoRef}
+        itens={itens}
+        subtotalCentavos={totalCentavos}
+        onAlterar={alterarQuantidade}
+        onEsvaziar={() => setCarrinho({})}
+      />
+    </div>
+  )
+}
+
+function BotaoAdicionar({
+  produto,
+  noCarrinho,
+  onAdicionar,
+  onVerCarrinho,
+  className = '',
+}: {
+  produto: Produto
+  noCarrinho: number
+  onAdicionar: () => void
+  onVerCarrinho: () => void
+  className?: string
+}) {
+  const [adicionado, setAdicionado] = useState(0)
+
+  useEffect(() => {
+    if (!adicionado) return
+    const t = setTimeout(() => setAdicionado(0), 1500)
+    return () => clearTimeout(t)
+  }, [adicionado])
+
+  if (!produto.preco) {
+    return (
+      <BotaoWhatsApp href={linkWhatsApp(mensagemProduto(produto))} className={`w-full ${className}`}>
+        Pedir orçamento
+      </BotaoWhatsApp>
+    )
+  }
+
+  return (
+    <div className={className}>
+      <button
+        type="button"
+        onClick={() => {
+          onAdicionar()
+          setAdicionado((n) => n + 1)
+        }}
+        disabled={noCarrinho >= QTD_MAXIMA}
+        className={`inline-flex min-h-14 w-full items-center justify-center gap-2.5 rounded-2xl px-5 text-lg font-bold text-white shadow-md transition focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400 disabled:opacity-50 ${
+          adicionado ? 'bg-brand-600' : 'bg-slate-900 hover:bg-slate-700'
+        }`}
       >
-        <IconeWhatsApp className="h-9 w-9" />
-      </a>
+        {adicionado ? (
+          '✓ Adicionado!'
+        ) : (
+          <>
+            <IconeCarrinho className="h-6 w-6 shrink-0" />
+            Adicionar ao carrinho
+          </>
+        )}
+      </button>
+      <p className="mt-2 min-h-7 text-center text-base" aria-live="polite">
+        {noCarrinho > 0 && (
+          <button type="button" onClick={onVerCarrinho} className="font-semibold text-brand-700 underline underline-offset-4 hover:text-brand-900">
+            {noCarrinho} no carrinho · Ver carrinho
+          </button>
+        )}
+      </p>
     </div>
   )
 }
@@ -269,15 +401,20 @@ const percentualDesconto = (p: Produto) =>
 const mensagemProduto = (p: Produto) =>
   `Olá! Tenho interesse no produto *${p.nome}*${p.preco ? ` (${formatarPreco(p.preco)})` : ''}. Pode me passar mais informações?`
 
-function CartaoProduto({ produto: p }: { produto: Produto }) {
-  const dialogRef = useRef<HTMLDialogElement>(null)
+type PropsCarrinho = { noCarrinho: number; onAdicionar: () => void; onVerCarrinho: () => void }
+
+function CartaoProduto({
+  produto: p,
+  onVerDetalhes,
+  ...carrinho
+}: { produto: Produto; onVerDetalhes: () => void } & PropsCarrinho) {
   const temDetalhes = Boolean(p.detalhes || p.caracteristicas?.length || (p.fotos?.length ?? 0) > 1)
 
   return (
     <li className="flex flex-col overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 transition hover:-translate-y-1 hover:shadow-xl">
       <button
         type="button"
-        onClick={() => temDetalhes && dialogRef.current?.showModal()}
+        onClick={() => temDetalhes && onVerDetalhes()}
         tabIndex={temDetalhes ? 0 : -1}
         aria-label={temDetalhes ? `Ver detalhes de ${p.nome}` : undefined}
         className={`relative block ${temDetalhes ? 'cursor-pointer' : 'cursor-default'}`}
@@ -292,14 +429,12 @@ function CartaoProduto({ produto: p }: { produto: Produto }) {
         <h3 className="text-xl font-bold leading-snug text-slate-900">{p.nome}</h3>
         <p className="mt-2 flex-1 text-slate-600">{p.descricao}</p>
         <Preco produto={p} className="mt-4" />
-        <BotaoWhatsApp href={linkWhatsApp(mensagemProduto(p))} className="mt-4 w-full">
-          {p.preco ? 'Comprar pelo WhatsApp' : 'Pedir orçamento'}
-        </BotaoWhatsApp>
+        <BotaoAdicionar produto={p} {...carrinho} className="mt-4" />
         {temDetalhes && (
           <button
             type="button"
-            onClick={() => dialogRef.current?.showModal()}
-            className="mt-3 min-h-12 rounded-2xl border-2 border-slate-300 font-bold text-slate-700 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+            onClick={onVerDetalhes}
+            className="mt-1 min-h-12 rounded-2xl border-2 border-slate-300 font-bold text-slate-700 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
           >
             Ver detalhes
           </button>
@@ -314,7 +449,6 @@ function CartaoProduto({ produto: p }: { produto: Produto }) {
           </div>
         )}
       </div>
-      {temDetalhes && <DetalhesProduto produto={p} dialogRef={dialogRef} />}
     </li>
   )
 }
@@ -361,15 +495,26 @@ function Preco({ produto: p, className = '' }: { produto: Produto; className?: s
   )
 }
 
-function DetalhesProduto({ produto: p, dialogRef }: { produto: Produto; dialogRef: React.RefObject<HTMLDialogElement> }) {
+function DetalhesProduto({
+  produto: p,
+  onVerCarrinho,
+  onFechar,
+  ...carrinho
+}: { produto: Produto; onFechar: () => void } & PropsCarrinho) {
   const [fotoAtual, setFotoAtual] = useState(0)
+  const dialogRef = useRef<HTMLDialogElement>(null)
   const fotos = p.fotos ?? []
   const fechar = () => dialogRef.current?.close()
+
+  useEffect(() => {
+    if (!dialogRef.current?.open) dialogRef.current?.showModal()
+  }, [])
 
   return (
     <dialog
       ref={dialogRef}
       aria-label={p.nome}
+      onClose={onFechar}
       onClick={(e) => e.target === e.currentTarget && fechar()}
       className="m-auto w-[calc(100%-2rem)] max-w-3xl rounded-3xl bg-white p-0 text-lg text-slate-800 shadow-2xl backdrop:bg-slate-900/60"
     >
@@ -409,9 +554,15 @@ function DetalhesProduto({ produto: p, dialogRef }: { produto: Produto; dialogRe
           <p className="text-sm font-bold uppercase tracking-wide text-brand-700">{p.categoria}</p>
           <h3 className="mt-1 text-2xl font-extrabold leading-snug text-slate-900">{p.nome}</h3>
           <Preco produto={p} className="mt-4" />
-          <BotaoWhatsApp href={linkWhatsApp(mensagemProduto(p))} className="mt-5 w-full">
-            {p.preco ? 'Comprar pelo WhatsApp' : 'Pedir orçamento'}
-          </BotaoWhatsApp>
+          <BotaoAdicionar
+            produto={p}
+            {...carrinho}
+            onVerCarrinho={() => {
+              fechar()
+              onVerCarrinho()
+            }}
+            className="mt-5"
+          />
         </div>
         {p.detalhes && (
           <div className="space-y-4 text-slate-700 md:col-span-2">
@@ -439,45 +590,115 @@ function DetalhesProduto({ produto: p, dialogRef }: { produto: Produto; dialogRe
   )
 }
 
-function BotaoWhatsApp({
-  href,
-  children,
-  className = '',
-  tamanho = 'grande',
-}: {
-  href: string
-  children: React.ReactNode
-  className?: string
-  tamanho?: 'grande' | 'pequeno'
-}) {
-  const tam = tamanho === 'grande' ? 'min-h-14 px-5 text-lg gap-2.5' : 'min-h-11 px-4 text-base gap-2'
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`inline-flex items-center justify-center rounded-2xl bg-[#25D366] text-center leading-tight font-bold text-white shadow-md transition hover:bg-[#1ebe5a] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-brand-700 ${tam} ${className}`}
-    >
-      <IconeWhatsApp className={`shrink-0 ${tamanho === 'grande' ? 'h-7 w-7' : 'h-5 w-5'}`} />
-      <span>{children}</span>
-    </a>
-  )
-}
-
-function IconeWhatsApp({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-    </svg>
-  )
-}
-
 function Decoracao() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0">
       <div className="absolute -left-16 top-10 h-48 w-48 rotate-12 rounded-[2.5rem] bg-brand-200/50" />
       <div className="absolute -right-10 top-32 h-36 w-36 -rotate-12 rounded-[2rem] bg-amber-200/60" />
       <div className="absolute bottom-6 left-1/4 h-20 w-20 rotate-45 rounded-2xl bg-sky-200/50" />
+    </div>
+  )
+}
+
+function FiltroCategorias({
+  categorias,
+  ativa,
+  onEscolher,
+  className = '',
+}: {
+  categorias: string[]
+  ativa: string
+  onEscolher: (categoria: string) => void
+  className?: string
+}) {
+  return (
+    <div role="group" aria-label="Filtrar por categoria" className={`flex flex-wrap justify-center gap-2 ${className}`}>
+      {categorias.map((c) => (
+        <button
+          key={c}
+          type="button"
+          onClick={() => onEscolher(c)}
+          aria-pressed={ativa === c}
+          className={`inline-flex min-h-12 items-center gap-2 rounded-full px-5 text-base font-semibold transition focus-visible:outline focus-visible:outline-4 focus-visible:outline-brand-300 ${
+            ativa === c ? 'bg-brand-600 text-white shadow' : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
+          }`}
+        >
+          {iconesCategorias[c] && <span aria-hidden>{iconesCategorias[c]}</span>}
+          {c}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+const SEGUNDOS_POR_PRODUTO = 4
+
+function Carrossel({ itens, onAbrir }: { itens: Produto[]; onAbrir: (p: Produto) => void }) {
+  const [pausado, setPausado] = useState(false)
+  if (itens.length === 0) return null
+
+  // Repete a lista para preencher telas largas; a trilha tem duas metades iguais para o loop não dar salto.
+  const metade = Array.from({ length: Math.ceil(8 / itens.length) }, () => itens).flat()
+  const trilha = [...metade, ...metade]
+
+  return (
+    <div className="mt-4">
+      <div className="group overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_2%,black_98%,transparent)] motion-reduce:overflow-x-auto">
+        <ul
+          className={`flex w-max items-start animate-carrossel py-2 group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] motion-reduce:animate-none ${
+            pausado ? '[animation-play-state:paused]' : ''
+          }`}
+          style={{ animationDuration: `${metade.length * SEGUNDOS_POR_PRODUTO}s` }}
+        >
+          {trilha.map((p, i) => {
+            const copia = i >= itens.length
+            return (
+              <li key={i} aria-hidden={copia || undefined} className={`pl-4 ${copia ? 'motion-reduce:hidden' : ''}`}>
+                <button
+                  type="button"
+                  tabIndex={copia ? -1 : undefined}
+                  onClick={() => onAbrir(p)}
+                  aria-label={`${p.nome}${p.preco ? `, ${formatarPreco(p.preco)}` : ''}. Ver detalhes`}
+                  className="flex w-52 flex-col overflow-hidden rounded-3xl bg-stone-50 text-left ring-1 ring-stone-200 transition hover:-translate-y-1 hover:shadow-lg focus-visible:outline focus-visible:outline-4 focus-visible:outline-brand-300 sm:w-60"
+                >
+                  <span className="relative block h-52 w-full shrink-0 overflow-hidden bg-white sm:h-60">
+                    {p.fotos?.[0] ? (
+                      <img src={`${base}produtos/${p.fotos[0]}`} alt="" loading="lazy" className="h-full w-full object-cover" />
+                    ) : (
+                      <span className="flex h-full items-center justify-center text-7xl" aria-hidden>{p.emoji ?? '📦'}</span>
+                    )}
+                    <SeloDesconto produto={p} className="absolute right-3 top-3 text-sm" />
+                  </span>
+                  <span className="block p-4">
+                    <span className="line-clamp-2 min-h-[3rem] text-base font-bold leading-6 text-slate-900">{p.nome}</span>
+                    {p.preco ? (
+                      <span className="mt-2 flex flex-wrap items-baseline gap-x-2">
+                        <span className="text-2xl font-extrabold text-slate-900">{formatarPreco(p.preco)}</span>
+                        {percentualDesconto(p) > 0 && <s className="text-base text-slate-500">{formatarPreco(p.precoOriginal!)}</s>}
+                      </span>
+                    ) : (
+                      <span className="mt-2 block text-xl font-extrabold text-slate-500">Sob consulta</span>
+                    )}
+                  </span>
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+      <div className="mx-auto mt-1 flex max-w-6xl justify-end px-4 motion-reduce:hidden">
+        <button
+          type="button"
+          onClick={() => setPausado((v) => !v)}
+          aria-pressed={pausado}
+          className="inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-base font-semibold text-slate-600 underline-offset-4 hover:text-slate-900 hover:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className="h-4 w-4">
+            {pausado ? <path d="M7 4.5v15l13-7.5z" /> : <path d="M6 4h4v16H6zM14 4h4v16h-4z" />}
+          </svg>
+          {pausado ? 'Continuar' : 'Pausar'}
+        </button>
+      </div>
     </div>
   )
 }
