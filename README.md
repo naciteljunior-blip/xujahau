@@ -1,6 +1,6 @@
 # Loja 3D + Calculadora de Custo
 
-- **Página principal (`/`)**: loja para os clientes verem os produtos, montarem um carrinho e enviarem o pedido (com itens, quantidades e total) pelo WhatsApp. O carrinho fica salvo no navegador do cliente.
+- **Página principal (`/`)**: loja para os clientes verem os produtos, montarem um carrinho e enviarem o pedido pelo WhatsApp. Antes de enviar, o cliente informa nome, endereço (o CEP preenche rua, bairro, cidade e estado via ViaCEP) e forma de pagamento; a mensagem chega com itens, subtotal, taxa de entrega fixa (`taxaEntrega` em `src/loja/config.ts`) e total. Carrinho e dados de entrega ficam salvos no navegador do cliente.
 - **Calculadora (`/#calculadora`)**: ferramenta interna, sem nenhum link na loja.
 
 ## Personalizando a loja

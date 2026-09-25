@@ -30,6 +30,9 @@ export const loja = {
   whatsapp: '5511916133318',
   cidade: 'Enviamos para todo o Brasil',
   instagram: '', // ex.: 'https://instagram.com/thinklab'
+  /** Taxa fixa de entrega em reais, somada ao total do carrinho. */
+  taxaEntrega: 10,
+  formasPagamento: ['Pix', 'Cartão de crédito', 'Boleto'],
   /** Vazio = a seção de marketplaces não aparece. Ex.: { nome: 'Shopee', url: '...', cor: 'bg-orange-500 hover:bg-orange-600' } */
   marketplaces: [] as Marketplace[],
 }
