@@ -1,6 +1,6 @@
 # Loja 3D + Calculadora de Custo
 
-- **Página principal (`/`)**: loja para os clientes verem os produtos e comprarem pelo WhatsApp (pessoas e empresas) ou pelos marketplaces.
+- **Página principal (`/`)**: loja para os clientes verem os produtos, montarem um carrinho e enviarem o pedido (com itens, quantidades e total) pelo WhatsApp. O carrinho fica salvo no navegador do cliente.
 - **Calculadora (`/#calculadora`)**: ferramenta interna, sem nenhum link na loja.
 
 ## Personalizando a loja

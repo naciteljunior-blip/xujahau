@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 import { loja, produtos, type Produto } from './config'
+
+type ItemCarrinho = { produto: Produto; quantidade: number }
+
+const QTD_MAXIMA = 99
+const centavos = (valor: number) => Math.round(valor * 100)
 
 const base = import.meta.env.BASE_URL
 
@@ -19,10 +25,42 @@ Produto desejado:
 Quantidade:
 Prazo:`
 
+function mensagemPedido(itens: ItemCarrinho[], totalCentavos: number) {
+  const linhas = itens.map(
+    ({ produto, quantidade }) =>
+      `• ${quantidade}x ${produto.nome} — ${formatarPreco((centavos(produto.preco!) * quantidade) / 100)}`,
+  )
+  return `Olá! Quero fazer este pedido na ${loja.nome}:
+
+${linhas.join('\n')}
+
+*Total: ${formatarPreco(totalCentavos / 100)}*
+
+Pode me passar o frete e as formas de pagamento?`
+}
+
 export default function Loja() {
   const [categoria, setCategoria] = useState('Todos')
   const categorias = useMemo(() => ['Todos', ...new Set(produtos.map((p) => p.categoria))], [])
   const visiveis = categoria === 'Todos' ? produtos : produtos.filter((p) => p.categoria === categoria)
+
+  const [carrinho, setCarrinho] = useLocalStorage<Record<string, number>>('thinklab-carrinho', {})
+  const carrinhoRef = useRef<HTMLDialogElement>(null)
+  const itens: ItemCarrinho[] = produtos
+    .filter((p) => p.preco && Number.isInteger(carrinho[p.id]) && carrinho[p.id] > 0)
+    .map((p) => ({ produto: p, quantidade: Math.min(carrinho[p.id], QTD_MAXIMA) }))
+  const totalItens = itens.reduce((soma, i) => soma + i.quantidade, 0)
+  const totalCentavos = itens.reduce((soma, i) => soma + centavos(i.produto.preco!) * i.quantidade, 0)
+
+  const alterarQuantidade = (id: string, delta: number) =>
+    setCarrinho((atual) => {
+      const nova = Math.min((Number.isInteger(atual[id]) ? atual[id] : 0) + delta, QTD_MAXIMA)
+      const copia = { ...atual }
+      if (nova > 0) copia[id] = nova
+      else delete copia[id]
+      return copia
+    })
+  const abrirCarrinho = () => carrinhoRef.current?.showModal()
 
   useEffect(() => {
     document.documentElement.classList.remove('dark')
@@ -30,7 +68,7 @@ export default function Loja() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-stone-50 text-lg text-slate-800">
+    <div className={`min-h-screen bg-stone-50 text-lg text-slate-800 ${totalItens > 0 ? 'pb-24' : ''}`}>
       <a href="#produtos" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:p-3">
         Pular para os produtos
       </a>
@@ -46,9 +84,25 @@ export default function Loja() {
             <a href="#empresas" className="hover:text-brand-700">Para empresas</a>
             <a href="#duvidas" className="hover:text-brand-700">Dúvidas</a>
           </nav>
-          <BotaoWhatsApp href={linkWhatsApp(msgGeral)} tamanho="pequeno">
-            WhatsApp
-          </BotaoWhatsApp>
+          <div className="flex items-center gap-2">
+            <BotaoWhatsApp href={linkWhatsApp(msgGeral)} tamanho="pequeno" className="hidden sm:inline-flex">
+              WhatsApp
+            </BotaoWhatsApp>
+            <button
+              type="button"
+              onClick={abrirCarrinho}
+              aria-label={`Abrir carrinho, ${totalItens} ${totalItens === 1 ? 'item' : 'itens'}`}
+              className="relative inline-flex min-h-11 items-center gap-2 rounded-2xl bg-slate-900 px-4 text-base font-bold text-white shadow-md transition hover:bg-slate-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+            >
+              <IconeCarrinho className="h-5 w-5" />
+              Carrinho
+              {totalItens > 0 && (
+                <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-brand-500 px-1.5 text-sm font-extrabold">
+                  {totalItens}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
       </header>
 
@@ -84,8 +138,8 @@ export default function Loja() {
           </h2>
           <ol className="mt-8 grid gap-5 md:grid-cols-3">
             {[
-              ['👀', 'Escolha', 'Veja os produtos abaixo e escolha o que você gostou.'],
-              ['💬', 'Chame no WhatsApp', 'Toque no botão verde. A mensagem já vai pronta.'],
+              ['🛒', 'Escolha', 'Toque em “Adicionar ao carrinho” nos produtos que você gostou.'],
+              ['💬', 'Envie pelo WhatsApp', 'Abra o carrinho e toque no botão verde. O pedido já vai pronto, com o total.'],
               ['🚚', 'Receba', 'Combinamos o pagamento e a entrega com você.'],
             ].map(([icone, titulo, texto], i) => (
               <li key={titulo} className="flex items-start gap-4 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
@@ -144,7 +198,13 @@ export default function Loja() {
 
                 <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {visiveis.map((p) => (
-                    <CartaoProduto key={p.id} produto={p} />
+                    <CartaoProduto
+                      key={p.id}
+                      produto={p}
+                      noCarrinho={itens.find((i) => i.produto.id === p.id)?.quantidade ?? 0}
+                      onAdicionar={() => alterarQuantidade(p.id, 1)}
+                      onVerCarrinho={abrirCarrinho}
+                    />
                   ))}
                 </ul>
               </>
@@ -248,16 +308,250 @@ export default function Loja() {
         <p className="mt-4 text-sm">© {new Date().getFullYear()} · Todos os direitos reservados</p>
       </footer>
 
-      <a
-        href={linkWhatsApp(msgGeral)}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Conversar no WhatsApp"
-        className="fixed bottom-5 right-5 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl ring-4 ring-white transition hover:scale-105 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
-      >
-        <IconeWhatsApp className="h-9 w-9" />
-      </a>
+      {totalItens > 0 ? (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-white/95 p-3 backdrop-blur">
+          <button
+            type="button"
+            onClick={abrirCarrinho}
+            className="mx-auto flex min-h-14 w-full max-w-xl items-center justify-between gap-3 rounded-2xl bg-slate-900 px-5 text-lg font-bold text-white shadow-lg transition hover:bg-slate-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+          >
+            <span className="flex items-center gap-3">
+              <IconeCarrinho className="h-6 w-6" />
+              <span>
+                Ver carrinho ({totalItens})<span className="sr-only"> {totalItens === 1 ? 'item' : 'itens'}</span>
+              </span>
+            </span>
+            <span>{formatarPreco(totalCentavos / 100)}</span>
+          </button>
+        </div>
+      ) : (
+        <a
+          href={linkWhatsApp(msgGeral)}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Conversar no WhatsApp"
+          className="fixed bottom-5 right-5 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl ring-4 ring-white transition hover:scale-105 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+        >
+          <IconeWhatsApp className="h-9 w-9" />
+        </a>
+      )}
+
+      <Carrinho
+        dialogRef={carrinhoRef}
+        itens={itens}
+        totalCentavos={totalCentavos}
+        onAlterar={alterarQuantidade}
+        onEsvaziar={() => setCarrinho({})}
+      />
     </div>
+  )
+}
+
+function Carrinho({
+  dialogRef,
+  itens,
+  totalCentavos,
+  onAlterar,
+  onEsvaziar,
+}: {
+  dialogRef: React.RefObject<HTMLDialogElement>
+  itens: ItemCarrinho[]
+  totalCentavos: number
+  onAlterar: (id: string, delta: number) => void
+  onEsvaziar: () => void
+}) {
+  const fechar = () => dialogRef.current?.close()
+
+  return (
+    <dialog
+      ref={dialogRef}
+      aria-labelledby="titulo-carrinho"
+      onClick={(e) => e.target === e.currentTarget && fechar()}
+      className="my-0 ml-auto mr-0 h-dvh max-h-dvh w-full max-w-md bg-white p-0 text-lg text-slate-800 shadow-2xl backdrop:bg-slate-900/60 sm:rounded-l-3xl"
+    >
+      <div className="flex h-full flex-col">
+        <div className="flex items-center justify-between gap-3 border-b border-stone-200 px-5 py-3">
+          <h2 id="titulo-carrinho" className="flex items-center gap-2 text-2xl font-extrabold text-slate-900">
+            <IconeCarrinho className="h-7 w-7" /> Seu carrinho
+          </h2>
+          <button
+            type="button"
+            onClick={fechar}
+            className="min-h-12 rounded-2xl bg-stone-100 px-5 font-bold text-slate-700 hover:bg-stone-200 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400"
+          >
+            ✕ Fechar
+          </button>
+        </div>
+
+        {itens.length === 0 ? (
+          <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
+            <span className="text-6xl" aria-hidden>🛒</span>
+            <p className="text-xl font-bold text-slate-900">Seu carrinho está vazio</p>
+            <p className="text-slate-600">Toque em “Adicionar ao carrinho” nos produtos que você gostar.</p>
+            <a
+              href="#produtos"
+              onClick={fechar}
+              className="mt-2 inline-flex min-h-14 items-center justify-center rounded-2xl bg-slate-900 px-8 font-bold text-white hover:bg-slate-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+            >
+              Ver produtos
+            </a>
+          </div>
+        ) : (
+          <>
+            <ul className="flex-1 divide-y divide-stone-200 overflow-y-auto px-5">
+              {itens.map(({ produto: p, quantidade }) => (
+                <li key={p.id} className="flex gap-4 py-4">
+                  <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl ring-1 ring-stone-200">
+                    {p.fotos?.[0] ? (
+                      <img src={`${base}produtos/${p.fotos[0]}`} alt="" className="h-full w-full bg-white object-cover" />
+                    ) : (
+                      <span className="flex h-full items-center justify-center text-4xl" aria-hidden>{p.emoji ?? '📦'}</span>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-bold leading-snug text-slate-900">{p.nome}</p>
+                    <p className="mt-1 text-base text-slate-600">{formatarPreco(p.preco!)} cada</p>
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex items-center rounded-2xl ring-2 ring-stone-200">
+                        <button
+                          type="button"
+                          onClick={() => onAlterar(p.id, -1)}
+                          aria-label={`Diminuir quantidade de ${p.nome}`}
+                          className="h-12 w-12 rounded-l-2xl text-2xl font-bold text-slate-700 hover:bg-stone-100 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400"
+                        >
+                          −
+                        </button>
+                        <span className="w-10 text-center text-xl font-extrabold" aria-live="polite" aria-label={`Quantidade: ${quantidade}`}>
+                          {quantidade}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => onAlterar(p.id, 1)}
+                          disabled={quantidade >= QTD_MAXIMA}
+                          aria-label={`Aumentar quantidade de ${p.nome}`}
+                          className="h-12 w-12 rounded-r-2xl text-2xl font-bold text-slate-700 hover:bg-stone-100 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400 disabled:opacity-40"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <p className="text-xl font-extrabold text-slate-900">
+                        {formatarPreco((centavos(p.preco!) * quantidade) / 100)}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => onAlterar(p.id, -quantidade)}
+                      className="mt-2 min-h-10 text-base font-semibold text-red-700 underline underline-offset-4 hover:text-red-900"
+                    >
+                      Remover
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="border-t border-stone-200 bg-stone-50 px-5 py-4">
+              <div className="flex items-baseline justify-between">
+                <span className="text-xl font-bold text-slate-900">Total</span>
+                <span className="text-3xl font-extrabold text-slate-900">{formatarPreco(totalCentavos / 100)}</span>
+              </div>
+              <p className="mt-1 text-base text-slate-600">O frete e a forma de pagamento são combinados pelo WhatsApp.</p>
+              <BotaoWhatsApp href={linkWhatsApp(mensagemPedido(itens, totalCentavos))} className="mt-4 w-full">
+                Enviar pedido pelo WhatsApp
+              </BotaoWhatsApp>
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={fechar}
+                  className="min-h-12 rounded-2xl border-2 border-slate-300 px-4 font-bold text-slate-700 hover:border-slate-500 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400"
+                >
+                  Continuar comprando
+                </button>
+                <button
+                  type="button"
+                  onClick={() => window.confirm('Tirar todos os produtos do carrinho?') && onEsvaziar()}
+                  className="min-h-12 px-2 text-base font-semibold text-slate-500 underline underline-offset-4 hover:text-slate-800"
+                >
+                  Esvaziar
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </dialog>
+  )
+}
+
+function BotaoAdicionar({
+  produto,
+  noCarrinho,
+  onAdicionar,
+  onVerCarrinho,
+  className = '',
+}: {
+  produto: Produto
+  noCarrinho: number
+  onAdicionar: () => void
+  onVerCarrinho: () => void
+  className?: string
+}) {
+  const [adicionado, setAdicionado] = useState(0)
+
+  useEffect(() => {
+    if (!adicionado) return
+    const t = setTimeout(() => setAdicionado(0), 1500)
+    return () => clearTimeout(t)
+  }, [adicionado])
+
+  if (!produto.preco) {
+    return (
+      <BotaoWhatsApp href={linkWhatsApp(mensagemProduto(produto))} className={`w-full ${className}`}>
+        Pedir orçamento
+      </BotaoWhatsApp>
+    )
+  }
+
+  return (
+    <div className={className}>
+      <button
+        type="button"
+        onClick={() => {
+          onAdicionar()
+          setAdicionado((n) => n + 1)
+        }}
+        disabled={noCarrinho >= QTD_MAXIMA}
+        className={`inline-flex min-h-14 w-full items-center justify-center gap-2.5 rounded-2xl px-5 text-lg font-bold text-white shadow-md transition focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400 disabled:opacity-50 ${
+          adicionado ? 'bg-brand-600' : 'bg-slate-900 hover:bg-slate-700'
+        }`}
+      >
+        {adicionado ? (
+          '✓ Adicionado!'
+        ) : (
+          <>
+            <IconeCarrinho className="h-6 w-6 shrink-0" />
+            Adicionar ao carrinho
+          </>
+        )}
+      </button>
+      <p className="mt-2 min-h-7 text-center text-base" aria-live="polite">
+        {noCarrinho > 0 && (
+          <button type="button" onClick={onVerCarrinho} className="font-semibold text-brand-700 underline underline-offset-4 hover:text-brand-900">
+            {noCarrinho} no carrinho · Ver carrinho
+          </button>
+        )}
+      </p>
+    </div>
+  )
+}
+
+function IconeCarrinho({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden className={className}>
+      <circle cx="9" cy="20" r="1.5" />
+      <circle cx="18" cy="20" r="1.5" />
+      <path d="M2.5 3h2.6l2.4 11.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L21 7H6" />
+    </svg>
   )
 }
 
@@ -269,7 +563,9 @@ const percentualDesconto = (p: Produto) =>
 const mensagemProduto = (p: Produto) =>
   `Olá! Tenho interesse no produto *${p.nome}*${p.preco ? ` (${formatarPreco(p.preco)})` : ''}. Pode me passar mais informações?`
 
-function CartaoProduto({ produto: p }: { produto: Produto }) {
+type PropsCarrinho = { noCarrinho: number; onAdicionar: () => void; onVerCarrinho: () => void }
+
+function CartaoProduto({ produto: p, ...carrinho }: { produto: Produto } & PropsCarrinho) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const temDetalhes = Boolean(p.detalhes || p.caracteristicas?.length || (p.fotos?.length ?? 0) > 1)
 
@@ -292,14 +588,12 @@ function CartaoProduto({ produto: p }: { produto: Produto }) {
         <h3 className="text-xl font-bold leading-snug text-slate-900">{p.nome}</h3>
         <p className="mt-2 flex-1 text-slate-600">{p.descricao}</p>
         <Preco produto={p} className="mt-4" />
-        <BotaoWhatsApp href={linkWhatsApp(mensagemProduto(p))} className="mt-4 w-full">
-          {p.preco ? 'Comprar pelo WhatsApp' : 'Pedir orçamento'}
-        </BotaoWhatsApp>
+        <BotaoAdicionar produto={p} {...carrinho} className="mt-4" />
         {temDetalhes && (
           <button
             type="button"
             onClick={() => dialogRef.current?.showModal()}
-            className="mt-3 min-h-12 rounded-2xl border-2 border-slate-300 font-bold text-slate-700 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+            className="mt-1 min-h-12 rounded-2xl border-2 border-slate-300 font-bold text-slate-700 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
           >
             Ver detalhes
           </button>
@@ -314,7 +608,7 @@ function CartaoProduto({ produto: p }: { produto: Produto }) {
           </div>
         )}
       </div>
-      {temDetalhes && <DetalhesProduto produto={p} dialogRef={dialogRef} />}
+      {temDetalhes && <DetalhesProduto produto={p} dialogRef={dialogRef} {...carrinho} />}
     </li>
   )
 }
@@ -361,7 +655,12 @@ function Preco({ produto: p, className = '' }: { produto: Produto; className?: s
   )
 }
 
-function DetalhesProduto({ produto: p, dialogRef }: { produto: Produto; dialogRef: React.RefObject<HTMLDialogElement> }) {
+function DetalhesProduto({
+  produto: p,
+  dialogRef,
+  onVerCarrinho,
+  ...carrinho
+}: { produto: Produto; dialogRef: React.RefObject<HTMLDialogElement> } & PropsCarrinho) {
   const [fotoAtual, setFotoAtual] = useState(0)
   const fotos = p.fotos ?? []
   const fechar = () => dialogRef.current?.close()
@@ -409,9 +708,15 @@ function DetalhesProduto({ produto: p, dialogRef }: { produto: Produto; dialogRe
           <p className="text-sm font-bold uppercase tracking-wide text-brand-700">{p.categoria}</p>
           <h3 className="mt-1 text-2xl font-extrabold leading-snug text-slate-900">{p.nome}</h3>
           <Preco produto={p} className="mt-4" />
-          <BotaoWhatsApp href={linkWhatsApp(mensagemProduto(p))} className="mt-5 w-full">
-            {p.preco ? 'Comprar pelo WhatsApp' : 'Pedir orçamento'}
-          </BotaoWhatsApp>
+          <BotaoAdicionar
+            produto={p}
+            {...carrinho}
+            onVerCarrinho={() => {
+              fechar()
+              onVerCarrinho()
+            }}
+            className="mt-5"
+          />
         </div>
         {p.detalhes && (
           <div className="space-y-4 text-slate-700 md:col-span-2">
