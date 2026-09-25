@@ -23,6 +23,12 @@ export type Produto = {
 
 export type Marketplace = { nome: string; url: string; cor: string }
 
+/** Ícone de cada categoria nos botões de filtro. Categoria sem ícone aparece só com o nome. */
+export const iconesCategorias: Record<string, string> = {
+  Confeitaria: '🧁',
+  Decoração: '🎄',
+}
+
 export const loja = {
   nome: 'Think Lab',
   slogan: 'Peças impressas em 3D com carinho, do jeitinho que você precisa.',

@@ -10,6 +10,7 @@ Tudo fica em `src/loja/config.ts`:
 - `whatsapp`: seu número só com números, com 55 + DDD (ex.: `5511912345678`)
 - `nome`, `slogan`, `cidade`, `instagram`
 - `marketplaces`: links da sua loja na Shopee, Mercado Livre, Elo7 etc.
+- `iconesCategorias`: emoji de cada categoria nos botões de filtro (acima do carrossel e da lista de produtos)
 - `produtos`: nome, descrição, categoria, preço (sem preço = "Sob consulta") e links do produto nos marketplaces
 
 Fotos: coloque os arquivos em `public/produtos/` e informe o nome em `imagem` (ex.: `imagem: 'vaso.jpg'`). Sem foto, o produto mostra o emoji.

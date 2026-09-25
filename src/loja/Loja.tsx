@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import Carrinho from './Carrinho'
 import { BotaoWhatsApp, IconeCarrinho, IconeWhatsApp } from './componentes'
-import { loja, produtos, type Produto } from './config'
+import { iconesCategorias, loja, produtos, type Produto } from './config'
 import { base, centavos, formatarPreco, linkWhatsApp, QTD_MAXIMA, type ItemCarrinho } from './util'
 
 const msgGeral = `Olá! Vim pelo site da ${loja.nome} e gostaria de mais informações.`
@@ -36,6 +36,9 @@ export default function Loja() {
       return copia
     })
   const abrirCarrinho = () => carrinhoRef.current?.showModal()
+  const noCarrinho = (id: string) => itens.find((i) => i.produto.id === id)?.quantidade ?? 0
+
+  const [detalhe, setDetalhe] = useState<Produto | null>(null)
 
   useEffect(() => {
     document.documentElement.classList.remove('dark')
@@ -82,6 +85,15 @@ export default function Loja() {
       </header>
 
       <main>
+        {produtos.length > 0 && (
+          <section aria-label="Destaques" className="border-b border-stone-200 bg-white pb-3 pt-5">
+            {categorias.length > 2 && (
+              <FiltroCategorias categorias={categorias} ativa={categoria} onEscolher={setCategoria} className="mx-auto max-w-6xl px-4" />
+            )}
+            <Carrossel key={categoria} itens={visiveis} onAbrir={setDetalhe} />
+          </section>
+        )}
+
         <section id="inicio" className="relative overflow-hidden bg-gradient-to-b from-brand-50 to-stone-50">
           <Decoracao />
           <div className="relative mx-auto max-w-6xl px-4 py-16 text-center md:py-24">
@@ -153,22 +165,7 @@ export default function Loja() {
                 <p className="mt-2 text-center text-slate-600">Não achou o que procura? Fazemos sob encomenda!</p>
 
                 {categorias.length > 2 && (
-                <div role="group" aria-label="Filtrar por categoria" className="mt-8 flex flex-wrap justify-center gap-2">
-                  {categorias.map((c) => (
-                    <button
-                      key={c}
-                      onClick={() => setCategoria(c)}
-                      aria-pressed={categoria === c}
-                      className={`min-h-12 rounded-full px-5 text-base font-semibold transition focus-visible:outline focus-visible:outline-4 focus-visible:outline-brand-300 ${
-                        categoria === c
-                          ? 'bg-brand-600 text-white shadow'
-                          : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
-                      }`}
-                    >
-                      {c}
-                    </button>
-                  ))}
-                </div>
+                  <FiltroCategorias categorias={categorias} ativa={categoria} onEscolher={setCategoria} className="mt-8" />
                 )}
 
                 <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -176,9 +173,10 @@ export default function Loja() {
                     <CartaoProduto
                       key={p.id}
                       produto={p}
-                      noCarrinho={itens.find((i) => i.produto.id === p.id)?.quantidade ?? 0}
+                      noCarrinho={noCarrinho(p.id)}
                       onAdicionar={() => alterarQuantidade(p.id, 1)}
                       onVerCarrinho={abrirCarrinho}
+                      onVerDetalhes={() => setDetalhe(p)}
                     />
                   ))}
                 </ul>
@@ -311,6 +309,17 @@ export default function Loja() {
         </a>
       )}
 
+      {detalhe && (
+        <DetalhesProduto
+          key={detalhe.id}
+          produto={detalhe}
+          noCarrinho={noCarrinho(detalhe.id)}
+          onAdicionar={() => alterarQuantidade(detalhe.id, 1)}
+          onVerCarrinho={abrirCarrinho}
+          onFechar={() => setDetalhe(null)}
+        />
+      )}
+
       <Carrinho
         dialogRef={carrinhoRef}
         itens={itens}
@@ -394,15 +403,18 @@ const mensagemProduto = (p: Produto) =>
 
 type PropsCarrinho = { noCarrinho: number; onAdicionar: () => void; onVerCarrinho: () => void }
 
-function CartaoProduto({ produto: p, ...carrinho }: { produto: Produto } & PropsCarrinho) {
-  const dialogRef = useRef<HTMLDialogElement>(null)
+function CartaoProduto({
+  produto: p,
+  onVerDetalhes,
+  ...carrinho
+}: { produto: Produto; onVerDetalhes: () => void } & PropsCarrinho) {
   const temDetalhes = Boolean(p.detalhes || p.caracteristicas?.length || (p.fotos?.length ?? 0) > 1)
 
   return (
     <li className="flex flex-col overflow-hidden rounded-3xl bg-stone-50 ring-1 ring-stone-200 transition hover:-translate-y-1 hover:shadow-xl">
       <button
         type="button"
-        onClick={() => temDetalhes && dialogRef.current?.showModal()}
+        onClick={() => temDetalhes && onVerDetalhes()}
         tabIndex={temDetalhes ? 0 : -1}
         aria-label={temDetalhes ? `Ver detalhes de ${p.nome}` : undefined}
         className={`relative block ${temDetalhes ? 'cursor-pointer' : 'cursor-default'}`}
@@ -421,7 +433,7 @@ function CartaoProduto({ produto: p, ...carrinho }: { produto: Produto } & Props
         {temDetalhes && (
           <button
             type="button"
-            onClick={() => dialogRef.current?.showModal()}
+            onClick={onVerDetalhes}
             className="mt-1 min-h-12 rounded-2xl border-2 border-slate-300 font-bold text-slate-700 transition hover:border-slate-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
           >
             Ver detalhes
@@ -437,7 +449,6 @@ function CartaoProduto({ produto: p, ...carrinho }: { produto: Produto } & Props
           </div>
         )}
       </div>
-      {temDetalhes && <DetalhesProduto produto={p} dialogRef={dialogRef} {...carrinho} />}
     </li>
   )
 }
@@ -486,18 +497,24 @@ function Preco({ produto: p, className = '' }: { produto: Produto; className?: s
 
 function DetalhesProduto({
   produto: p,
-  dialogRef,
   onVerCarrinho,
+  onFechar,
   ...carrinho
-}: { produto: Produto; dialogRef: React.RefObject<HTMLDialogElement> } & PropsCarrinho) {
+}: { produto: Produto; onFechar: () => void } & PropsCarrinho) {
   const [fotoAtual, setFotoAtual] = useState(0)
+  const dialogRef = useRef<HTMLDialogElement>(null)
   const fotos = p.fotos ?? []
   const fechar = () => dialogRef.current?.close()
+
+  useEffect(() => {
+    if (!dialogRef.current?.open) dialogRef.current?.showModal()
+  }, [])
 
   return (
     <dialog
       ref={dialogRef}
       aria-label={p.nome}
+      onClose={onFechar}
       onClick={(e) => e.target === e.currentTarget && fechar()}
       className="m-auto w-[calc(100%-2rem)] max-w-3xl rounded-3xl bg-white p-0 text-lg text-slate-800 shadow-2xl backdrop:bg-slate-900/60"
     >
@@ -579,6 +596,109 @@ function Decoracao() {
       <div className="absolute -left-16 top-10 h-48 w-48 rotate-12 rounded-[2.5rem] bg-brand-200/50" />
       <div className="absolute -right-10 top-32 h-36 w-36 -rotate-12 rounded-[2rem] bg-amber-200/60" />
       <div className="absolute bottom-6 left-1/4 h-20 w-20 rotate-45 rounded-2xl bg-sky-200/50" />
+    </div>
+  )
+}
+
+function FiltroCategorias({
+  categorias,
+  ativa,
+  onEscolher,
+  className = '',
+}: {
+  categorias: string[]
+  ativa: string
+  onEscolher: (categoria: string) => void
+  className?: string
+}) {
+  return (
+    <div role="group" aria-label="Filtrar por categoria" className={`flex flex-wrap justify-center gap-2 ${className}`}>
+      {categorias.map((c) => (
+        <button
+          key={c}
+          type="button"
+          onClick={() => onEscolher(c)}
+          aria-pressed={ativa === c}
+          className={`inline-flex min-h-12 items-center gap-2 rounded-full px-5 text-base font-semibold transition focus-visible:outline focus-visible:outline-4 focus-visible:outline-brand-300 ${
+            ativa === c ? 'bg-brand-600 text-white shadow' : 'bg-stone-100 text-slate-700 hover:bg-stone-200'
+          }`}
+        >
+          {iconesCategorias[c] && <span aria-hidden>{iconesCategorias[c]}</span>}
+          {c}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+const SEGUNDOS_POR_PRODUTO = 4
+
+function Carrossel({ itens, onAbrir }: { itens: Produto[]; onAbrir: (p: Produto) => void }) {
+  const [pausado, setPausado] = useState(false)
+  if (itens.length === 0) return null
+
+  // Repete a lista para preencher telas largas; a trilha tem duas metades iguais para o loop não dar salto.
+  const metade = Array.from({ length: Math.ceil(8 / itens.length) }, () => itens).flat()
+  const trilha = [...metade, ...metade]
+
+  return (
+    <div className="mt-4">
+      <div className="group overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_2%,black_98%,transparent)] motion-reduce:overflow-x-auto">
+        <ul
+          className={`flex w-max items-start animate-carrossel py-2 group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] motion-reduce:animate-none ${
+            pausado ? '[animation-play-state:paused]' : ''
+          }`}
+          style={{ animationDuration: `${metade.length * SEGUNDOS_POR_PRODUTO}s` }}
+        >
+          {trilha.map((p, i) => {
+            const copia = i >= itens.length
+            return (
+              <li key={i} aria-hidden={copia || undefined} className={`pl-4 ${copia ? 'motion-reduce:hidden' : ''}`}>
+                <button
+                  type="button"
+                  tabIndex={copia ? -1 : undefined}
+                  onClick={() => onAbrir(p)}
+                  aria-label={`${p.nome}${p.preco ? `, ${formatarPreco(p.preco)}` : ''}. Ver detalhes`}
+                  className="flex w-52 flex-col overflow-hidden rounded-3xl bg-stone-50 text-left ring-1 ring-stone-200 transition hover:-translate-y-1 hover:shadow-lg focus-visible:outline focus-visible:outline-4 focus-visible:outline-brand-300 sm:w-60"
+                >
+                  <span className="relative block h-52 w-full shrink-0 overflow-hidden bg-white sm:h-60">
+                    {p.fotos?.[0] ? (
+                      <img src={`${base}produtos/${p.fotos[0]}`} alt="" loading="lazy" className="h-full w-full object-cover" />
+                    ) : (
+                      <span className="flex h-full items-center justify-center text-7xl" aria-hidden>{p.emoji ?? '📦'}</span>
+                    )}
+                    <SeloDesconto produto={p} className="absolute right-3 top-3 text-sm" />
+                  </span>
+                  <span className="block p-4">
+                    <span className="line-clamp-2 min-h-[3rem] text-base font-bold leading-6 text-slate-900">{p.nome}</span>
+                    {p.preco ? (
+                      <span className="mt-2 flex flex-wrap items-baseline gap-x-2">
+                        <span className="text-2xl font-extrabold text-slate-900">{formatarPreco(p.preco)}</span>
+                        {percentualDesconto(p) > 0 && <s className="text-base text-slate-500">{formatarPreco(p.precoOriginal!)}</s>}
+                      </span>
+                    ) : (
+                      <span className="mt-2 block text-xl font-extrabold text-slate-500">Sob consulta</span>
+                    )}
+                  </span>
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+      <div className="mx-auto mt-1 flex max-w-6xl justify-end px-4 motion-reduce:hidden">
+        <button
+          type="button"
+          onClick={() => setPausado((v) => !v)}
+          aria-pressed={pausado}
+          className="inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-base font-semibold text-slate-600 underline-offset-4 hover:text-slate-900 hover:underline focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className="h-4 w-4">
+            {pausado ? <path d="M7 4.5v15l13-7.5z" /> : <path d="M6 4h4v16H6zM14 4h4v16h-4z" />}
+          </svg>
+          {pausado ? 'Continuar' : 'Pausar'}
+        </button>
+      </div>
     </div>
   )
 }
