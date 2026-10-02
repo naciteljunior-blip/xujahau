@@ -1,108 +1,96 @@
-// Ejetor de teia do Homem-Aranha – 2 peças (copo com teia + anel/luva)
+// Ejetor de teia do Homem-Aranha – cilindro com aba na base e desenho em relevo no topo
 // Abra no OpenSCAD, ajuste os parâmetros e exporte o STL (F6 → F7).
-// Escolha a peça em "peca": "copo", "anel" ou "ambos" (as duas lado a lado).
+// "desenho": "teia", "aranha" ou "teia_aranha".
 
-peca = "ambos";
+desenho = "teia_aranha";
 
 /* [Medidas gerais] */
-lados        = 12;     // forma de 12 lados, igual à foto
-copo_largura = 36;     // copo: distância entre faces opostas (mm)
-copo_altura  = 20;     // altura total do copo (mm)
-folga        = 0.25;   // folga por lado entre copo e anel (0.2 a 0.3 p/ bico 0.4)
+diametro_base = 35;    // diâmetro da aba de baixo (= largura total X/Y)
+altura        = 30;    // altura total (Z)
+corpo_recuo   = 2.0;   // quanto o corpo é mais fino que a aba, por lado
+aba_altura    = 3.0;   // altura da aba da base
+chanfro       = 0.5;   // chanfro na base (evita "pé de elefante")
 
-/* [Teia] */
-borda        = 1.6;    // largura da borda em volta da teia (4 linhas de 0.4)
-rebaixo      = 1.2;    // profundidade do fundo da teia (6 camadas de 0.2)
-fio          = 1.0;    // largura de cada fio da teia (2 linhas de 0.4 a 0.5)
-aneis_teia   = 5;      // quantos anéis/voltas a teia tem
-curvatura    = 0.12;   // quanto os fios entre os raios "caem" para o centro
-
-/* [Anel] */
-parede       = 2.0;    // parede do anel (5 linhas de 0.4)
-anel_altura  = 18;     // altura total do anel
-degrau_alt   = 9;      // altura da parte mais larga embaixo
-degrau_larg  = 1.0;    // quanto a parte de baixo é mais larga
-apoio_larg   = 1.6;    // aba interna embaixo onde o copo apoia
-apoio_alt    = 1.6;    // espessura da aba interna
-chanfro      = 0.5;    // chanfro na base (evita "pé de elefante")
+/* [Topo] */
+borda         = 1.2;   // largura da borda em volta do desenho (3 linhas de 0.4)
+rebaixo       = 1.0;   // profundidade do fundo do desenho (5 camadas de 0.2)
+fio           = 1.0;   // largura dos fios da teia (2 linhas de extrusão)
+perna         = 1.4;   // largura das pernas da aranha
+aneis_teia    = 5;     // voltas da teia
+curvatura     = 0.12;  // quanto os fios entre os raios "caem" para o centro
 
 /* [Hidden] */
-$fn = 32;
-ang0 = 180 / lados;                 // gira p/ ficar com face reta no eixo X
-k    = 1 / cos(180 / lados);        // apótema → raio do vértice
+$fn = 128;
+raios = 12;
+d_corpo = diametro_base - 2 * corpo_recuo;
+r_rebaixo = d_corpo / 2 - borda;
 
-module poligono(apotema) rotate(ang0) circle(r = apotema * k, $fn = lados);
+module traco(p, q, w) hull() { translate(p) circle(d = w, $fn = 24); translate(q) circle(d = w, $fn = 24); }
+module linha(pts, w) for (i = [0:len(pts) - 2]) traco(pts[i], pts[i + 1], w);
 
-// prisma de 12 lados com chanfro só na base
-module prisma(apotema, altura, ch = chanfro) {
-    hull() {
-        linear_extrude(ch) poligono(apotema - ch);
-        translate([0, 0, ch]) linear_extrude(altura - ch) poligono(apotema);
-    }
-}
-
-module traco(p, q) hull() { translate(p) circle(d = fio); translate(q) circle(d = fio); }
-
-module teia2d(raio) {
-    // raios até os cantos do polígono
-    for (i = [0:lados - 1]) {
-        a = ang0 + i * 360 / lados;
-        traco([0, 0], raio * 1.15 * [cos(a), sin(a)]);
-    }
-    // anéis que "caem" para o centro entre cada raio, como teia de verdade
+module teia2d(r) {
+    for (i = [0:raios - 1]) traco([0, 0], r * 1.1 * [cos(i * 360 / raios), sin(i * 360 / raios)], fio);
     passos = 8;
-    for (n = [1:aneis_teia], i = [0:lados - 1], s = [0:passos - 1]) {
-        r  = raio * n / (aneis_teia + 0.35);
-        a1 = ang0 + i * 360 / lados;
+    for (n = [1:aneis_teia], i = [0:raios - 1], s = [0:passos - 1]) {
+        rr = r * n / (aneis_teia + 0.3);
+        a1 = i * 360 / raios;
         t1 = s / passos;  t2 = (s + 1) / passos;
-        p1 = r * (1 - curvatura * sin(180 * t1)) * [cos(a1 + t1 * 360 / lados), sin(a1 + t1 * 360 / lados)];
-        p2 = r * (1 - curvatura * sin(180 * t2)) * [cos(a1 + t2 * 360 / lados), sin(a1 + t2 * 360 / lados)];
-        traco(p1, p2);
+        traco(rr * (1 - curvatura * sin(180 * t1)) * [cos(a1 + t1 * 360 / raios), sin(a1 + t1 * 360 / raios)],
+              rr * (1 - curvatura * sin(180 * t2)) * [cos(a1 + t2 * 360 / raios), sin(a1 + t2 * 360 / raios)], fio);
     }
-    circle(d = fio * 2.6);           // nó central
+    circle(d = fio * 2.6, $fn = 24);
 }
 
-module copo() {
-    a  = copo_largura / 2;
-    ai = a - borda;                  // área rebaixada da teia
-    difference() {
-        prisma(a, copo_altura);
-        translate([0, 0, copo_altura - rebaixo]) linear_extrude(rebaixo + 1) poligono(ai);
+// aranha estilizada (estilo emblema), em unidades onde 1 = raio do rebaixo
+pernas = [
+    [[0.06, 0.26], [0.30, 0.48], [0.36, 0.86]],
+    [[0.09, 0.20], [0.46, 0.32], [0.62, 0.62]],
+    [[0.09, 0.12], [0.46, 0.00], [0.62, -0.32]],
+    [[0.06, 0.05], [0.30, -0.24], [0.36, -0.74]],
+];
+module aranha2d(r) {
+    scale([r, r]) {
+        translate([0, 0.42]) circle(r = 0.10, $fn = 48);                        // cabeça
+        translate([0, 0.20]) scale([0.16, 0.20]) circle(r = 1, $fn = 64);       // tórax
+        hull() {                                                                 // abdômen
+            translate([0, -0.14]) circle(r = 0.15, $fn = 48);
+            translate([0, -0.66]) circle(r = 0.05, $fn = 24);
+        }
     }
-    // fios da teia: sobem até a altura da borda e se fundem nela
-    translate([0, 0, copo_altura - rebaixo - 0.01])
-        linear_extrude(rebaixo + 0.01)
-            intersection() { teia2d(ai * k); poligono(ai + 0.1); }
+    for (m = [0, 1]) mirror([m, 0]) for (p = pernas) linha(r * p, perna);
 }
 
-module anel() {
-    ai = copo_largura / 2 + folga;   // interno do anel (copo + folga)
-    ae = ai + parede;                // externo em cima
-    ab = ae + degrau_larg;           // externo embaixo (degrau)
+module desenho2d(r) {
+    if (desenho == "teia") teia2d(r);
+    else if (desenho == "aranha") aranha2d(r * 0.95);
+    else {
+        // teia com um vão em volta da aranha, para a aranha ficar bem destacada
+        difference() { teia2d(r); offset(delta = 0.9) aranha2d(r * 0.85); }
+        aranha2d(r * 0.85);
+    }
+}
+
+module ejetor() {
     difference() {
         union() {
-            prisma(ab, degrau_alt);
-            prisma(ae, anel_altura);
-        }
-        // furo principal (começa acima da aba de apoio)
-        translate([0, 0, apoio_alt]) linear_extrude(anel_altura) poligono(ai);
-        // furo da aba de apoio, com chanfro embaixo
-        translate([0, 0, -0.01]) hull() {
-            linear_extrude(0.01) poligono(ai - apoio_larg + chanfro);
-            translate([0, 0, chanfro]) linear_extrude(apoio_alt) poligono(ai - apoio_larg);
-        }
-        // chanfro de entrada no topo, facilita encaixar o copo
-        translate([0, 0, anel_altura - 0.6])
+            // aba da base com chanfro embaixo e rampa de 45° em cima (sem saliência)
             hull() {
-                linear_extrude(0.01) poligono(ai);
-                translate([0, 0, 0.6]) linear_extrude(0.01) poligono(ai + 0.6);
+                cylinder(d = diametro_base - 2 * chanfro, h = chanfro);
+                translate([0, 0, chanfro]) cylinder(d = diametro_base, h = aba_altura - chanfro - corpo_recuo / 2);
+                cylinder(d = d_corpo, h = aba_altura + corpo_recuo / 2);
             }
+            // corpo com leve chanfro na borda de cima
+            cylinder(d = d_corpo, h = altura - 0.4);
+            cylinder(d = d_corpo - 0.8, h = altura);
+        }
+        translate([0, 0, altura - rebaixo]) cylinder(r = r_rebaixo, h = rebaixo + 1);
     }
+    // desenho sobe até a altura da borda
+    translate([0, 0, altura - rebaixo - 0.01])
+        linear_extrude(rebaixo + 0.01)
+            // offset duplo arredonda cantos minúsculos e limpa a malha
+            offset(r = 0.1, $fn = 12) offset(delta = -0.1)
+                intersection() { desenho2d(r_rebaixo); circle(r = r_rebaixo + 0.1); }
 }
 
-if (peca == "copo") copo();
-else if (peca == "anel") anel();
-else {
-    translate([-(copo_largura / 2 + 4), 0, 0]) copo();
-    translate([  copo_largura / 2 + parede + degrau_larg + 6, 0, 0]) anel();
-}
+ejetor();
