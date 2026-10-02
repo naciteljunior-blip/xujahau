@@ -5,7 +5,7 @@
 Duas peças que **já saem encaixadas da impressora** (como na vista de baixo: disco do marcador no meio, uma fenda fina e o cortador em volta). Medida total: **35 × 35 × 30 mm** (X × Y × Z).
 
 - **Cortador**: tubo reto (sem chanfro no topo) com aba na base.
-- **Marcador**: cilindro solto dentro do cortador (Ø27 × 29 mm), com o desenho em relevo 1 mm abaixo da borda do cortador, para cortar primeiro e marcar depois.
+- **Marcador** (interno): cilindro solto dentro do cortador, **28 × 28 × 30 mm**, com o desenho em relevo no topo, rente à borda do cortador.
 - Folga de **0.4 mm** por lado entre as duas peças, em toda a altura.
 
 **Como usar**: vire a peça (aba para cima), aperte para cortar a massa e depois empurre o fundo do marcador para marcar o desenho e soltar a massa.
@@ -17,7 +17,7 @@ Duas peças que **já saem encaixadas da impressora** (como na vista de baixo: d
 | `ejetor-teia-aranha.stl` | Teia com a aranha no meio |
 | `ejetor.scad` | Arquivo editável (OpenSCAD) com as medidas como parâmetros |
 
-Medidas: aba Ø35 × 3 mm · corpo do cortador Ø31 mm, parede reta de 1.6 mm · marcador Ø27 mm · relevo 1.0 mm.
+Medidas: aba Ø35 × 3 mm · corpo do cortador Ø32 mm, parede reta de 1.6 mm · marcador Ø28 × 30 mm · relevo 1.0 mm.
 
 ## Como imprimir (bico 0.4)
 

@@ -11,7 +11,7 @@ peca    = "ambos";
 /* [Medidas gerais] */
 diametro_base = 35;    // diâmetro da aba de baixo (= largura total X/Y)
 altura        = 30;    // altura total (Z)
-corpo_recuo   = 2.0;   // quanto o corpo é mais fino que a aba, por lado
+corpo_recuo   = 1.5;   // quanto o corpo é mais fino que a aba, por lado
 aba_altura    = 3.0;   // altura da aba da base
 chanfro       = 0.5;   // chanfro na base (evita "pé de elefante" e peças grudadas)
 
@@ -20,7 +20,7 @@ parede        = 1.6;   // parede do cortador (4 linhas de 0.4)
 folga         = 0.4;   // folga por lado entre cortador e marcador
 
 /* [Marcador] */
-recuo_marcador = 1.0;  // o desenho fica abaixo do fio de corte (corta primeiro, marca depois)
+recuo_marcador = 0;    // quanto o desenho fica abaixo da borda do cortador (0 = rente, marcador com 30 mm)
 relevo        = 1.0;   // altura do relevo do desenho (5 camadas de 0.2)
 fio           = 0.8;   // largura dos fios da teia (2 linhas de 0.4 – mínimo seguro)
 contorno      = 1.2;   // largura do anel em volta do desenho (3 linhas de 0.4)
