@@ -30,7 +30,7 @@ Medidas: aba Ø35 × 3 mm · corpo do cortador Ø31 mm, parede reta de 1.6 mm ·
 
 ## Por que não entope nem força a impressora
 
-- Teia com 4 voltas bem espaçadas, fios de 1.2 mm e pernas da aranha de 1.4 mm (3 linhas de extrusão): nada mais fino que o bico consegue fazer.
+- Teia com 4 voltas bem espaçadas e fios finos de 0.8 mm (2 linhas de extrusão, o mínimo seguro para bico 0.4); pernas da aranha de 1.4 mm e contorno de 1.2 mm: nada mais fino que o bico consegue fazer.
 - Nenhuma saliência acima de 45° nem ponte: a aba tem rampa de 45° até o corpo, e o bico não arrasta fio solto.
 - Chanfro de 0.5 mm na base das duas peças, para o "pé de elefante" não fechar a fenda entre elas.
 - Malhas fechadas (manifold) e conferidas, sem erros para o fatiador corrigir.

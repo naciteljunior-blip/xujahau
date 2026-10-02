@@ -22,7 +22,8 @@ folga         = 0.4;   // folga por lado entre cortador e marcador
 /* [Marcador] */
 recuo_marcador = 1.0;  // o desenho fica abaixo do fio de corte (corta primeiro, marca depois)
 relevo        = 1.0;   // altura do relevo do desenho (5 camadas de 0.2)
-fio           = 1.2;   // largura dos fios da teia (3 linhas de 0.4)
+fio           = 0.8;   // largura dos fios da teia (2 linhas de 0.4 – mínimo seguro)
+contorno      = 1.2;   // largura do anel em volta do desenho (3 linhas de 0.4)
 perna         = 1.4;   // largura das pernas da aranha
 aneis_teia    = 4;     // voltas da teia (menos = mais espaçada)
 curvatura     = 0.12;  // quanto os fios entre os raios "caem" para o centro
@@ -33,7 +34,7 @@ raios = 12;
 d_corpo   = diametro_base - 2 * corpo_recuo;
 d_furo    = d_corpo - 2 * parede;
 d_marc    = d_furo - 2 * folga;
-r_desenho = d_marc / 2 - fio;     // desenho dentro do contorno do marcador
+r_desenho = d_marc / 2 - contorno;     // desenho dentro do contorno do marcador
 
 module traco(p, q, w) hull() { translate(p) circle(d = w, $fn = 24); translate(q) circle(d = w, $fn = 24); }
 module linha(pts, w) for (i = [0:len(pts) - 2]) traco(pts[i], pts[i + 1], w);
@@ -108,7 +109,7 @@ module marcador() {
     // contorno + desenho em relevo
     translate([0, 0, topo - 0.01])
         linear_extrude(relevo + 0.01) {
-            difference() { circle(d = d_marc); circle(d = d_marc - 2 * fio); }
+            difference() { circle(d = d_marc); circle(d = d_marc - 2 * contorno); }
             // offset duplo arredonda cantos minúsculos e limpa a malha
             offset(r = 0.1, $fn = 12) offset(delta = -0.1)
                 intersection() { desenho2d(r_desenho); circle(r = r_desenho + 0.2); }
