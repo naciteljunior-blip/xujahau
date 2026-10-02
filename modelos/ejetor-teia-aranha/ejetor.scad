@@ -1,5 +1,5 @@
 // Cortador + marcador do Homem-Aranha (impressão em uma vez, já encaixados)
-// Cortador: tubo com aba na base e fio de corte fino em cima.
+// Cortador: tubo reto com aba na base.
 // Marcador: cilindro solto dentro do cortador, com o desenho em relevo no topo.
 // Abra no OpenSCAD, ajuste os parâmetros e exporte o STL (F6 → F7).
 // "desenho": "teia", "aranha" ou "teia_aranha".
@@ -17,16 +17,14 @@ chanfro       = 0.5;   // chanfro na base (evita "pé de elefante" e peças grud
 
 /* [Cortador] */
 parede        = 1.6;   // parede do cortador (4 linhas de 0.4)
-fio_corte     = 0.8;   // espessura do fio de corte no topo (2 linhas de 0.4)
-afinamento    = 4;     // altura da parte afinada até o fio de corte
 folga         = 0.4;   // folga por lado entre cortador e marcador
 
 /* [Marcador] */
 recuo_marcador = 1.0;  // o desenho fica abaixo do fio de corte (corta primeiro, marca depois)
 relevo        = 1.0;   // altura do relevo do desenho (5 camadas de 0.2)
-fio           = 1.0;   // largura dos fios da teia (2 linhas de extrusão)
+fio           = 1.2;   // largura dos fios da teia (3 linhas de 0.4)
 perna         = 1.4;   // largura das pernas da aranha
-aneis_teia    = 5;     // voltas da teia
+aneis_teia    = 4;     // voltas da teia (menos = mais espaçada)
 curvatura     = 0.12;  // quanto os fios entre os raios "caem" para o centro
 
 /* [Hidden] */
@@ -91,10 +89,8 @@ module cortador() {
                 translate([0, 0, chanfro]) cylinder(d = diametro_base, h = aba_altura - chanfro - corpo_recuo / 2);
                 cylinder(d = d_corpo, h = aba_altura + corpo_recuo / 2);
             }
-            // corpo, afinando por fora até o fio de corte
-            cylinder(d = d_corpo, h = altura - afinamento);
-            translate([0, 0, altura - afinamento])
-                cylinder(d1 = d_corpo, d2 = d_furo + 2 * fio_corte, h = afinamento);
+            // corpo reto até o topo
+            cylinder(d = d_corpo, h = altura);
         }
         // furo passante, com chanfro embaixo
         translate([0, 0, -1]) cylinder(d = d_furo, h = altura + 2);

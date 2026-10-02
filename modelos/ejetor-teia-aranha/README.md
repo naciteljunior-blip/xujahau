@@ -4,8 +4,8 @@
 
 Duas peças que **já saem encaixadas da impressora** (como na vista de baixo: disco do marcador no meio, uma fenda fina e o cortador em volta). Medida total: **35 × 35 × 30 mm** (X × Y × Z).
 
-- **Cortador**: tubo com aba na base e fio de corte de 0.8 mm no topo.
-- **Marcador**: cilindro solto dentro do cortador (Ø27 × 29 mm), com o desenho em relevo 1 mm abaixo do fio de corte, para cortar primeiro e marcar depois.
+- **Cortador**: tubo reto (sem chanfro no topo) com aba na base.
+- **Marcador**: cilindro solto dentro do cortador (Ø27 × 29 mm), com o desenho em relevo 1 mm abaixo da borda do cortador, para cortar primeiro e marcar depois.
 - Folga de **0.4 mm** por lado entre as duas peças, em toda a altura.
 
 **Como usar**: vire a peça (aba para cima), aperte para cortar a massa e depois empurre o fundo do marcador para marcar o desenho e soltar a massa.
@@ -17,7 +17,7 @@ Duas peças que **já saem encaixadas da impressora** (como na vista de baixo: d
 | `ejetor-teia-aranha.stl` | Teia com a aranha no meio |
 | `ejetor.scad` | Arquivo editável (OpenSCAD) com as medidas como parâmetros |
 
-Medidas: aba Ø35 × 3 mm · corpo do cortador Ø31 mm, parede 1.6 mm afinando até 0.8 mm no fio · marcador Ø27 mm · relevo 1.0 mm.
+Medidas: aba Ø35 × 3 mm · corpo do cortador Ø31 mm, parede reta de 1.6 mm · marcador Ø27 mm · relevo 1.0 mm.
 
 ## Como imprimir (bico 0.4)
 
@@ -30,7 +30,7 @@ Medidas: aba Ø35 × 3 mm · corpo do cortador Ø31 mm, parede 1.6 mm afinando a
 
 ## Por que não entope nem força a impressora
 
-- Fios da teia com 1.0 mm e pernas da aranha com 1.4 mm (2 a 3 linhas de extrusão): nada mais fino que o bico consegue fazer.
+- Teia com 4 voltas bem espaçadas, fios de 1.2 mm e pernas da aranha de 1.4 mm (3 linhas de extrusão): nada mais fino que o bico consegue fazer.
 - Nenhuma saliência acima de 45° nem ponte: a aba tem rampa de 45° até o corpo, e o bico não arrasta fio solto.
 - Chanfro de 0.5 mm na base das duas peças, para o "pé de elefante" não fechar a fenda entre elas.
 - Malhas fechadas (manifold) e conferidas, sem erros para o fatiador corrigir.
