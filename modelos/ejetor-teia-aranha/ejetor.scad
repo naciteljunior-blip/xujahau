@@ -1,19 +1,29 @@
-// Ejetor de teia do Homem-Aranha – cilindro com aba na base e desenho em relevo no topo
+// Cortador + marcador do Homem-Aranha (impressão em uma vez, já encaixados)
+// Cortador: tubo com aba na base e fio de corte fino em cima.
+// Marcador: cilindro solto dentro do cortador, com o desenho em relevo no topo.
 // Abra no OpenSCAD, ajuste os parâmetros e exporte o STL (F6 → F7).
 // "desenho": "teia", "aranha" ou "teia_aranha".
+// "peca": "ambos" (encaixados, como na foto), "cortador" ou "marcador".
 
 desenho = "teia_aranha";
+peca    = "ambos";
 
 /* [Medidas gerais] */
 diametro_base = 35;    // diâmetro da aba de baixo (= largura total X/Y)
 altura        = 30;    // altura total (Z)
 corpo_recuo   = 2.0;   // quanto o corpo é mais fino que a aba, por lado
 aba_altura    = 3.0;   // altura da aba da base
-chanfro       = 0.5;   // chanfro na base (evita "pé de elefante")
+chanfro       = 0.5;   // chanfro na base (evita "pé de elefante" e peças grudadas)
 
-/* [Topo] */
-borda         = 1.2;   // largura da borda em volta do desenho (3 linhas de 0.4)
-rebaixo       = 1.0;   // profundidade do fundo do desenho (5 camadas de 0.2)
+/* [Cortador] */
+parede        = 1.6;   // parede do cortador (4 linhas de 0.4)
+fio_corte     = 0.8;   // espessura do fio de corte no topo (2 linhas de 0.4)
+afinamento    = 4;     // altura da parte afinada até o fio de corte
+folga         = 0.4;   // folga por lado entre cortador e marcador
+
+/* [Marcador] */
+recuo_marcador = 1.0;  // o desenho fica abaixo do fio de corte (corta primeiro, marca depois)
+relevo        = 1.0;   // altura do relevo do desenho (5 camadas de 0.2)
 fio           = 1.0;   // largura dos fios da teia (2 linhas de extrusão)
 perna         = 1.4;   // largura das pernas da aranha
 aneis_teia    = 5;     // voltas da teia
@@ -22,8 +32,10 @@ curvatura     = 0.12;  // quanto os fios entre os raios "caem" para o centro
 /* [Hidden] */
 $fn = 128;
 raios = 12;
-d_corpo = diametro_base - 2 * corpo_recuo;
-r_rebaixo = d_corpo / 2 - borda;
+d_corpo   = diametro_base - 2 * corpo_recuo;
+d_furo    = d_corpo - 2 * parede;
+d_marc    = d_furo - 2 * folga;
+r_desenho = d_marc / 2 - fio;     // desenho dentro do contorno do marcador
 
 module traco(p, q, w) hull() { translate(p) circle(d = w, $fn = 24); translate(q) circle(d = w, $fn = 24); }
 module linha(pts, w) for (i = [0:len(pts) - 2]) traco(pts[i], pts[i + 1], w);
@@ -41,7 +53,7 @@ module teia2d(r) {
     circle(d = fio * 2.6, $fn = 24);
 }
 
-// aranha estilizada (estilo emblema), em unidades onde 1 = raio do rebaixo
+// aranha estilizada (estilo emblema), em unidades onde 1 = raio do desenho
 pernas = [
     [[0.06, 0.26], [0.30, 0.48], [0.36, 0.86]],
     [[0.09, 0.20], [0.46, 0.32], [0.62, 0.62]],
@@ -70,7 +82,7 @@ module desenho2d(r) {
     }
 }
 
-module ejetor() {
+module cortador() {
     difference() {
         union() {
             // aba da base com chanfro embaixo e rampa de 45° em cima (sem saliência)
@@ -79,18 +91,33 @@ module ejetor() {
                 translate([0, 0, chanfro]) cylinder(d = diametro_base, h = aba_altura - chanfro - corpo_recuo / 2);
                 cylinder(d = d_corpo, h = aba_altura + corpo_recuo / 2);
             }
-            // corpo com leve chanfro na borda de cima
-            cylinder(d = d_corpo, h = altura - 0.4);
-            cylinder(d = d_corpo - 0.8, h = altura);
+            // corpo, afinando por fora até o fio de corte
+            cylinder(d = d_corpo, h = altura - afinamento);
+            translate([0, 0, altura - afinamento])
+                cylinder(d1 = d_corpo, d2 = d_furo + 2 * fio_corte, h = afinamento);
         }
-        translate([0, 0, altura - rebaixo]) cylinder(r = r_rebaixo, h = rebaixo + 1);
+        // furo passante, com chanfro embaixo
+        translate([0, 0, -1]) cylinder(d = d_furo, h = altura + 2);
+        translate([0, 0, -0.01]) cylinder(d1 = d_furo + 2 * chanfro, d2 = d_furo, h = chanfro);
     }
-    // desenho sobe até a altura da borda
-    translate([0, 0, altura - rebaixo - 0.01])
-        linear_extrude(rebaixo + 0.01)
-            // offset duplo arredonda cantos minúsculos e limpa a malha
-            offset(r = 0.1, $fn = 12) offset(delta = -0.1)
-                intersection() { desenho2d(r_rebaixo); circle(r = r_rebaixo + 0.1); }
 }
 
-ejetor();
+module marcador() {
+    topo = altura - recuo_marcador - relevo;   // face do marcador
+    // corpo com chanfro na base
+    hull() {
+        cylinder(d = d_marc - 2 * chanfro, h = chanfro);
+        translate([0, 0, chanfro]) cylinder(d = d_marc, h = topo - chanfro);
+    }
+    // contorno + desenho em relevo
+    translate([0, 0, topo - 0.01])
+        linear_extrude(relevo + 0.01) {
+            difference() { circle(d = d_marc); circle(d = d_marc - 2 * fio); }
+            // offset duplo arredonda cantos minúsculos e limpa a malha
+            offset(r = 0.1, $fn = 12) offset(delta = -0.1)
+                intersection() { desenho2d(r_desenho); circle(r = r_desenho + 0.2); }
+        }
+}
+
+if (peca != "marcador") cortador();
+if (peca != "cortador") marcador();
