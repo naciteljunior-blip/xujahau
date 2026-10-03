@@ -220,6 +220,7 @@ Garantia: Este produto não possui garantia.`,
     descricao: 'Kit Carimbos Modeladores para Doces Tema Batizado (6 Unidades).',
     categoria: 'Confeitaria',
     preco: 19,
+    precoOriginal: 38,
     fotos: ['carimbo-brigadeiro-marcador-doces-personalizado-5-unidades-1.jpg', 'carimbo-brigadeiro-marcador-doces-personalizado-5-unidades-2.jpg', 'carimbo-brigadeiro-marcador-doces-personalizado-5-unidades-3.jpg', 'carimbo-brigadeiro-marcador-doces-personalizado-5-unidades-4.jpg', 'carimbo-brigadeiro-marcador-doces-personalizado-5-unidades-5.jpg'],
     detalhes: `Kit Carimbos Modeladores para Doces Tema Batizado (6 Unidades)
 
@@ -338,6 +339,7 @@ Trabalho honesto e dedicado para entregar a melhor qualidade para as suas criaç
     descricao: 'Ideal para quem busca organização sem abrir mão da estética, este suporte geométrico transforma a disposição dos seus objetos na…',
     categoria: 'Utensílios Domésticos',
     preco: 19,
+    precoOriginal: 38,
     fotos: ['kit-6-prendedores-de-embalagem-alimento-astheric-minimalista-1.jpg', 'kit-6-prendedores-de-embalagem-alimento-astheric-minimalista-2.jpg', 'kit-6-prendedores-de-embalagem-alimento-astheric-minimalista-3.jpg', 'kit-6-prendedores-de-embalagem-alimento-astheric-minimalista-4.jpg'],
     detalhes: `Ideal para quem busca organização sem abrir mão da estética, este suporte geométrico transforma a disposição dos seus objetos na mesa ou bancada. Com linhas minimalistas e formato simétrico, ele se integra perfeitamente a diferentes estilos de ambiente, mantendo o visual limpo e moderno.
 
@@ -477,6 +479,7 @@ Produto livre de BPA`,
     descricao: 'Kit Cortador e Marcador de Biscoitos Toy Story (5 Peças).',
     categoria: 'Confeitaria',
     preco: 37.5,
+    precoOriginal: 75,
     fotos: ['kit-5-marcador-cortador-toy-story-biscoito-cookie-1.jpg', 'kit-5-marcador-cortador-toy-story-biscoito-cookie-2.jpg', 'kit-5-marcador-cortador-toy-story-biscoito-cookie-3.jpg'],
     detalhes: `Kit Cortador e Marcador de Biscoitos Toy Story (5 Peças)
 Impressão 3D Premium | Material Atóxico e Seguro
@@ -666,6 +669,7 @@ Sem garantia`,
     descricao: 'Apresentamos o Kit de Marcadores de Página Coleção Rosas. Desenvolvido para leitores que valorizam sofisticação em cada detalhe,…',
     categoria: 'Decoração',
     preco: 29.9,
+    precoOriginal: 59.8,
     fotos: ['kit-3-marcadores-de-pagina-livro-tema-rosas-vazado-preto-cin-1.jpg', 'kit-3-marcadores-de-pagina-livro-tema-rosas-vazado-preto-cin-2.jpg', 'kit-3-marcadores-de-pagina-livro-tema-rosas-vazado-preto-cin-3.jpg'],
     detalhes: `Kit 3 Marcadores de Página Premium Coleção Rosas
 *Produto Exclusivo | Acabamento Refinado*
@@ -707,6 +711,7 @@ Apresentamos o Kit de Marcadores de Página Coleção Rosas. Desenvolvido para l
     descricao: 'Kit Carimbos Marcadores para Doces Tema Números (9 Unidades).',
     categoria: 'Confeitaria',
     preco: 29,
+    precoOriginal: 58,
     fotos: ['10-marcadores-carimbos-doces-brigadeiros-numeros-idade-aleat-1.jpg', '10-marcadores-carimbos-doces-brigadeiros-numeros-idade-aleat-2.jpg', '10-marcadores-carimbos-doces-brigadeiros-numeros-idade-aleat-3.jpg', '10-marcadores-carimbos-doces-brigadeiros-numeros-idade-aleat-4.jpg', '10-marcadores-carimbos-doces-brigadeiros-numeros-idade-aleat-5.jpg'],
     detalhes: `Kit Carimbos Marcadores para Doces Tema Números (9 Unidades)
 
@@ -774,6 +779,7 @@ Garantia: 7 dias de garantia oferecida pelo vendedor.`,
     descricao: 'Suporte de garrafa em formato de coração. Presente criativo para o Dia dos Namorados.',
     categoria: 'Decoração',
     preco: 19.9,
+    precoOriginal: 39.8,
     fotos: ['suporte-para-garrafa-coracao-namorados-1.jpg', 'suporte-para-garrafa-coracao-namorados-2.jpg', 'suporte-para-garrafa-coracao-namorados-3.jpg', 'suporte-para-garrafa-coracao-namorados-4.jpg', 'suporte-para-garrafa-coracao-namorados-5.jpg'],
     detalhes: `Surpreenda Quem Você Ama com um Presente Inesquecível
 
@@ -830,6 +836,7 @@ Garantia de fábrica: 7 dias`,
     descricao: 'Suporte de parede que deixa o secador de cabelo organizado e sempre à mão.',
     categoria: 'Decoração',
     preco: 22.99,
+    precoOriginal: 45.98,
     fotos: ['suporte-organizador-universal-parede-secador-de-cabelo-1.jpg', 'suporte-organizador-universal-parede-secador-de-cabelo-2.jpg', 'suporte-organizador-universal-parede-secador-de-cabelo-3.jpg', 'suporte-organizador-universal-parede-secador-de-cabelo-4.jpg', 'suporte-organizador-universal-parede-secador-de-cabelo-5.jpg'],
     detalhes: `Atenção ao Encaixe (Medida Importante): O diâmetro interno do suporte é de 8,5 cm. Meça o corpo do seu secador e compare antes de finalizar a compra para garantir a compatibilidade exata com o seu equipamento.
 
@@ -898,6 +905,7 @@ Aviso Importante: Para o funcionamento do movimento, é necessário conectá-lo 
     descricao: 'Kit Carimbos Marcadores para Doces Tema Idade 1 a 9 Anos.',
     categoria: 'Confeitaria',
     preco: 35,
+    precoOriginal: 70,
     fotos: ['carimbos-brigadeiro-idade-1-a-9-anos-marcador-doce-tematico-1.jpg', 'carimbos-brigadeiro-idade-1-a-9-anos-marcador-doce-tematico-2.jpg', 'carimbos-brigadeiro-idade-1-a-9-anos-marcador-doce-tematico-3.jpg', 'carimbos-brigadeiro-idade-1-a-9-anos-marcador-doce-tematico-4.jpg', 'carimbos-brigadeiro-idade-1-a-9-anos-marcador-doce-tematico-5.jpg'],
     detalhes: `Kit Carimbos Marcadores para Doces Tema Idade 1 a 9 Anos
 
@@ -1019,6 +1027,7 @@ Garantia do vendedor: 3 meses`,
     descricao: 'Kit Carimbos Marcadores para Doces Tema Fazendinha (5 Unidades).',
     categoria: 'Confeitaria',
     preco: 32,
+    precoOriginal: 64,
     fotos: ['kit-5-carimbos-fazendinha-p-doces-brigadeiro-1.jpg', 'kit-5-carimbos-fazendinha-p-doces-brigadeiro-2.jpg', 'kit-5-carimbos-fazendinha-p-doces-brigadeiro-3.jpg', 'kit-5-carimbos-fazendinha-p-doces-brigadeiro-4.jpg', 'kit-5-carimbos-fazendinha-p-doces-brigadeiro-5.jpg'],
     detalhes: `Kit Carimbos Marcadores para Doces Tema Fazendinha (5 Unidades)
 
@@ -1044,6 +1053,7 @@ Manutenção e Limpeza: Para preservar a integridade e durabilidade das peças, 
     descricao: 'Marcador para Fatias de Bolo Slice Cake 30x10x2,5cm (1 Unidade).',
     categoria: 'Confeitaria',
     preco: 69,
+    precoOriginal: 138,
     fotos: ['marcado-fatias-perfeitas-festival-bolo-cake-30x10x2-5cm-1.jpg', 'marcado-fatias-perfeitas-festival-bolo-cake-30x10x2-5cm-2.jpg', 'marcado-fatias-perfeitas-festival-bolo-cake-30x10x2-5cm-3.jpg', 'marcado-fatias-perfeitas-festival-bolo-cake-30x10x2-5cm-4.jpg', 'marcado-fatias-perfeitas-festival-bolo-cake-30x10x2-5cm-5.jpg'],
     detalhes: `Marcador para Fatias de Bolo Slice Cake 30x10x2,5cm (1 Unidade)
 
@@ -1720,6 +1730,7 @@ Manutenção e Limpeza: Para preservar a integridade e durabilidade das peças, 
     descricao: 'Transforme a produção de doces com decorações temáticas, práticas e criativas. Desenvolvido para confeiteiras, doceiras e…',
     categoria: 'Confeitaria',
     preco: 21.9,
+    precoOriginal: 43.8,
     fotos: ['kit-carimbos-brigadeiro-docinhos-halloween-dia-das-bruxas-ca-1.jpg', 'kit-carimbos-brigadeiro-docinhos-halloween-dia-das-bruxas-ca-2.jpg', 'kit-carimbos-brigadeiro-docinhos-halloween-dia-das-bruxas-ca-3.jpg', 'kit-carimbos-brigadeiro-docinhos-halloween-dia-das-bruxas-ca-4.jpg', 'kit-carimbos-brigadeiro-docinhos-halloween-dia-das-bruxas-ca-5.jpg'],
     detalhes: `KIT DE MARCADORES E CARIMBOS PARA DOCES - TEMA HALLOWEEN
 
