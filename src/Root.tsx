@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import App from './App.tsx'
 import Loja from './loja/Loja.tsx'
+import LojaNova from './loja/LojaNova.tsx'
 
 export default function Root() {
   const [hash, setHash] = useState(window.location.hash)
@@ -11,5 +12,6 @@ export default function Root() {
     return () => window.removeEventListener('hashchange', onHashChange)
   }, [])
 
-  return hash === '#calculadora' ? <App /> : <Loja />
+  if (hash === '#calculadora') return <App />
+  return new URLSearchParams(window.location.search).get('estilo') === 'novo' ? <LojaNova /> : <Loja />
 }
