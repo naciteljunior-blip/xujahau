@@ -27,6 +27,7 @@ export type Marketplace = { nome: string; url: string; cor: string }
 export const iconesCategorias: Record<string, string> = {
   Confeitaria: '🧁',
   Decoração: '🎄',
+  'Utensílios Domésticos': '🏠',
 }
 
 export const loja = {
@@ -335,7 +336,7 @@ Trabalho honesto e dedicado para entregar a melhor qualidade para as suas criaç
     id: 'kit-6-prendedores-de-embalagem-alimento-astheric-minimalista',
     nome: 'Kit 6 Prendedores De Embalagem Alimento Astheric Minimalista Bege',
     descricao: 'Ideal para quem busca organização sem abrir mão da estética, este suporte geométrico transforma a disposição dos seus objetos na…',
-    categoria: 'Decoração',
+    categoria: 'Utensílios Domésticos',
     preco: 19,
     fotos: ['kit-6-prendedores-de-embalagem-alimento-astheric-minimalista-1.jpg', 'kit-6-prendedores-de-embalagem-alimento-astheric-minimalista-2.jpg', 'kit-6-prendedores-de-embalagem-alimento-astheric-minimalista-3.jpg', 'kit-6-prendedores-de-embalagem-alimento-astheric-minimalista-4.jpg'],
     detalhes: `Ideal para quem busca organização sem abrir mão da estética, este suporte geométrico transforma a disposição dos seus objetos na mesa ou bancada. Com linhas minimalistas e formato simétrico, ele se integra perfeitamente a diferentes estilos de ambiente, mantendo o visual limpo e moderno.
