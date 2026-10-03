@@ -1,5 +1,15 @@
 // ✏️ Edite este arquivo para personalizar a sua loja.
 
+export type Variacao = {
+  nome: string
+  /** Texto curto embaixo do nome da opção (ex.: 'Letra cursiva'). */
+  dica?: string
+  preco: number
+  precoOriginal?: number
+  /** Foto desta opção, dentro de `public/produtos/`. */
+  foto?: string
+}
+
 export type Produto = {
   id: string
   nome: string
@@ -17,6 +27,10 @@ export type Produto = {
   detalhes?: string
   /** Tabela de características, mostrada em "Ver detalhes". */
   caracteristicas?: [string, string][]
+  /** Opções que o cliente escolhe antes de adicionar ao carrinho. `preco` deve ser o menor preço entre elas. */
+  variacoes?: Variacao[]
+  /** Pergunta mostrada acima das opções (ex.: 'Escolha o modelo'). */
+  rotuloVariacao?: string
   /** Links deste produto em outros sites (opcional). */
   links?: { nome: string; url: string }[]
 }
@@ -1632,48 +1646,27 @@ Garantia: 3 meses de garantia oferecida pelo vendedor.`,
   },
   {
     id: 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator',
-    nome: 'Carimbo Personalizado Logo Nome Brigadeiro Doce 1 Pc Aleatório Tipo 1',
-    descricao: 'Carimbo Marcador Personalizado para Doces (1 Unidade).',
+    nome: 'Carimbo Personalizado Logo Nome Brigadeiro Doce 1 Pç',
+    descricao: 'Carimbo marcador com o seu nome ou a sua logo, para doces (1 unidade). Escolha o modelo da letra ou a logo.',
     categoria: 'Confeitaria',
     preco: 21.5,
     precoOriginal: 35.9,
-    fotos: ['carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-1.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-2.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-3.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-4.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-5.jpg'],
-    detalhes: `Carimbo Marcador Personalizado para Doces (1 Unidade)
-• O que você recebe: 1 Carimbo personalizado com o seu logotipo, nome ou arte exclusiva.
-• Indicação de Uso: Ferramenta ideal para estampar sua marca em brigadeiros, doces finos, biscoitos e pasta americana, valorizando eventos, brindes corporativos, lembrancinhas e encomendas profissionais.
-• Como Funciona a Personalização: Após a confirmação da compra, envie o seu logotipo (em alta resolução), nome ou informação desejada imediatamente através do chat do pedido. Nossa equipe técnica fará a análise do arquivo para garantir a melhor qualidade de marcação antes de iniciar a produção.
-• Material e Segurança: Fabricado em plástico premium de alta precisão, totalmente seguro para contato direto com alimentos e 100% Livre de BPA.
-• Manutenção e Limpeza: Higienize apenas com água fria e sabão neutro. Não exponha o produto a água quente, lava-louças ou fontes de calor para preservar a integridade da peça.
-• Avisos Importantes: O prazo de confecção e envio segue rigorosamente o estipulado no anúncio. A cor da estrutura do carimbo pode variar conforme a disponibilidade de estoque. Caso tenha dúvidas sobre a viabilidade da sua arte ou tamanho, envie uma pergunta antes de finalizar a compra.
-
-Aviso legal
-É livre de BPA.`,
-    caracteristicas: [
-      ['Marca', 'N97'],
-      ['Cor e padrão', 'Aleatório'],
-      ['Formato de venda', 'Unidade'],
-      ['Quantidade de carimbos', '1'],
-      ['Material do carimbo', 'PLA'],
-      ['Material do cabo', 'PLA'],
-      ['É livre de BPA', 'Sim'],
-      ['É para uso de forma quente', 'Não'],
+    rotuloVariacao: 'Escolha o modelo',
+    variacoes: [
+      { nome: 'Tipo 1', dica: 'Nome em letra cursiva', preco: 21.5, precoOriginal: 35.9, foto: 'carimbo-personalizado-tipo1.jpg' },
+      { nome: 'Tipo 2', dica: 'Nome em letra com serifa', preco: 21.5, precoOriginal: 35.9, foto: 'carimbo-personalizado-tipo2.jpg' },
+      { nome: 'Tipo 3', dica: 'Nome em letra simples', preco: 21.5, precoOriginal: 35.9, foto: 'carimbo-personalizado-tipo3.jpg' },
+      { nome: 'Tipo 4', dica: 'Nome em letra simples e grossa', preco: 21.5, precoOriginal: 35.9, foto: 'carimbo-personalizado-tipo4.jpg' },
+      { nome: 'Logo', dica: 'A logo da sua marca', preco: 29.9, precoOriginal: 35.9, foto: 'carimbo-personalizado-logo.jpg' },
     ],
-  },
-  {
-    id: 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-8764',
-    nome: 'Carimbo Personalizado Logo Nome Brigadeiro Doce 1 Pc Aleatório Logo',
-    descricao: 'Carimbo Marcador Personalizado para Doces (1 Unidade).',
-    categoria: 'Confeitaria',
-    preco: 29.9,
-    precoOriginal: 35.9,
-    fotos: ['carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-8764-1.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-8764-2.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-8764-3.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-8764-4.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-8764-5.jpg'],
+    fotos: ['carimbo-personalizado-1.jpg', 'carimbo-personalizado-2.jpg', 'carimbo-personalizado-3.jpg', 'carimbo-personalizado-tipo1.jpg', 'carimbo-personalizado-tipo2.jpg', 'carimbo-personalizado-tipo3.jpg', 'carimbo-personalizado-tipo4.jpg', 'carimbo-personalizado-logo.jpg', 'carimbo-personalizado-4.jpg', 'carimbo-personalizado-5.jpg'],
     detalhes: `Carimbo Marcador Personalizado para Doces (1 Unidade)
 • O que você recebe: 1 Carimbo personalizado com o seu logotipo, nome ou arte exclusiva.
 • Indicação de Uso: Ferramenta ideal para estampar sua marca em brigadeiros, doces finos, biscoitos e pasta americana, valorizando eventos, brindes corporativos, lembrancinhas e encomendas profissionais.
-• Como Funciona a Personalização: Após a confirmação da compra, envie o seu logotipo (em alta resolução), nome ou informação desejada imediatamente através do chat do pedido. Nossa equipe técnica fará a análise do arquivo para garantir a melhor qualidade de marcação antes de iniciar a produção.
+• Como Funciona a Personalização: Após a confirmação da compra, envie o seu logotipo (em alta resolução), nome ou informação desejada imediatamente pelo WhatsApp. Nossa equipe técnica fará a análise do arquivo para garantir a melhor qualidade de marcação antes de iniciar a produção.
 • Material e Segurança: Fabricado em plástico premium de alta precisão, totalmente seguro para contato direto com alimentos e 100% Livre de BPA.
 • Manutenção e Limpeza: Higienize apenas com água fria e sabão neutro. Não exponha o produto a água quente, lava-louças ou fontes de calor para preservar a integridade da peça.
-• Avisos Importantes: O prazo de confecção e envio segue rigorosamente o estipulado no anúncio. A cor da estrutura do carimbo pode variar conforme a disponibilidade de estoque. Caso tenha dúvidas sobre a viabilidade da sua arte ou tamanho, envie uma pergunta antes de finalizar a compra.
+• Avisos Importantes: O prazo de confecção e envio segue rigorosamente o estipulado no anúncio. A cor da estrutura do carimbo pode variar conforme a disponibilidade de estoque. Caso tenha dúvidas sobre a viabilidade da sua arte ou tamanho, chame no WhatsApp antes de finalizar a compra.
 
 Aviso legal
 É livre de BPA.`,
@@ -1794,35 +1787,6 @@ carimbo para brigadeiro, marcador para brigadeiro, carimbo para doces, marcador 
     ],
   },
   {
-    id: 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-1522',
-    nome: 'Carimbo Personalizado Logo Nome Brigadeiro Doce 1 Pc Aleatório Tipo 3',
-    descricao: 'Carimbo Marcador Personalizado para Doces (1 Unidade).',
-    categoria: 'Confeitaria',
-    preco: 21.5,
-    precoOriginal: 35.9,
-    fotos: ['carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-1522-1.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-1522-2.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-1522-3.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-1522-4.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-1522-5.jpg'],
-    detalhes: `Carimbo Marcador Personalizado para Doces (1 Unidade)
-• O que você recebe: 1 Carimbo personalizado com o seu logotipo, nome ou arte exclusiva.
-• Indicação de Uso: Ferramenta ideal para estampar sua marca em brigadeiros, doces finos, biscoitos e pasta americana, valorizando eventos, brindes corporativos, lembrancinhas e encomendas profissionais.
-• Como Funciona a Personalização: Após a confirmação da compra, envie o seu logotipo (em alta resolução), nome ou informação desejada imediatamente através do chat do pedido. Nossa equipe técnica fará a análise do arquivo para garantir a melhor qualidade de marcação antes de iniciar a produção.
-• Material e Segurança: Fabricado em plástico premium de alta precisão, totalmente seguro para contato direto com alimentos e 100% Livre de BPA.
-• Manutenção e Limpeza: Higienize apenas com água fria e sabão neutro. Não exponha o produto a água quente, lava-louças ou fontes de calor para preservar a integridade da peça.
-• Avisos Importantes: O prazo de confecção e envio segue rigorosamente o estipulado no anúncio. A cor da estrutura do carimbo pode variar conforme a disponibilidade de estoque. Caso tenha dúvidas sobre a viabilidade da sua arte ou tamanho, envie uma pergunta antes de finalizar a compra.
-
-Aviso legal
-É livre de BPA.`,
-    caracteristicas: [
-      ['Marca', 'N97'],
-      ['Cor e padrão', 'Aleatório'],
-      ['Formato de venda', 'Unidade'],
-      ['Quantidade de carimbos', '1'],
-      ['Material do carimbo', 'PLA'],
-      ['Material do cabo', 'PLA'],
-      ['É livre de BPA', 'Sim'],
-      ['É para uso de forma quente', 'Não'],
-    ],
-  },
-  {
     id: 'molde-ejetor-formato-diamante-5cm-diametro-aleatorio-diamant',
     nome: 'Molde Ejetor Formato Diamante 5cm Diametro Aleatório Diamante',
     descricao: 'Kit Molde Ejetor e Cortador Tema Diamante Lapidado (2 Peças).',
@@ -1848,35 +1812,6 @@ Aviso legal
       ['Largura', '5 cm'],
       ['Comprimento', '5 cm'],
       ['Diâmetro', '5 cm'],
-      ['É livre de BPA', 'Sim'],
-      ['É para uso de forma quente', 'Não'],
-    ],
-  },
-  {
-    id: 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-4434',
-    nome: 'Carimbo Personalizado Logo Nome Brigadeiro Doce 1 Pc Aleatório Tipo 4',
-    descricao: 'Carimbo Marcador Personalizado para Doces (1 Unidade).',
-    categoria: 'Confeitaria',
-    preco: 21.5,
-    precoOriginal: 35.9,
-    fotos: ['carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-4434-1.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-4434-2.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-4434-3.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-4434-4.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-4434-5.jpg'],
-    detalhes: `Carimbo Marcador Personalizado para Doces (1 Unidade)
-• O que você recebe: 1 Carimbo personalizado com o seu logotipo, nome ou arte exclusiva.
-• Indicação de Uso: Ferramenta ideal para estampar sua marca em brigadeiros, doces finos, biscoitos e pasta americana, valorizando eventos, brindes corporativos, lembrancinhas e encomendas profissionais.
-• Como Funciona a Personalização: Após a confirmação da compra, envie o seu logotipo (em alta resolução), nome ou informação desejada imediatamente através do chat do pedido. Nossa equipe técnica fará a análise do arquivo para garantir a melhor qualidade de marcação antes de iniciar a produção.
-• Material e Segurança: Fabricado em plástico premium de alta precisão, totalmente seguro para contato direto com alimentos e 100% Livre de BPA.
-• Manutenção e Limpeza: Higienize apenas com água fria e sabão neutro. Não exponha o produto a água quente, lava-louças ou fontes de calor para preservar a integridade da peça.
-• Avisos Importantes: O prazo de confecção e envio segue rigorosamente o estipulado no anúncio. A cor da estrutura do carimbo pode variar conforme a disponibilidade de estoque. Caso tenha dúvidas sobre a viabilidade da sua arte ou tamanho, envie uma pergunta antes de finalizar a compra.
-
-Aviso legal
-É livre de BPA.`,
-    caracteristicas: [
-      ['Marca', 'N97'],
-      ['Cor e padrão', 'Aleatório'],
-      ['Formato de venda', 'Unidade'],
-      ['Quantidade de carimbos', '1'],
-      ['Material do carimbo', 'PLA'],
-      ['Material do cabo', 'PLA'],
       ['É livre de BPA', 'Sim'],
       ['É para uso de forma quente', 'Não'],
     ],
@@ -1933,35 +1868,6 @@ Manutenção e Limpeza: Para preservar a integridade e durabilidade das peças, 
       ['Marca', 'N97'],
       ['Cor e padrão', 'Aleatório'],
       ['É livre de BPA', 'Não'],
-      ['É para uso de forma quente', 'Não'],
-    ],
-  },
-  {
-    id: 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-6340',
-    nome: 'Carimbo Personalizado Logo Nome Brigadeiro Doce 1 Pc Aleatório Tipo 2',
-    descricao: 'Carimbo Marcador Personalizado para Doces (1 Unidade).',
-    categoria: 'Confeitaria',
-    preco: 21.5,
-    precoOriginal: 35.9,
-    fotos: ['carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-6340-1.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-6340-2.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-6340-3.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-6340-4.jpg', 'carimbo-personalizado-logo-nome-brigadeiro-doce-1-pc-aleator-6340-5.jpg'],
-    detalhes: `Carimbo Marcador Personalizado para Doces (1 Unidade)
-• O que você recebe: 1 Carimbo personalizado com o seu logotipo, nome ou arte exclusiva.
-• Indicação de Uso: Ferramenta ideal para estampar sua marca em brigadeiros, doces finos, biscoitos e pasta americana, valorizando eventos, brindes corporativos, lembrancinhas e encomendas profissionais.
-• Como Funciona a Personalização: Após a confirmação da compra, envie o seu logotipo (em alta resolução), nome ou informação desejada imediatamente através do chat do pedido. Nossa equipe técnica fará a análise do arquivo para garantir a melhor qualidade de marcação antes de iniciar a produção.
-• Material e Segurança: Fabricado em plástico premium de alta precisão, totalmente seguro para contato direto com alimentos e 100% Livre de BPA.
-• Manutenção e Limpeza: Higienize apenas com água fria e sabão neutro. Não exponha o produto a água quente, lava-louças ou fontes de calor para preservar a integridade da peça.
-• Avisos Importantes: O prazo de confecção e envio segue rigorosamente o estipulado no anúncio. A cor da estrutura do carimbo pode variar conforme a disponibilidade de estoque. Caso tenha dúvidas sobre a viabilidade da sua arte ou tamanho, envie uma pergunta antes de finalizar a compra.
-
-Aviso legal
-É livre de BPA.`,
-    caracteristicas: [
-      ['Marca', 'N97'],
-      ['Cor e padrão', 'Aleatório'],
-      ['Formato de venda', 'Unidade'],
-      ['Quantidade de carimbos', '1'],
-      ['Material do carimbo', 'PLA'],
-      ['Material do cabo', 'PLA'],
-      ['É livre de BPA', 'Sim'],
       ['É para uso de forma quente', 'Não'],
     ],
   },

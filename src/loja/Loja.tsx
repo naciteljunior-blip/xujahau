@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import Carrinho from './Carrinho'
 import { BotaoWhatsApp, IconeCarrinho, IconeWhatsApp } from './componentes'
-import { iconesCategorias, loja, produtos, type Produto } from './config'
-import { base, centavos, formatarPreco, linkWhatsApp, QTD_MAXIMA, type ItemCarrinho } from './util'
+import { iconesCategorias, loja, produtos, type Produto, type Variacao } from './config'
+import { base, centavos, chaveCarrinho, formatarPreco, linkWhatsApp, QTD_MAXIMA, type ItemCarrinho } from './util'
 
 const msgGeral = `Olá! Vim pelo site da ${loja.nome} e gostaria de mais informações.`
 const msgEncomenda = `Olá! Vim pelo site da ${loja.nome} e gostaria de encomendar uma peça 3D.`
@@ -22,21 +22,28 @@ export default function Loja() {
   const [carrinho, setCarrinho] = useLocalStorage<Record<string, number>>('thinklab-carrinho', {})
   const carrinhoRef = useRef<HTMLDialogElement>(null)
   const itens: ItemCarrinho[] = produtos
-    .filter((p) => p.preco && Number.isInteger(carrinho[p.id]) && carrinho[p.id] > 0)
-    .map((p) => ({ produto: p, quantidade: Math.min(carrinho[p.id], QTD_MAXIMA) }))
+    .flatMap((p) =>
+      p.variacoes
+        ? p.variacoes.map((v) => ({ chave: chaveCarrinho(p, v), produto: p, variacao: v, preco: v.preco }))
+        : p.preco
+          ? [{ chave: chaveCarrinho(p), produto: p, preco: p.preco }]
+          : [],
+    )
+    .filter((i) => Number.isInteger(carrinho[i.chave]) && carrinho[i.chave] > 0)
+    .map((i) => ({ ...i, quantidade: Math.min(carrinho[i.chave], QTD_MAXIMA) }))
   const totalItens = itens.reduce((soma, i) => soma + i.quantidade, 0)
-  const totalCentavos = itens.reduce((soma, i) => soma + centavos(i.produto.preco!) * i.quantidade, 0)
+  const totalCentavos = itens.reduce((soma, i) => soma + centavos(i.preco) * i.quantidade, 0)
 
-  const alterarQuantidade = (id: string, delta: number) =>
+  const alterarQuantidade = (chave: string, delta: number) =>
     setCarrinho((atual) => {
-      const nova = Math.min((Number.isInteger(atual[id]) ? atual[id] : 0) + delta, QTD_MAXIMA)
+      const nova = Math.min((Number.isInteger(atual[chave]) ? atual[chave] : 0) + delta, QTD_MAXIMA)
       const copia = { ...atual }
-      if (nova > 0) copia[id] = nova
-      else delete copia[id]
+      if (nova > 0) copia[chave] = nova
+      else delete copia[chave]
       return copia
     })
   const abrirCarrinho = () => carrinhoRef.current?.showModal()
-  const noCarrinho = (id: string) => itens.find((i) => i.produto.id === id)?.quantidade ?? 0
+  const noCarrinho = (id: string) => itens.filter((i) => i.produto.id === id).reduce((soma, i) => soma + i.quantidade, 0)
 
   const [detalhe, setDetalhe] = useState<Produto | null>(null)
 
@@ -314,7 +321,7 @@ export default function Loja() {
           key={detalhe.id}
           produto={detalhe}
           noCarrinho={noCarrinho(detalhe.id)}
-          onAdicionar={() => alterarQuantidade(detalhe.id, 1)}
+          onAdicionar={(v) => alterarQuantidade(chaveCarrinho(detalhe, v), 1)}
           onVerCarrinho={abrirCarrinho}
           onFechar={() => setDetalhe(null)}
         />
@@ -336,12 +343,14 @@ function BotaoAdicionar({
   noCarrinho,
   onAdicionar,
   onVerCarrinho,
+  onEscolher,
   className = '',
 }: {
   produto: Produto
   noCarrinho: number
-  onAdicionar: () => void
+  onAdicionar: () => boolean | void
   onVerCarrinho: () => void
+  onEscolher?: () => void
   className?: string
 }) {
   const [adicionado, setAdicionado] = useState(0)
@@ -360,12 +369,37 @@ function BotaoAdicionar({
     )
   }
 
+  const linkCarrinho = (
+    <p className="mt-2 min-h-7 text-center text-base" aria-live="polite">
+      {noCarrinho > 0 && (
+        <button type="button" onClick={onVerCarrinho} className="font-semibold text-brand-700 underline underline-offset-4 hover:text-brand-900">
+          {noCarrinho} no carrinho · Ver carrinho
+        </button>
+      )}
+    </p>
+  )
+
+  if (produto.variacoes && onEscolher) {
+    return (
+      <div className={className}>
+        <button
+          type="button"
+          onClick={onEscolher}
+          className="inline-flex min-h-14 w-full items-center justify-center gap-2.5 rounded-2xl bg-slate-900 px-5 text-lg font-bold text-white shadow-md transition hover:bg-slate-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+        >
+          Escolher opção ({produto.variacoes.length})
+        </button>
+        {linkCarrinho}
+      </div>
+    )
+  }
+
   return (
     <div className={className}>
       <button
         type="button"
         onClick={() => {
-          onAdicionar()
+          if (onAdicionar() === false) return
           setAdicionado((n) => n + 1)
         }}
         disabled={noCarrinho >= QTD_MAXIMA}
@@ -382,13 +416,7 @@ function BotaoAdicionar({
           </>
         )}
       </button>
-      <p className="mt-2 min-h-7 text-center text-base" aria-live="polite">
-        {noCarrinho > 0 && (
-          <button type="button" onClick={onVerCarrinho} className="font-semibold text-brand-700 underline underline-offset-4 hover:text-brand-900">
-            {noCarrinho} no carrinho · Ver carrinho
-          </button>
-        )}
-      </p>
+      {linkCarrinho}
     </div>
   )
 }
@@ -401,7 +429,12 @@ const percentualDesconto = (p: Produto) =>
 const mensagemProduto = (p: Produto) =>
   `Olá! Tenho interesse no produto *${p.nome}*${p.preco ? ` (${formatarPreco(p.preco)})` : ''}. Pode me passar mais informações?`
 
-type PropsCarrinho = { noCarrinho: number; onAdicionar: () => void; onVerCarrinho: () => void }
+type PropsCarrinho = { noCarrinho: number; onAdicionar: (v?: Variacao) => void; onVerCarrinho: () => void }
+
+const temPrecosDiferentes = (p: Produto) => new Set(p.variacoes?.map((v) => v.preco)).size > 1
+
+const comVariacao = (p: Produto, v: Variacao | null): Produto =>
+  v ? { ...p, preco: v.preco, precoOriginal: v.precoOriginal ?? p.precoOriginal, variacoes: undefined } : p
 
 function CartaoProduto({
   produto: p,
@@ -429,7 +462,7 @@ function CartaoProduto({
         <h3 className="text-xl font-bold leading-snug text-slate-900">{p.nome}</h3>
         <p className="mt-2 flex-1 text-slate-600">{p.descricao}</p>
         <Preco produto={p} className="mt-4" />
-        <BotaoAdicionar produto={p} {...carrinho} className="mt-4" />
+        <BotaoAdicionar produto={p} {...carrinho} onEscolher={onVerDetalhes} className="mt-4" />
         {temDetalhes && (
           <button
             type="button"
@@ -490,7 +523,10 @@ function Preco({ produto: p, className = '' }: { produto: Produto; className?: s
           <span className="sr-only"> por</span>
         </p>
       )}
-      <p className="text-3xl font-extrabold text-slate-900">{formatarPreco(p.preco)}</p>
+      <p className="text-3xl font-extrabold text-slate-900">
+        {temPrecosDiferentes(p) && <span className="block text-base font-semibold text-slate-600">A partir de</span>}
+        {formatarPreco(p.preco)}
+      </p>
     </div>
   )
 }
@@ -499,12 +535,32 @@ function DetalhesProduto({
   produto: p,
   onVerCarrinho,
   onFechar,
-  ...carrinho
+  onAdicionar,
+  noCarrinho,
 }: { produto: Produto; onFechar: () => void } & PropsCarrinho) {
   const [fotoAtual, setFotoAtual] = useState(0)
+  const [escolhida, setEscolhida] = useState<Variacao | null>(null)
+  const [faltaEscolher, setFaltaEscolher] = useState(false)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const fotos = p.fotos ?? []
   const fechar = () => dialogRef.current?.close()
+  const exibido = comVariacao(p, escolhida)
+
+  const escolher = (v: Variacao) => {
+    setEscolhida(v)
+    setFaltaEscolher(false)
+    const i = v.foto ? fotos.indexOf(v.foto) : -1
+    if (i >= 0) setFotoAtual(i)
+  }
+
+  const adicionar = () => {
+    if (p.variacoes && !escolhida) {
+      setFaltaEscolher(true)
+      document.getElementById(`opcao-${p.id}-0`)?.focus()
+      return false
+    }
+    onAdicionar(escolhida ?? undefined)
+  }
 
   useEffect(() => {
     if (!dialogRef.current?.open) dialogRef.current?.showModal()
@@ -531,7 +587,7 @@ function DetalhesProduto({
         <div>
           <div className="relative overflow-hidden rounded-2xl ring-1 ring-stone-200">
             <FotoProduto produto={p} foto={fotos[fotoAtual]} />
-            <SeloDesconto produto={p} className="absolute right-3 top-3" />
+            <SeloDesconto produto={exibido} className="absolute right-3 top-3" />
           </div>
           {fotos.length > 1 && (
             <div className="mt-3 flex flex-wrap gap-2">
@@ -553,10 +609,50 @@ function DetalhesProduto({
         <div className="flex flex-col">
           <p className="text-sm font-bold uppercase tracking-wide text-brand-700">{p.categoria}</p>
           <h3 className="mt-1 text-2xl font-extrabold leading-snug text-slate-900">{p.nome}</h3>
-          <Preco produto={p} className="mt-4" />
+          <Preco produto={exibido} className="mt-4" />
+          {p.variacoes && (
+            <fieldset className="mt-5">
+              <legend className="text-lg font-extrabold text-slate-900">{p.rotuloVariacao ?? 'Escolha uma opção'}</legend>
+              <div role="radiogroup" className="mt-2 grid gap-2" aria-invalid={faltaEscolher || undefined}>
+                {p.variacoes.map((v, i) => (
+                  <label
+                    key={v.nome}
+                    className={`flex min-h-16 cursor-pointer items-center gap-3 rounded-2xl p-2 pr-4 ring-2 transition has-[:focus-visible]:outline has-[:focus-visible]:outline-4 has-[:focus-visible]:outline-slate-400 ${
+                      escolhida?.nome === v.nome
+                        ? 'bg-brand-50 ring-brand-600'
+                        : faltaEscolher
+                          ? 'ring-red-400'
+                          : 'ring-stone-200 hover:ring-stone-400'
+                    }`}
+                  >
+                    <input
+                      id={`opcao-${p.id}-${i}`}
+                      type="radio"
+                      name={`opcao-${p.id}`}
+                      checked={escolhida?.nome === v.nome}
+                      onChange={() => escolher(v)}
+                      className="sr-only"
+                    />
+                    {v.foto && <img src={`${base}produtos/${v.foto}`} alt="" className="h-14 w-14 shrink-0 rounded-xl bg-white object-cover" />}
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-bold text-slate-900">{v.nome}</span>
+                      {v.dica && <span className="block text-base text-slate-600">{v.dica}</span>}
+                    </span>
+                    <span className="font-extrabold text-slate-900">{formatarPreco(v.preco)}</span>
+                  </label>
+                ))}
+              </div>
+              {faltaEscolher && (
+                <p className="mt-2 text-base font-semibold text-red-700" role="alert">
+                  Escolha uma opção antes de adicionar.
+                </p>
+              )}
+            </fieldset>
+          )}
           <BotaoAdicionar
-            produto={p}
-            {...carrinho}
+            produto={exibido}
+            noCarrinho={noCarrinho}
+            onAdicionar={adicionar}
             onVerCarrinho={() => {
               fechar()
               onVerCarrinho()
@@ -673,6 +769,7 @@ function Carrossel({ itens, onAbrir }: { itens: Produto[]; onAbrir: (p: Produto)
                     <span className="line-clamp-2 min-h-[3rem] text-base font-bold leading-6 text-slate-900">{p.nome}</span>
                     {p.preco ? (
                       <span className="mt-2 flex flex-wrap items-baseline gap-x-2">
+                        {temPrecosDiferentes(p) && <span className="w-full text-sm font-semibold text-slate-600">A partir de</span>}
                         <span className="text-2xl font-extrabold text-slate-900">{formatarPreco(p.preco)}</span>
                         {percentualDesconto(p) > 0 && <s className="text-base text-slate-500">{formatarPreco(p.precoOriginal!)}</s>}
                       </span>

@@ -55,8 +55,8 @@ const camposFaltando = (e: Entrega) => obrigatorios.filter(([campo, , valido]) =
 
 function mensagemPedido(itens: ItemCarrinho[], subtotalCentavos: number, e: Entrega) {
   const linhas = itens.map(
-    ({ produto, quantidade }) =>
-      `• ${quantidade}x ${produto.nome} — ${formatarPreco((centavos(produto.preco!) * quantidade) / 100)}`,
+    ({ produto, variacao, preco, quantidade }) =>
+      `• ${quantidade}x ${produto.nome}${variacao ? ` (${variacao.nome})` : ''} — ${formatarPreco((centavos(preco) * quantidade) / 100)}`,
   )
   const complemento = e.complemento.trim() ? ` - ${e.complemento.trim()}` : ''
   const observacoes = e.observacoes.trim() ? `\n*Observações:* ${e.observacoes.trim()}` : ''
@@ -196,8 +196,8 @@ export default function Carrinho({
           <>
             <div ref={corpoRef} className="flex-1 overflow-y-auto px-5">
               <ul className="divide-y divide-stone-200">
-                {itens.map(({ produto: p, quantidade }) => (
-                  <LinhaCarrinho key={p.id} produto={p} quantidade={quantidade} onAlterar={onAlterar} />
+                {itens.map((item) => (
+                  <LinhaCarrinho key={item.chave} {...item} onAlterar={onAlterar} />
                 ))}
               </ul>
             </div>
@@ -361,28 +361,32 @@ function Resumo({ subtotalCentavos }: { subtotalCentavos: number }) {
 }
 
 function LinhaCarrinho({
+  chave,
   produto: p,
+  variacao,
+  preco,
   quantidade,
   onAlterar,
 }: ItemCarrinho & { onAlterar: (id: string, delta: number) => void }) {
   return (
     <li className="flex gap-4 py-4">
       <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl ring-1 ring-stone-200">
-        {p.fotos?.[0] ? (
-          <img src={`${base}produtos/${p.fotos[0]}`} alt="" className="h-full w-full bg-white object-cover" />
+        {variacao?.foto ?? p.fotos?.[0] ? (
+          <img src={`${base}produtos/${variacao?.foto ?? p.fotos![0]}`} alt="" className="h-full w-full bg-white object-cover" />
         ) : (
           <span className="flex h-full items-center justify-center text-4xl" aria-hidden>{p.emoji ?? '📦'}</span>
         )}
       </div>
       <div className="min-w-0 flex-1">
         <p className="font-bold leading-snug text-slate-900">{p.nome}</p>
-        <p className="mt-1 text-base text-slate-600">{formatarPreco(p.preco!)} cada</p>
+        {variacao && <p className="mt-1 text-base font-semibold text-slate-700">Opção: {variacao.nome}</p>}
+        <p className="mt-1 text-base text-slate-600">{formatarPreco(preco)} cada</p>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center rounded-2xl ring-2 ring-stone-200">
             <button
               type="button"
-              onClick={() => onAlterar(p.id, -1)}
-              aria-label={`Diminuir quantidade de ${p.nome}`}
+              onClick={() => onAlterar(chave, -1)}
+              aria-label={`Diminuir quantidade de ${p.nome}${variacao ? `, ${variacao.nome}` : ''}`}
               className="h-12 w-12 rounded-l-2xl text-2xl font-bold text-slate-700 hover:bg-stone-100 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400"
             >
               −
@@ -392,19 +396,19 @@ function LinhaCarrinho({
             </span>
             <button
               type="button"
-              onClick={() => onAlterar(p.id, 1)}
+              onClick={() => onAlterar(chave, 1)}
               disabled={quantidade >= QTD_MAXIMA}
-              aria-label={`Aumentar quantidade de ${p.nome}`}
+              aria-label={`Aumentar quantidade de ${p.nome}${variacao ? `, ${variacao.nome}` : ''}`}
               className="h-12 w-12 rounded-r-2xl text-2xl font-bold text-slate-700 hover:bg-stone-100 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400 disabled:opacity-40"
             >
               +
             </button>
           </div>
-          <p className="text-xl font-extrabold text-slate-900">{formatarPreco((centavos(p.preco!) * quantidade) / 100)}</p>
+          <p className="text-xl font-extrabold text-slate-900">{formatarPreco((centavos(preco) * quantidade) / 100)}</p>
         </div>
         <button
           type="button"
-          onClick={() => onAlterar(p.id, -quantidade)}
+          onClick={() => onAlterar(chave, -quantidade)}
           className="mt-2 min-h-10 text-base font-semibold text-red-700 underline underline-offset-4 hover:text-red-900"
         >
           Remover
