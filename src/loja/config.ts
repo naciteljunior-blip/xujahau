@@ -364,8 +364,8 @@ Versatilidade de uso: atende perfeitamente como organizador prático ou como ele
     nome: 'Suporte Parede Mangueira Grande Pequena Universal Premium',
     descricao: 'Mantenha seu espaço organizado, seguro e livre de tropeços. Este suporte de parede protege sua mangueira contra desgastes e…',
     categoria: 'Decoração',
-    preco: 34.9,
-    precoOriginal: 39,
+    preco: 79,
+    precoOriginal: 158,
     fotos: ['suporte-parede-mangueira-grande-pequena-universal-premium-1.jpg', 'suporte-parede-mangueira-grande-pequena-universal-premium-2.jpg', 'suporte-parede-mangueira-grande-pequena-universal-premium-3.jpg', 'suporte-parede-mangueira-grande-pequena-universal-premium-4.jpg', 'suporte-parede-mangueira-grande-pequena-universal-premium-5.jpg'],
     detalhes: `SUPORTE DE PAREDE PARA MANGUEIRA DE JARDIM
 
