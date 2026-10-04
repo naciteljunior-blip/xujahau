@@ -5,19 +5,17 @@ import { base, comVariacao, formatarPreco, linkWhatsApp, mensagemProduto, percen
 
 export type PropsCarrinho = { noCarrinho: number; onAdicionar: (v?: Variacao) => void; onVerCarrinho: () => void }
 
-export function BotaoAdicionar({
+function BotaoAdicionar({
   produto,
   noCarrinho,
   onAdicionar,
   onVerCarrinho,
-  onEscolher,
   className = '',
 }: {
   produto: Produto
   noCarrinho: number
   onAdicionar: () => boolean | void
   onVerCarrinho: () => void
-  onEscolher?: () => void
   className?: string
 }) {
   const [adicionado, setAdicionado] = useState(0)
@@ -46,21 +44,6 @@ export function BotaoAdicionar({
     </p>
   )
 
-  if (produto.variacoes && onEscolher) {
-    return (
-      <div className={className}>
-        <button
-          type="button"
-          onClick={onEscolher}
-          className="inline-flex min-h-14 w-full items-center justify-center gap-2.5 rounded-2xl bg-slate-900 px-5 text-lg font-bold text-white shadow-md transition hover:bg-slate-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
-        >
-          Escolher opção ({produto.variacoes.length})
-        </button>
-        {linkCarrinho}
-      </div>
-    )
-  }
-
   return (
     <div className={className}>
       <button
@@ -88,7 +71,7 @@ export function BotaoAdicionar({
   )
 }
 
-export function FotoProduto({ produto: p, foto }: { produto: Produto; foto?: string }) {
+function FotoProduto({ produto: p, foto }: { produto: Produto; foto?: string }) {
   const arquivo = foto ?? p.fotos?.[0]
   return (
     <div className="flex aspect-[4/3] items-center justify-center overflow-hidden bg-gradient-to-br from-brand-100 via-white to-amber-100">
@@ -113,7 +96,7 @@ export function SeloDesconto({ produto, className = '' }: { produto: Produto; cl
   )
 }
 
-export function Preco({ produto: p, className = '' }: { produto: Produto; className?: string }) {
+function Preco({ produto: p, className = '' }: { produto: Produto; className?: string }) {
   if (!p.preco) return <p className={`text-2xl font-extrabold text-slate-500 ${className}`}>Sob consulta</p>
   const pct = percentualDesconto(p)
   return (
