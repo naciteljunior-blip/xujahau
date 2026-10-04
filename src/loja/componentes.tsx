@@ -1,3 +1,5 @@
+import { formatarPreco, linkWhatsApp, mensagemGeral } from './util'
+
 export function BotaoWhatsApp({
   href,
   children,
@@ -41,5 +43,35 @@ export function IconeCarrinho({ className }: { className?: string }) {
       <circle cx="18" cy="20" r="1.5" />
       <path d="M2.5 3h2.6l2.4 11.2a1.5 1.5 0 0 0 1.5 1.2h8.6a1.5 1.5 0 0 0 1.5-1.1L21 7H6" />
     </svg>
+  )
+}
+
+export function BarraCarrinho({ totalItens, totalCentavos, onAbrir }: { totalItens: number; totalCentavos: number; onAbrir: () => void }) {
+  return totalItens > 0 ? (
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-white/95 p-3 backdrop-blur">
+      <button
+        type="button"
+        onClick={onAbrir}
+        className="mx-auto flex min-h-14 w-full max-w-xl items-center justify-between gap-3 rounded-2xl bg-slate-900 px-5 text-lg font-bold text-white shadow-lg transition hover:bg-slate-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+      >
+        <span className="flex items-center gap-3">
+          <IconeCarrinho className="h-6 w-6" />
+          <span>
+            Ver carrinho ({totalItens})<span className="sr-only"> {totalItens === 1 ? 'item' : 'itens'}</span>
+          </span>
+        </span>
+        <span>{formatarPreco(totalCentavos / 100)}</span>
+      </button>
+    </div>
+  ) : (
+    <a
+      href={linkWhatsApp(mensagemGeral)}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Conversar no WhatsApp"
+      className="fixed bottom-5 right-5 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl ring-4 ring-white transition hover:scale-105 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+    >
+      <IconeWhatsApp className="h-9 w-9" />
+    </a>
   )
 }

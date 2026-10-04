@@ -28,10 +28,6 @@ export default {
           '35%': { transform: 'scale(1.08)' },
           '100%': { transform: 'scale(1)' },
         },
-        carrossel: {
-          from: { transform: 'translateX(0)' },
-          to: { transform: 'translateX(-50%)' },
-        },
         'check-in': {
           '0%': { transform: 'scale(0) rotate(-20deg)', opacity: '0' },
           '60%': { transform: 'scale(1.25) rotate(0deg)', opacity: '1' },
@@ -41,7 +37,6 @@ export default {
       animation: {
         'save-pop': 'save-pop 0.35s ease-out',
         'check-in': 'check-in 0.4s ease-out',
-        carrossel: 'carrossel 40s linear infinite',
       },
     },
   },
