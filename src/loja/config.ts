@@ -253,14 +253,14 @@ Garantia: 3 meses de garantia oferecida pelo vendedor.`,
     ],
   },
   {
-    id: 'kit-6-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio',
-    nome: 'Kit 6 Carimbos Brigadeiro Docinho Frutas Marcador Aleatório 4',
-    descricao: 'Kit Carimbos Marcadores para Doces Tema Frutas V2 (6 Unidades).',
+    id: 'kit-4-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio',
+    nome: 'Kit 4 Carimbos Brigadeiro Docinho Frutas Marcador Aleatório',
+    descricao: 'Kit Carimbos Marcadores para Doces Tema Frutas V2 (4 Unidades).',
     categoria: 'Confeitaria',
     preco: 19,
     precoOriginal: 22,
-    fotos: ['kit-6-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-1.jpg', 'kit-6-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-2.jpg', 'kit-6-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-3.jpg'],
-    detalhes: `Kit Carimbos Marcadores para Doces Tema Frutas V2 (6 Unidades)
+    fotos: ['kit-4-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-1.jpg', 'kit-4-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-2.jpg', 'kit-4-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-3.jpg'],
+    detalhes: `Kit Carimbos Marcadores para Doces Tema Frutas V2 (4 Unidades)
 
 O que você recebe: 1 Kit contendo 4 carimbos com estampas exclusivas no tema Frutas (Banana, Morango, Melancia, Cítrico, Cereja e Uva) em cor aleatória.
 
@@ -275,7 +275,7 @@ Manutenção e Limpeza: Superfície projetada para higienização rápida. Recom
       ['Marca', 'N97'],
       ['Cor e padrão', 'Aleatório'],
       ['Formato de venda', 'Kit'],
-      ['Unidades por kit', '6'],
+      ['Unidades por kit', '4'],
       ['Material do carimbo', 'Plástico'],
       ['Material do cabo', 'Plástico'],
       ['É livre de BPA', 'Sim'],
@@ -557,13 +557,13 @@ Garantia: 7 dias de garantia de fábrica.`,
     ],
   },
   {
-    id: 'kit-6-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-4992',
-    nome: 'Kit 6 Carimbos Brigadeiro Docinho Frutas Marcador Aleatório 6',
+    id: 'kit-6-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio',
+    nome: 'Kit 6 Carimbos Brigadeiro Docinho Frutas Marcador Aleatório',
     descricao: 'Kit Carimbos Marcadores para Doces Tema Frutas V2 (6 Unidades).',
     categoria: 'Confeitaria',
     preco: 21,
     precoOriginal: 29,
-    fotos: ['kit-6-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-4992-1.jpg', 'kit-6-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-4992-2.jpg', 'kit-6-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-4992-3.jpg'],
+    fotos: ['kit-6-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-1.jpg', 'kit-6-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-2.jpg', 'kit-6-carimbos-brigadeiro-docinho-frutas-marcador-aleatorio-3.jpg'],
     detalhes: `Kit Carimbos Marcadores para Doces Tema Frutas V2 (6 Unidades)
 
 O que você recebe: 1 Kit contendo 6 carimbos com estampas exclusivas no tema Frutas (Banana, Morango, Melancia, Cítrico, Cereja e Uva) em cor aleatória.
