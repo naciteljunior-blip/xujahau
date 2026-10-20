@@ -1062,33 +1062,6 @@ Manutenção e Limpeza: Para preservar a integridade e durabilidade das peças, 
     ],
   },
   {
-    id: 'marcado-fatias-perfeitas-festival-bolo-cake-30x10x2-5cm',
-    nome: 'Marcado Fatias Perfeitas Festival Bolo Cake 30x10x2,5cm',
-    descricao: 'Marcador para Fatias de Bolo Slice Cake 30x10x2,5cm (1 Unidade).',
-    categoria: 'Confeitaria',
-    preco: 69,
-    precoOriginal: 138,
-    fotos: ['marcado-fatias-perfeitas-festival-bolo-cake-30x10x2-5cm-1.jpg', 'marcado-fatias-perfeitas-festival-bolo-cake-30x10x2-5cm-2.jpg', 'marcado-fatias-perfeitas-festival-bolo-cake-30x10x2-5cm-3.jpg', 'marcado-fatias-perfeitas-festival-bolo-cake-30x10x2-5cm-4.jpg', 'marcado-fatias-perfeitas-festival-bolo-cake-30x10x2-5cm-5.jpg'],
-    detalhes: `Marcador para Fatias de Bolo Slice Cake 30x10x2,5cm (1 Unidade)
-
-O que você recebe: 1 Marcador de fatias (forma) no formato retangular, com as dimensões de 30 cm x 10 cm x 2,5 cm.
-
-Indicação de Uso: Ferramenta ideal para o porcionamento padronizado de bolos tipo slice cake, sendo perfeita para uso comercial por confeiteiros e padarias, bem como para uso doméstico.
-
-Benefícios para a Produção: O design funcional adapta-se perfeitamente ao formato do bolo, auxiliando no alinhamento correto do corte. Permite dividir as fatias de forma uniforme, rápida e prática, garantindo máxima precisão e uma apresentação com padrão de acabamento profissional.
-
-Material e Segurança: Fabricado com material de alta resistência e durabilidade, projetado para o uso contínuo nas preparações.
-
-Manutenção e Limpeza: Para preservar a integridade da peça, recomenda-se a higienização simples com água em temperatura ambiente e sabão neutro.
-
-Garantia: 3 meses de garantia oferecida pelo vendedor.`,
-    caracteristicas: [
-      ['Marca', 'N97'],
-      ['Material', 'Plástico'],
-      ['Diâmetro', '10 cm'],
-    ],
-  },
-  {
     id: 'kit-6-carimbos-p-brigadeiro-super-herois-marcador-aleatorio',
     nome: 'Kit 6 Carimbos P Brigadeiro Super Herois Marcador Aleatório Super-heróis',
     descricao: 'Kit Carimbos Marcadores para Doces Tema Super-Heróis (6 Unidades).',
@@ -2157,35 +2130,6 @@ Envio e Embalagem: Produto a pronta entrega com despacho rápido para todo o Bra
       ['Comprimento', '2 cm'],
       ['Diâmetro', '2 cm'],
       ['É para uso de forma quente', 'Não'],
-    ],
-  },
-  {
-    id: 'enfeite-natal-croche-boneco-de-neve-6cm-noel',
-    nome: 'Enfeite Natal Crochê Boneco De Neve 6cm',
-    descricao: 'Boneco de Neve Miniatura Decorativo Natalino Estilo Crochê em 3D.',
-    categoria: 'Decoração',
-    preco: 24.9,
-    precoOriginal: 59,
-    fotos: ['enfeite-natal-croche-boneco-de-neve-6cm-noel-1.jpg', 'enfeite-natal-croche-boneco-de-neve-6cm-noel-2.jpg', 'enfeite-natal-croche-boneco-de-neve-6cm-noel-3.jpg', 'enfeite-natal-croche-boneco-de-neve-6cm-noel-4.jpg'],
-    detalhes: `Boneco de Neve Miniatura Decorativo Natalino Estilo Crochê em 3D
-
-O que você recebe: 1 Peça miniatura decorativa de Boneco de Neve com design exclusivo e acabamento texturizado inspirado no efeito de pontos de crochê. (Atenção: O produto é estritamente decorativo e não possui luzes, sons ou componentes elétricos).
-
-Indicação de Uso: Peça compacta e charmosa, perfeita para agregar o espírito natalino a mesas, aparadores, estantes, prateleiras, escritórios e outros pequenos espaços, trazendo um toque divertido e acolhedor ao ambiente.
-
-Dimensões e Cores: A miniatura possui 6 cm de altura (tamanho ideal para composições delicadas) e é produzida nas cores branco e vermelho.
-
-Material: Fabricado em plástico PETG de alta qualidade por meio de impressão 3D, garantindo excelente resistência mecânica e longa durabilidade à peça.
-
-Características da Impressão 3D (Aviso Importante): Por se tratar de um produto fabricado com tecnologia de impressão 3D, podem ocorrer sutis linhas, texturas ou variações características do processo produtivo. Esses detalhes não configuram defeito, mas sim particularidades que compõem o acabamento exclusivo da peça.
-
-Manutenção e Cuidados: Para conservar o seu produto por mais tempo, evite quedas e impactos. Realize a limpeza delicadamente utilizando apenas um pano seco, levemente umedecido ou espanador. Não utilize produtos químicos, não mergulhe em água e evite a exposição direta e prolongada à luz solar ou a altas temperaturas.`,
-    caracteristicas: [
-      ['Marca', 'N97'],
-      ['Cor', 'Branco e vermelho'],
-      ['Formato de venda', 'Unidade'],
-      ['Quantidade de bonecos navideños', '1'],
-      ['Altura', '6 cm'],
     ],
   },
   {
