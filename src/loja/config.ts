@@ -1871,4 +1871,358 @@ Manutenção e Limpeza: Para preservar a integridade e durabilidade das peças, 
       ['É para uso de forma quente', 'Não'],
     ],
   },
+  {
+    id: 'kit-4-ejetor-modelador-doce-marcador-brigadeiro-dinossauro',
+    nome: 'Kit 4 Ejetor Modelador Doce Marcador Brigadeiro Dinossauro',
+    descricao: '4 ejetores modeladores com estampas do tema Dinossauro para brigadeiros e doces.',
+    categoria: 'Confeitaria',
+    preco: 32.9,
+    precoOriginal: 49,
+    fotos: ['kit-4-ejetor-modelador-doce-marcador-brigadeiro-dinossauro-1.jpg', 'kit-4-ejetor-modelador-doce-marcador-brigadeiro-dinossauro-2.jpg', 'kit-4-ejetor-modelador-doce-marcador-brigadeiro-dinossauro-3.jpg'],
+    detalhes: `Kit Modelador Ejetor Tema Dinossauro (4 Peças)
+
+O que você recebe: 1 Kit contendo 4 ejetores com estampas temáticas exclusivas referentes ao tema Dinossauro. (Atenção: As peças são enviadas em cores sortidas conforme a disponibilidade de estoque. Doces não acompanham o produto, imagens meramente ilustrativas).
+
+Indicação de Uso: Ferramenta ideal para personalizar brigadeiros, pasta americana, fondant, biscuit e massas em geral, garantindo um acabamento lúdico e profissional para festas infantis e eventos temáticos.
+
+Dimensões da Peça: O ejetor possui o tamanho de aproximadamente 4,2 cm.
+
+Benefícios para a Produção: O sistema ejetor prático facilita a marcação e o desmolde rápido e seguro da massa, assegurando agilidade, padronização e um acabamento impecável sem deformar o seu doce.
+
+Material e Segurança: Fabricado em plástico PETG de alta qualidade, garantindo maior resistência mecânica e durabilidade. Produto totalmente atóxico e 100% seguro para o contato direto com alimentos (Livre de BPA).
+
+Manutenção e Limpeza: Para preservar a integridade das peças, higienize exclusivamente com água em temperatura ambiente e sabão neutro. Evite a imersão em água fervente, o uso de máquinas lava-louças e produtos abrasivos.
+
+Envio e Embalagem: Produto a pronta entrega com despacho rápido e acompanhado de Nota Fiscal. Utilizamos o Mercado Envios e opções de entrega no mesmo dia via Envios Flex para garantir máxima agilidade. O kit é embalado com total cuidado para assegurar que chegue em perfeitas condições até você.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor e padrão', 'Aleatório'],
+      ['Formato de venda', 'Kit'],
+      ['Quantidade de carimbos', '4'],
+      ['Material do carimbo', 'Plástico Resistente'],
+      ['Material do cabo', 'Plástico resistente'],
+      ['Altura', '2 cm'],
+      ['Largura', '4.2 cm'],
+      ['Comprimento', '4.2 cm'],
+      ['É para uso de forma quente', 'Não'],
+    ],
+  },
+  {
+    id: 'ejetor-brigadeiro-fundo-do-mar-peixe-polvo-cavalo-marinho',
+    nome: 'Ejetor Brigadeiro Fundo Do Mar Peixe Polvo Cavalo Marinho',
+    descricao: '3 ejetores modeladores com estampas do tema Fundo do Mar para brigadeiros e doces.',
+    categoria: 'Confeitaria',
+    preco: 35.9,
+    precoOriginal: 69,
+    fotos: ['ejetor-brigadeiro-fundo-do-mar-peixe-polvo-cavalo-marinho-1.jpg', 'ejetor-brigadeiro-fundo-do-mar-peixe-polvo-cavalo-marinho-2.jpg'],
+    detalhes: `Kit Modelador Ejetor Tema Fundo do Mar (3 Peças)
+
+O que você recebe: 1 Kit contendo 3 ejetores com estampas temáticas exclusivas referentes ao Fundo do Mar.
+
+Indicação de Uso: Ferramenta versátil, ideal para personalizar brigadeiros, pasta americana, fondant, biscuit, EVA e artesanatos em geral, garantindo um diferencial único nas suas criações.
+
+Dimensões da Peça: O tamanho final do doce ou aplique modelado é de 3,5 cm.
+
+Benefícios para a Produção: Projetado para entregar perfeição em cada detalhe, proporciona marcações nítidas e impecáveis, sem falhas ou irregularidades. Prático e fácil de usar, é ideal tanto para iniciantes quanto para profissionais que buscam agilidade e um acabamento de alta qualidade.
+
+Material e Segurança: Fabricado em plástico PETG de alta qualidade por meio de impressão 3D, garantindo maior resistência mecânica e durabilidade. Produto totalmente atóxico e seguro para o contato direto com alimentos (Livre de BPA).
+
+Manutenção e Limpeza: Para preservar a integridade das peças, higienize exclusivamente com água em temperatura ambiente (água fria) e sabão neutro. Não utilize água quente, pois pode deformar o material, evite o uso de máquinas lava-louças e produtos abrasivos.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Altura', '4 cm'],
+      ['Largura', '12 cm'],
+    ],
+  },
+  {
+    id: '5-carimbos-marcador-brigadeiro-escola-professor-formacao',
+    nome: '5 Carimbos Marcador Brigadeiro Escola Professor Formação',
+    descricao: 'Kit Carimbos Marcadores para Doces Tema Escola e Professor (5 Unidades).',
+    categoria: 'Confeitaria',
+    preco: 19.9,
+    precoOriginal: 33,
+    fotos: ['5-carimbos-marcador-brigadeiro-escola-professor-formacao-1.jpg', '5-carimbos-marcador-brigadeiro-escola-professor-formacao-2.jpg'],
+    detalhes: `Kit Carimbos Marcadores para Doces Tema Escola e Professor (5 Unidades)
+
+O que você recebe: 1 Kit contendo 5 carimbos circulares com estampas temáticas referentes a Escola, Professor e Formação. (Atenção: As peças são enviadas em cores sortidas conforme a disponibilidade de estoque. Doces não acompanham o produto, imagens meramente ilustrativas).
+
+Indicação de Uso: Ferramenta ideal para personalizar brigadeiros, docinhos gourmet, biscoitos, pasta americana e biscuit, garantindo um acabamento sofisticado e profissional para a sua produção.
+
+Dimensões da Peça: Altura total do carimbo de 2,5 cm, diâmetro da base (área redonda) de 2,2 cm e relevo da figura com 0,4 cm de altura.
+
+Material e Segurança: Fabricado em plástico PLA (biopolímero biodegradável derivado do milho). Produto resistente, totalmente atóxico e 100% seguro para o contato direto com alimentos (Livre de BPA).
+
+Manutenção e Limpeza: O material PLA possui sensibilidade térmica e deve ser manuseado apenas com massas frias. Higienize exclusivamente com água em temperatura ambiente e sabão neutro. Não utilize água quente, máquinas lava-louças ou produtos abrasivos, e evite a exposição ao sol.
+
+Envio e Embalagem: Produto de pronta entrega, acompanhado de Nota Fiscal. O kit é embalado com o máximo de cuidado e proteção para garantir que chegue em perfeitas condições até o seu endereço.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor e padrão', 'Aleatório'],
+      ['Formato de venda', 'Kit'],
+      ['Quantidade de carimbos', '5'],
+      ['Material do carimbo', 'Plástico Resistente'],
+      ['Material do cabo', 'Plástico resistente'],
+      ['Altura', '15 cm'],
+      ['Largura', '2 cm'],
+      ['Comprimento', '20 cm'],
+      ['Diâmetro', '2 cm'],
+      ['É para uso de forma quente', 'Não'],
+    ],
+  },
+  {
+    id: 'kit-9-carimbos-brigadeiro-harry-potter',
+    nome: 'Kit 9 Carimbos Brigadeiro Harry Potter',
+    descricao: 'Kit Carimbos Marcadores para Doces Tema Harry Potter (9 Unidades).',
+    categoria: 'Confeitaria',
+    preco: 24.9,
+    precoOriginal: 42,
+    fotos: ['kit-9-carimbos-brigadeiro-harry-potter-1.jpg', 'kit-9-carimbos-brigadeiro-harry-potter-2.jpg', 'kit-9-carimbos-brigadeiro-harry-potter-3.jpg', 'kit-9-carimbos-brigadeiro-harry-potter-4.jpg'],
+    detalhes: `Kit Carimbos Marcadores para Doces Tema Harry Potter (9 Unidades)
+
+O que você recebe: 1 Kit contendo 9 carimbos com estampas temáticas exclusivas referentes aos símbolos e elementos icônicos da saga Harry Potter.
+
+Indicação de Uso: Ferramenta ideal para personalizar brigadeiros, docinhos gourmet, biscoitos, pasta americana e biscuit, sendo perfeita para encantar em festas e eventos temáticos.
+
+Benefícios para a Produção: Apresenta design ergonômico que facilita o manuseio e assegura marcações precisas e detalhadas na massa, proporcionando um acabamento profissional e padronizado às suas criações culinárias de forma rápida e prática.
+
+Material e Segurança: Fabricado em plástico PETG de alta qualidade, garantindo maior resistência mecânica e durabilidade. Produto totalmente atóxico e 100% seguro para o contato direto com alimentos (Livre de BPA).
+
+Manutenção e Limpeza: Peças fáceis de limpar e armazenar. Para preservar a integridade das peças, higienize exclusivamente com água em temperatura ambiente e sabão neutro. Evite a imersão em água fervente, o uso de máquinas lava-louças e produtos abrasivos.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor e padrão', 'Aleatório'],
+      ['Formato de venda', 'Kit'],
+      ['Quantidade de carimbos', '9'],
+      ['Material do carimbo', 'PLA'],
+      ['Material do cabo', 'Plástico'],
+      ['Altura', '2.5 cm'],
+      ['Largura', '2.2 cm'],
+      ['Comprimento', '2.2 cm'],
+    ],
+  },
+  {
+    id: 'kit-6-carimbos-borboletas-sortidas-brigadeiro-doces',
+    nome: 'Kit 6 Carimbos Borboletas Sortidas Brigadeiro Doces',
+    descricao: 'Kit Carimbos Marcadores para Doces Tema Borboletas Encantadas (6 Unidades).',
+    categoria: 'Confeitaria',
+    preco: 19.9,
+    precoOriginal: 33,
+    fotos: ['kit-6-carimbos-borboletas-sortidas-brigadeiro-doces-1.jpg', 'kit-6-carimbos-borboletas-sortidas-brigadeiro-doces-2.jpg'],
+    detalhes: `Kit Carimbos Marcadores para Doces Tema Borboletas Encantadas (6 Unidades)
+
+O que você recebe: 1 Kit contendo 6 carimbos com estampas temáticas exclusivas referentes ao tema Borboletas Encantadas.
+
+Indicação de Uso: Ferramenta ideal para personalizar brigadeiros, docinhos gourmet, biscoitos, pasta americana e biscuit, garantindo um acabamento sofisticado e profissional para a sua produção.
+
+Modo de Usar: Processo prático e rápido. Basta encaixar o bastão no desenho desejado e pressionar suavemente sobre o doce ou massa para obter uma marcação nítida e personalizada.
+
+Dimensões da Peça: Tamanho padronizado ideal para doces (tamanho aproximado de 3,5 cm de altura total e base com 2,2 cm de diâmetro).
+
+Material e Segurança: Fabricado em plástico PETG de alta qualidade, garantindo maior resistência mecânica e durabilidade. Produto com acabamento estético impecável, totalmente atóxico e 100% seguro para o contato direto com alimentos (Livre de BPA).
+
+Manutenção e Limpeza: Para preservar a integridade das peças, higienize exclusivamente com água em temperatura ambiente e sabão neutro. Evite a imersão em água fervente, o uso de máquinas lava-louças e produtos abrasivos.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor e padrão', 'Aleatório'],
+      ['É livre de BPA', 'Não'],
+      ['É para uso de forma quente', 'Não'],
+    ],
+  },
+  {
+    id: 'kit-8-carimbos-brigadeiro-toy-story',
+    nome: 'Kit 8 Carimbos Brigadeiro Toy Story',
+    descricao: '8 carimbos com estampas do universo Toy Story para brigadeiros e doces.',
+    categoria: 'Confeitaria',
+    preco: 22.9,
+    precoOriginal: 40,
+    fotos: ['kit-8-carimbos-brigadeiro-toy-story-1.jpg', 'kit-8-carimbos-brigadeiro-toy-story-2.jpg', 'kit-8-carimbos-brigadeiro-toy-story-3.jpg'],
+    detalhes: `O que você recebe: 1 Kit contendo 8 carimbos com estampas temáticas exclusivas referentes ao universo Toy Story (incluindo: Chapéu de Cowboy, Bota de Cowboy, Estrela de Xerife, Nome "ANDY", Alien/ET, Planeta/Galáxia, Asas/Símbolo do Buzz e Chapéu de Galáxia).
+
+Indicação de Uso: Ferramenta ideal para personalizar brigadeiros (perfeitamente ajustado para doces com peso entre 15g e 20g), docinhos gourmet, biscoitos, pasta americana e biscuit, garantindo um acabamento lúdico e profissional para festas infantis e eventos temáticos.
+
+Dimensões da Peça: Formato circular com diâmetro da base de 2,0 cm e altura total do carimbo de 2,5 cm.
+
+Benefícios para a Produção: Possui haste anatômica que facilita o manuseio e a aplicação sem amassar ou deformar o doce. Desenvolvidos para entregar marcações limpas, precisas e bem definidas, otimizando o seu tempo e padronizando a sua produção com alta qualidade.
+
+Dica de Uso: Para um resultado impecável e para evitar que a massa grude, passe a superfície do carimbo levemente em açúcar impalpável, pó decorativo, ou unte com um pouco de óleo de coco/água antes de pressionar sobre o brigadeiro já enrolado.
+
+Material e Segurança: Fabricado em plástico PETG de alta qualidade, garantindo maior resistência mecânica e durabilidade. Produto totalmente atóxico e 100% seguro para o contato direto com alimentos (Livre de BPA).
+
+Manutenção e Limpeza: Para preservar a integridade das peças, higienize exclusivamente com água em temperatura ambiente e sabão neutro. Evite a imersão em água fervente, o uso de máquinas lava-louças e produtos abrasivos.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor e padrão', 'Aleatório'],
+      ['Material do carimbo', 'PETG'],
+      ['Material do cabo', 'Petg'],
+      ['Altura', '2.5 cm'],
+      ['Diâmetro', '2 cm'],
+      ['É livre de BPA', 'Sim'],
+      ['É para uso de forma quente', 'Não'],
+    ],
+  },
+  {
+    id: 'kit-6-carimbos-brigadeiro-natal-papai-noel',
+    nome: 'Kit 6 Carimbos Brigadeiro Natal Papai Noel',
+    descricao: 'Kit Carimbos Marcadores para Doces Tema Natal (6 Unidades).',
+    categoria: 'Confeitaria',
+    preco: 19.9,
+    precoOriginal: 34,
+    fotos: ['kit-6-carimbos-brigadeiro-natal-papai-noel-1.jpg', 'kit-6-carimbos-brigadeiro-natal-papai-noel-2.jpg', 'kit-6-carimbos-brigadeiro-natal-papai-noel-3.jpg'],
+    detalhes: `Kit Carimbos Marcadores para Doces Tema Natal (6 Unidades)
+
+O que você recebe: 1 Kit contendo 6 carimbos com estampas temáticas exclusivas referentes ao tema de Natal (Natalino).
+
+Indicação de Uso: Ferramenta ideal para personalizar brigadeiros, docinhos gourmet, doces finos, biscoitos, pasta americana e biscuit. Perfeito para produções artesanais, lembrancinhas e datas comemorativas, proporcionando um acabamento sofisticado e diferenciado.
+
+Dimensões da Peça: Altura total do carimbo de 3,5 cm, diâmetro da base de 2,2 cm e relevo do desenho com 0,5 cm de altura (tamanho ideal para doces padrão).
+
+Benefícios para a Produção: Possui estrutura firme e design de fácil manuseio. Proporciona marcações precisas e uniformes, facilitando a padronização da sua produção e valorizando a apresentação final dos seus produtos com total praticidade.
+
+Material e Segurança: Fabricado em plástico PETG de alta qualidade, garantindo maior resistência mecânica e durabilidade. Produto totalmente atóxico e 100% seguro para o contato direto com alimentos (Livre de BPA).
+
+Manutenção e Limpeza: Para preservar a integridade das peças, higienize exclusivamente com água em temperatura ambiente e sabão neutro. Evite a imersão em água fervente, o uso de máquinas lava-louças e produtos abrasivos.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor e padrão', 'Aleatório'],
+      ['Formato de venda', 'Kit'],
+      ['Quantidade de carimbos', '6'],
+      ['Material do carimbo', 'Plástico'],
+      ['Comprimento', '25 cm'],
+      ['Diâmetro', '2.2 cm'],
+      ['É livre de BPA', 'Não'],
+      ['É para uso de forma quente', 'Não'],
+    ],
+  },
+  {
+    id: 'kit-5-cortador-natal-marcador-cookie-papai-noel-presente',
+    nome: 'Kit 5 Cortador Natal Marcador Cookie Papai Noel Presente',
+    descricao: 'Kit Cortadores e Marcadores para Biscoitos Tema Natal (5 Peças).',
+    categoria: 'Confeitaria',
+    preco: 49.9,
+    precoOriginal: 69,
+    fotos: ['kit-5-cortador-natal-marcador-cookie-papai-noel-presente-1.jpg', 'kit-5-cortador-natal-marcador-cookie-papai-noel-presente-2.jpg', 'kit-5-cortador-natal-marcador-cookie-papai-noel-presente-3.jpg'],
+    detalhes: `Kit Cortadores e Marcadores para Biscoitos Tema Natal (5 Peças)
+
+O que você recebe: 1 Kit contendo 5 cortadores com marcadores embutidos, apresentando designs exclusivos referentes ao tema de Natal (incluindo Papai Noel e Presentes).
+
+Indicação de Uso: Ferramenta ideal para o corte e marcação de biscoitos (cookies), pasta americana, fondant e biscuit. Perfeito para criar doces decorados para presentear ou compor mesas natalinas com muito charme.
+
+Benefícios para a Produção: O design inteligente une cortador e marcador, permitindo estampar detalhes precisos (como os traços do Papai Noel e os laços dos presentes) de forma rápida e prática. Ideal para soltar a criatividade, otimizar o tempo de produção e impressionar clientes e convidados com um acabamento profissional e personalizado.
+
+Material e Segurança: Fabricado em plástico PETG de alta qualidade, garantindo maior resistência mecânica e durabilidade. Produto totalmente atóxico e 100% seguro para o contato direto com alimentos (Livre de BPA).
+
+Manutenção e Limpeza: Para preservar a integridade e durabilidade das peças, higienize exclusivamente com água em temperatura ambiente e sabão neutro. Evite a imersão em água fervente, o uso de máquinas lava-louças e produtos abrasivos.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor', 'Aleatória'],
+      ['Formato de venda', 'Kit'],
+      ['Quantidade de embalagens', '5'],
+      ['Altura', '7 cm'],
+      ['Largura', '7 cm'],
+      ['É apto para lava-louças', 'Não'],
+    ],
+  },
+  {
+    id: 'kit-6-carimbos-brigadeiro-ursinho-pooh',
+    nome: 'Kit 6 Carimbos Brigadeiro Ursinho Pooh',
+    descricao: 'Kit Carimbos Marcadores para Doces Tema Ursinho Pooh (6 Unidades).',
+    categoria: 'Confeitaria',
+    preco: 19.02,
+    precoOriginal: 32,
+    fotos: ['kit-6-carimbos-brigadeiro-ursinho-pooh-1.jpg', 'kit-6-carimbos-brigadeiro-ursinho-pooh-2.jpg', 'kit-6-carimbos-brigadeiro-ursinho-pooh-3.jpg'],
+    detalhes: `Kit Carimbos Marcadores para Doces Tema Ursinho Pooh (6 Unidades)
+
+O que você recebe: 1 Kit contendo 6 carimbos circulares com estampas temáticas exclusivas referentes ao universo do Ursinho Pooh (incluindo elementos como Mel, Abelha e Floresta). (Atenção: As peças são enviadas em cores sortidas conforme a disponibilidade de estoque. Doces não acompanham o produto, imagens meramente ilustrativas).
+
+Indicação de Uso: Ferramenta ideal para personalizar brigadeiros, docinhos gourmet, biscoitos, pasta americana e biscuit, garantindo um acabamento lúdico, fofo e profissional para festas infantis e eventos temáticos.
+
+Dimensões da Peça: Formato circular com diâmetro da base de 2,2 cm, altura total do carimbo de 2,5 cm e relevo da figura com 0,4 cm de altura.
+
+Benefícios para a Produção: Proporciona marcações nítidas, precisas e uniformes com total praticidade, facilitando a padronização da sua produção e valorizando a apresentação final dos doces.
+
+Material e Segurança: Fabricado em plástico PETG de alta qualidade, garantindo maior resistência mecânica e durabilidade. Produto totalmente atóxico e 100% seguro para o contato direto com alimentos (Livre de BPA).
+
+Manutenção e Limpeza: Para preservar a integridade das peças, higienize exclusivamente com água em temperatura ambiente e sabão neutro. Evite a imersão em água fervente, o uso de máquinas lava-louças e produtos abrasivos.
+
+Envio e Embalagem: Produto a pronta entrega com despacho rápido para todo o Brasil e acompanhado de Nota Fiscal. O kit é embalado com o máximo de cuidado e proteção para assegurar que chegue em perfeitas condições até você.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor e padrão', 'Aleatório'],
+      ['Formato de venda', 'Kit'],
+      ['Quantidade de carimbos', '6'],
+      ['Material do carimbo', 'Plástico Resistente'],
+      ['Material do cabo', 'Plástico resistente'],
+      ['Altura', '2.5 cm'],
+      ['Largura', '2 cm'],
+      ['Comprimento', '2 cm'],
+      ['Diâmetro', '2 cm'],
+      ['É para uso de forma quente', 'Não'],
+    ],
+  },
+  {
+    id: 'enfeite-natal-croche-boneco-de-neve-6cm-noel',
+    nome: 'Enfeite Natal Crochê Boneco De Neve 6cm',
+    descricao: 'Boneco de Neve Miniatura Decorativo Natalino Estilo Crochê em 3D.',
+    categoria: 'Decoração',
+    preco: 24.9,
+    precoOriginal: 59,
+    fotos: ['enfeite-natal-croche-boneco-de-neve-6cm-noel-1.jpg', 'enfeite-natal-croche-boneco-de-neve-6cm-noel-2.jpg', 'enfeite-natal-croche-boneco-de-neve-6cm-noel-3.jpg', 'enfeite-natal-croche-boneco-de-neve-6cm-noel-4.jpg'],
+    detalhes: `Boneco de Neve Miniatura Decorativo Natalino Estilo Crochê em 3D
+
+O que você recebe: 1 Peça miniatura decorativa de Boneco de Neve com design exclusivo e acabamento texturizado inspirado no efeito de pontos de crochê. (Atenção: O produto é estritamente decorativo e não possui luzes, sons ou componentes elétricos).
+
+Indicação de Uso: Peça compacta e charmosa, perfeita para agregar o espírito natalino a mesas, aparadores, estantes, prateleiras, escritórios e outros pequenos espaços, trazendo um toque divertido e acolhedor ao ambiente.
+
+Dimensões e Cores: A miniatura possui 6 cm de altura (tamanho ideal para composições delicadas) e é produzida nas cores branco e vermelho.
+
+Material: Fabricado em plástico PETG de alta qualidade por meio de impressão 3D, garantindo excelente resistência mecânica e longa durabilidade à peça.
+
+Características da Impressão 3D (Aviso Importante): Por se tratar de um produto fabricado com tecnologia de impressão 3D, podem ocorrer sutis linhas, texturas ou variações características do processo produtivo. Esses detalhes não configuram defeito, mas sim particularidades que compõem o acabamento exclusivo da peça.
+
+Manutenção e Cuidados: Para conservar o seu produto por mais tempo, evite quedas e impactos. Realize a limpeza delicadamente utilizando apenas um pano seco, levemente umedecido ou espanador. Não utilize produtos químicos, não mergulhe em água e evite a exposição direta e prolongada à luz solar ou a altas temperaturas.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor', 'Branco e vermelho'],
+      ['Formato de venda', 'Unidade'],
+      ['Quantidade de bonecos navideños', '1'],
+      ['Altura', '6 cm'],
+    ],
+  },
+  {
+    id: 'kit-5-carimbos-brigadeiro-hello-kitty-laco-desenho',
+    nome: 'Kit 5 Carimbos Brigadeiro Hello Kitty Laço Desenho',
+    descricao: 'Kit Carimbos Marcadores para Doces Tema Hello Kitty e Laço (5 Unidades).',
+    categoria: 'Confeitaria',
+    preco: 19.9,
+    precoOriginal: 32,
+    fotos: ['kit-5-carimbos-brigadeiro-hello-kitty-laco-desenho-1.jpg', 'kit-5-carimbos-brigadeiro-hello-kitty-laco-desenho-2.jpg', 'kit-5-carimbos-brigadeiro-hello-kitty-laco-desenho-3.jpg'],
+    detalhes: `Kit Carimbos Marcadores para Doces Tema Hello Kitty e Laço (5 Unidades)
+
+O que você recebe: 1 Kit contendo 5 carimbos circulares com estampas temáticas exclusivas referentes ao tema Hello Kitty e Laço. (Atenção: As peças são enviadas em cores sortidas conforme a disponibilidade de estoque. Doces não acompanham o produto, imagens meramente ilustrativas).
+
+Indicação de Uso: Ferramenta ideal para personalizar brigadeiros, docinhos gourmet, biscoitos, pasta americana e biscuit, garantindo um acabamento delicado, charmoso e profissional para festas e eventos temáticos.
+
+Dimensões da Peça: Formato circular com diâmetro da base atualizado para 3,0 cm e altura total do carimbo de 3,5 cm (relevo da figura com 0,4 cm de altura).
+
+Benefícios para a Produção: Proporciona marcações nítidas, precisas e uniformes com total praticidade, facilitando a padronização da sua produção e valorizando a apresentação final dos doces.
+
+Material e Segurança: Fabricado em plástico PETG de alta qualidade, garantindo maior resistência mecânica e durabilidade. Produto totalmente atóxico e 100% seguro para o contato direto com alimentos (Livre de BPA).
+
+Manutenção e Limpeza: Para preservar a integridade das peças, higienize exclusivamente com água em temperatura ambiente e sabão neutro. Evite a imersão em água fervente, o uso de máquinas lava-louças e produtos abrasivos.
+
+Envio e Embalagem: Produto a pronta entrega com despacho rápido para todo o Brasil e acompanhado de Nota Fiscal. O kit é embalado com o máximo de cuidado e proteção para assegurar que chegue em perfeitas condições até você.`,
+    caracteristicas: [
+      ['Marca', 'N97'],
+      ['Cor e padrão', 'Aleatório'],
+      ['Formato de venda', 'Kit'],
+      ['Quantidade de carimbos', '5'],
+      ['Material do carimbo', 'Plástico Resistente'],
+      ['Material do cabo', 'Plástico resistente'],
+      ['Altura', '2 cm'],
+      ['Largura', '2 cm'],
+      ['Comprimento', '2 cm'],
+      ['Diâmetro', '2 cm'],
+      ['É para uso de forma quente', 'Não'],
+    ],
+  },
 ]
