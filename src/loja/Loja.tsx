@@ -3,8 +3,8 @@ import Carrinho from './Carrinho'
 import { BarraCarrinho, IconeCarrinho, IconeWhatsApp, Logomarca, SeletorQuantidade } from './componentes'
 import { iconesCategorias, loja, produtos, type Produto } from './config'
 import { DetalhesProduto, SeloDesconto } from './produto'
-import { Avatar, BotaoGoogle } from './BotaoGoogle'
-import { loginGoogleAtivo, useUsuarioGoogle } from './google'
+import { Avatar, DialogoLogin, MinhaConta } from './ContaUI'
+import { contasAtivas, prepararLogin, sair, useConta, type Pedido } from './conta'
 import { useCarrinho } from './useCarrinho'
 import { base, chaveCarrinho, duvidas, QTD_MAXIMA, formatarPreco, linkWhatsApp, mensagemGeral, percentualDesconto, temPrecosDiferentes } from './util'
 
@@ -35,6 +35,8 @@ export default function Loja() {
   const [categoria, setCategoria] = useState('Todos')
   const [busca, setBusca] = useState('')
   const [ordem, setOrdem] = useState<Ordem>('relevancia')
+  const [login, setLogin] = useState<'entrar' | 'criar' | null>(null)
+  const [conta, setConta] = useState<'pedidos' | 'dados' | null>(null)
   const gradeRef = useRef<HTMLElement>(null)
 
   const categorias = useMemo(() => ['Todos', ...new Set(produtos.map((p) => p.categoria))], [])
@@ -103,7 +105,7 @@ export default function Loja() {
             sugestoes={sugestoes}
             onEscolher={setDetalhe} className="hidden flex-1 md:flex" />
           <div className="ml-auto flex items-center gap-1 md:ml-0">
-            {loginGoogleAtivo && <MenuConta />}
+            {contasAtivas && <MenuConta onEntrar={() => setLogin('entrar')} onAbrirConta={setConta} />}
             <a
               href={linkWhatsApp(mensagemGeral)}
               target="_blank"
@@ -395,9 +397,26 @@ export default function Loja() {
         subtotalCentavos={carrinho.totalCentavos}
         onAlterar={carrinho.alterarQuantidade}
         onEsvaziar={carrinho.esvaziar}
+        onEntrar={() => setLogin('entrar')}
       />
+
+      {login && <DialogoLogin modo={login} onFechar={() => setLogin(null)} />}
+      {conta && <MinhaConta aba={conta} onFechar={() => setConta(null)} onPedirDeNovo={pedirDeNovo} />}
     </div>
   )
+
+  /** Coloca no carrinho os itens de um pedido antigo que ainda estão à venda. */
+  function pedirDeNovo(pedido: Pedido) {
+    let faltaram = 0
+    for (const item of pedido.itens) {
+      const p = produtos.find((x) => x.id === item.produtoId)
+      const v = item.variacao ? p?.variacoes?.find((x) => x.nome === item.variacao) : undefined
+      if (!p || (item.variacao && !v) || (!v && !p.preco)) faltaram++
+      else carrinho.alterarQuantidade(chaveCarrinho(p, v), item.quantidade)
+    }
+    carrinho.abrir()
+    if (faltaram) window.alert(`${faltaram === 1 ? '1 produto desse pedido não está' : `${faltaram} produtos desse pedido não estão`} mais à venda e ficou de fora.`)
+  }
 }
 
 function CampoBusca({
@@ -636,20 +655,31 @@ function CartaoCompacto({
   )
 }
 
-/** Cabeçalho: "Entrar com o Google" ou, depois do login, a foto do cliente com a opção de sair. */
-function MenuConta() {
-  const { usuario, sair } = useUsuarioGoogle()
+/** Cabeçalho: "Login / Criar conta" ou, depois de entrar, a foto do cliente com "minha conta". */
+function MenuConta({ onEntrar, onAbrirConta }: { onEntrar: () => void; onAbrirConta: (aba: 'pedidos' | 'dados') => void }) {
+  const { usuario, pronto } = useConta()
   const [aberto, setAberto] = useState(false)
 
   if (!usuario) {
     return (
-      <>
-        <BotaoGoogle compacto className="lg:hidden" />
-        <BotaoGoogle className="hidden lg:block" />
-      </>
+      <button
+        type="button"
+        onClick={onEntrar}
+        onPointerEnter={prepararLogin}
+        disabled={!pronto}
+        className="flex min-h-11 items-center gap-2 rounded-full border-[1.5px] border-vinho px-3 font-semibold text-vinho transition hover:bg-vinho hover:text-pessego disabled:opacity-50 lg:px-4"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" aria-hidden className="h-5 w-5 shrink-0">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21a8 8 0 0 1 16 0" />
+        </svg>
+        <span className="lg:hidden">Entrar</span>
+        <span className="hidden lg:inline">Login / Criar conta</span>
+      </button>
     )
   }
 
+  const item = 'flex min-h-11 w-full items-center rounded-xl px-3 text-left font-semibold text-chocolate hover:bg-pessego'
   return (
     <div
       className="relative"
@@ -661,24 +691,43 @@ function MenuConta() {
         type="button"
         onClick={() => setAberto((a) => !a)}
         aria-expanded={aberto}
-        aria-label={`Conta de ${usuario.nome}`}
+        aria-label={`Minha conta, ${usuario.nome}`}
         className="flex min-h-11 items-center gap-2 rounded-full px-2 font-semibold text-chocolate/85 hover:bg-pessego"
       >
         <Avatar usuario={usuario} />
         <span className="hidden max-w-32 truncate lg:block">Olá, {usuario.nome.split(' ')[0]}</span>
       </button>
       {aberto && (
-        <div className="absolute right-0 top-full z-40 mt-2 w-64 rounded-2xl bg-creme p-4 shadow-xl ring-1 ring-chocolate/10">
-          <p className="font-semibold text-chocolate">{usuario.nome}</p>
-          <p className="truncate text-sm text-chocolate/75">{usuario.email}</p>
-          <p className="mt-2 text-sm text-chocolate/75">Seu nome e e-mail já vão preenchidos no pedido.</p>
+        <div className="absolute right-0 top-full z-40 mt-2 w-64 rounded-2xl bg-creme p-2 shadow-xl ring-1 ring-chocolate/10">
+          <div className="px-3 pb-2 pt-1">
+            <p className="truncate font-semibold text-chocolate">{usuario.nome}</p>
+            <p className="truncate text-sm text-chocolate/75">{usuario.email}</p>
+          </div>
+          {(
+            [
+              ['pedidos', '📦 Meus pedidos'],
+              ['dados', '📝 Meus dados'],
+            ] as const
+          ).map(([aba, texto]) => (
+            <button
+              key={aba}
+              type="button"
+              onClick={() => {
+                setAberto(false)
+                onAbrirConta(aba)
+              }}
+              className={item}
+            >
+              {texto}
+            </button>
+          ))}
           <button
             type="button"
             onClick={() => {
               setAberto(false)
               sair()
             }}
-            className="mt-3 min-h-11 w-full rounded-full border-[1.5px] border-vinho font-semibold text-vinho hover:bg-vinho hover:text-pessego"
+            className={`${item} text-vinho`}
           >
             Sair
           </button>

@@ -1,47 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import { useLocalStorage } from '../hooks/useLocalStorage'
-import { BotaoWhatsApp, IconeCarrinho, SeletorQuantidade } from './componentes'
+import { BotaoWhatsApp, Campo, IconeCarrinho, SeletorQuantidade } from './componentes'
 import { loja } from './config'
-import { Avatar, BotaoGoogle } from './BotaoGoogle'
-import { loginGoogleAtivo, useUsuarioGoogle } from './google'
+import { digitosCep, enderecoEmTexto, entregaVazia, formatarCep, useEntrega, type Entrega } from './entrega'
+import { Avatar } from './ContaUI'
+import { contasAtivas, salvarPedido, sair, useConta } from './conta'
 import { base, centavos, formatarPreco, linkWhatsApp, type ItemCarrinho } from './util'
-
-type Entrega = {
-  nome: string
-  cep: string
-  rua: string
-  numero: string
-  complemento: string
-  bairro: string
-  cidade: string
-  uf: string
-  pagamento: string
-  observacoes: string
-}
 
 type StatusCep = 'ocioso' | 'buscando' | 'encontrado' | 'nao-encontrado' | 'erro'
 
-const entregaVazia: Entrega = {
-  nome: '',
-  cep: '',
-  rua: '',
-  numero: '',
-  complemento: '',
-  bairro: '',
-  cidade: '',
-  uf: '',
-  pagamento: '',
-  observacoes: '',
-}
-
 const taxaCentavos = centavos(loja.taxaEntrega)
-const digitosCep = (cep: string) => cep.replace(/\D/g, '')
-
-function formatarCep(valor: string) {
-  const d = digitosCep(valor).slice(0, 8)
-  return d.length > 5 ? `${d.slice(0, 5)}-${d.slice(5)}` : d
-}
-
 const obrigatorios: [keyof Entrega, string, (v: string) => boolean][] = [
   ['nome', 'seu nome', (v) => v.trim().length > 0],
   ['cep', 'o CEP', (v) => digitosCep(v).length === 8],
@@ -85,22 +52,24 @@ export default function Carrinho({
   subtotalCentavos,
   onAlterar,
   onEsvaziar,
+  onEntrar,
 }: {
   dialogRef: React.RefObject<HTMLDialogElement>
   itens: ItemCarrinho[]
   subtotalCentavos: number
   onAlterar: (id: string, delta: number) => void
   onEsvaziar: () => void
+  /** Abre a janela de login / criar conta. */
+  onEntrar: () => void
 }) {
   const [etapa, setEtapa] = useState<'itens' | 'dados'>('itens')
-  const [entrega, setEntrega] = useLocalStorage<Entrega>('thinklab-entrega', entregaVazia)
+  const [dados, setEntrega] = useEntrega()
   const [tentouEnviar, setTentouEnviar] = useState(false)
   const [statusCep, setStatusCep] = useState<StatusCep>('ocioso')
-  const { usuario, sair } = useUsuarioGoogle()
+  const { usuario } = useConta()
   const buscaAtual = useRef(0)
   const corpoRef = useRef<HTMLDivElement>(null)
 
-  const dados = { ...entregaVazia, ...entrega }
   const faltando = camposFaltando(dados)
   const erroDe = (campo: keyof Entrega) => tentouEnviar && faltando.some(([c]) => c === campo)
   const totalCentavos = subtotalCentavos + taxaCentavos
@@ -112,7 +81,7 @@ export default function Carrinho({
   }
   const alterar = (campo: keyof Entrega, valor: string) => setEntrega((e) => ({ ...entregaVazia, ...e, [campo]: valor }))
 
-  // Ao entrar com o Google, o nome vem preenchido (sem apagar um nome que o cliente já tenha digitado).
+  // Ao entrar na conta, o nome vem preenchido (sem apagar um nome que o cliente já tenha digitado).
   useEffect(() => {
     if (usuario) setEntrega((e) => (e?.nome?.trim() ? e : { ...entregaVazia, ...e, nome: usuario.nome }))
   }, [usuario, setEntrega])
@@ -155,7 +124,28 @@ export default function Carrinho({
   }
 
   function aoEnviar(e: React.MouseEvent) {
-    if (faltando.length === 0) return
+    if (faltando.length === 0) {
+      if (usuario) {
+        // Guarda no histórico da conta; se falhar, o pedido pelo WhatsApp segue normalmente.
+        salvarPedido({
+          data: new Date().toISOString(),
+          itens: itens.map((i) => ({
+            produtoId: i.produto.id,
+            nome: i.produto.nome,
+            ...(i.variacao ? { variacao: i.variacao.nome } : {}),
+            quantidade: i.quantidade,
+            preco: i.preco,
+          })),
+          subtotal: subtotalCentavos / 100,
+          taxaEntrega: taxaCentavos / 100,
+          total: (subtotalCentavos + taxaCentavos) / 100,
+          pagamento: dados.pagamento,
+          endereco: enderecoEmTexto(dados),
+          mensagem: mensagemPedido(itens, subtotalCentavos, dados, usuario.email),
+        }).catch(() => {})
+      }
+      return
+    }
     e.preventDefault()
     setTentouEnviar(true)
     const primeiro = faltando[0][0]
@@ -248,7 +238,7 @@ export default function Carrinho({
                 ← Voltar ao carrinho
               </button>
 
-              {loginGoogleAtivo &&
+              {contasAtivas &&
                 (usuario ? (
                   <div className="flex items-center gap-3 rounded-2xl bg-pessego/60 p-3">
                     <Avatar usuario={usuario} className="h-10 w-10 shrink-0" />
@@ -256,15 +246,21 @@ export default function Carrinho({
                       Comprando como <strong className="font-semibold">{usuario.nome}</strong>
                       <span className="block truncate text-chocolate/75">{usuario.email}</span>
                     </p>
-                    <button type="button" onClick={sair} className="min-h-11 shrink-0 px-2 text-base font-semibold text-vinho underline underline-offset-4">
+                    <button type="button" onClick={() => sair()} className="min-h-11 shrink-0 px-2 text-base font-semibold text-vinho underline underline-offset-4">
                       Sair
                     </button>
                   </div>
                 ) : (
                   <div className="rounded-2xl bg-pessego/60 p-4">
                     <p className="font-semibold text-chocolate">Como você quer comprar?</p>
-                    <p className="mt-1 text-base text-chocolate/75">Entre com o Google e seu nome e e-mail já vêm preenchidos.</p>
-                    <BotaoGoogle className="mt-3" />
+                    <p className="mt-1 text-base text-chocolate/75">Com uma conta, seus dados já vêm preenchidos e você acompanha seus pedidos.</p>
+                    <button
+                      type="button"
+                      onClick={onEntrar}
+                      className="mt-3 inline-flex min-h-12 items-center justify-center rounded-full bg-vinho px-6 font-semibold text-pessego hover:bg-vinho-escuro"
+                    >
+                      Login / Criar conta
+                    </button>
                     <p className="mt-3 text-base text-chocolate/75">
                       Ou <strong className="font-semibold text-chocolate">continue sem login</strong>: é só preencher os dados abaixo.
                     </p>
@@ -430,43 +426,5 @@ function LinhaCarrinho({
         </button>
       </div>
     </li>
-  )
-}
-
-function Campo({
-  id,
-  label,
-  value,
-  onChange,
-  erro,
-  opcional,
-  className = '',
-  ...props
-}: {
-  id: string
-  label: string
-  value: string
-  onChange: (valor: string) => void
-  erro?: boolean
-  opcional?: boolean
-  className?: string
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'id' | 'className'>) {
-  return (
-    <div>
-      <label htmlFor={id} className="block font-bold text-chocolate">
-        {label} {opcional && <span className="font-normal text-chocolate/70">(opcional)</span>}
-      </label>
-      <input
-        id={id}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        aria-invalid={erro || undefined}
-        className={`mt-2 min-h-14 w-full rounded-2xl border-2 px-4 text-lg focus:outline-none focus:ring-4 ${
-          erro ? 'border-red-500 focus:ring-red-100' : 'border-chocolate/20 focus:border-vinho focus:ring-vinho/15'
-        } ${className}`}
-        {...props}
-      />
-      {erro && <p className="mt-1 text-base font-semibold text-red-700">Preencha este campo.</p>}
-    </div>
   )
 }

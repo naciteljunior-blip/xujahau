@@ -184,3 +184,42 @@ export function BarraCarrinho({ totalItens, totalCentavos, onAbrir }: { totalIte
     </a>
   )
 }
+
+/** Campo de formulário com rótulo e mensagem de erro. */
+export function Campo({
+  id,
+  label,
+  value,
+  onChange,
+  erro,
+  opcional,
+  className = '',
+  ...props
+}: {
+  id: string
+  label: string
+  value: string
+  onChange: (valor: string) => void
+  erro?: boolean
+  opcional?: boolean
+  className?: string
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'id' | 'className'>) {
+  return (
+    <div>
+      <label htmlFor={id} className="block font-bold text-chocolate">
+        {label} {opcional && <span className="font-normal text-chocolate/70">(opcional)</span>}
+      </label>
+      <input
+        id={id}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        aria-invalid={erro || undefined}
+        className={`mt-2 min-h-14 w-full rounded-2xl border-2 px-4 text-lg focus:outline-none focus:ring-4 ${
+          erro ? 'border-red-500 focus:ring-red-100' : 'border-chocolate/20 focus:border-vinho focus:ring-vinho/15'
+        } ${className}`}
+        {...props}
+      />
+      {erro && <p className="mt-1 text-base font-semibold text-red-700">Preencha este campo.</p>}
+    </div>
+  )
+}
