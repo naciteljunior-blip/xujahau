@@ -3,6 +3,8 @@ import Carrinho from './Carrinho'
 import { BarraCarrinho, IconeCarrinho, IconeWhatsApp, Logomarca, SeletorQuantidade } from './componentes'
 import { iconesCategorias, loja, produtos, type Produto } from './config'
 import { DetalhesProduto, SeloDesconto } from './produto'
+import { Avatar, BotaoGoogle } from './BotaoGoogle'
+import { loginGoogleAtivo, useUsuarioGoogle } from './google'
 import { useCarrinho } from './useCarrinho'
 import { base, chaveCarrinho, duvidas, QTD_MAXIMA, formatarPreco, linkWhatsApp, mensagemGeral, percentualDesconto, temPrecosDiferentes } from './util'
 
@@ -101,6 +103,7 @@ export default function Loja() {
             sugestoes={sugestoes}
             onEscolher={setDetalhe} className="hidden flex-1 md:flex" />
           <div className="ml-auto flex items-center gap-1 md:ml-0">
+            {loginGoogleAtivo && <MenuConta />}
             <a
               href={linkWhatsApp(mensagemGeral)}
               target="_blank"
@@ -630,5 +633,57 @@ function CartaoCompacto({
         </p>
       </div>
     </article>
+  )
+}
+
+/** Cabeçalho: "Entrar com o Google" ou, depois do login, a foto do cliente com a opção de sair. */
+function MenuConta() {
+  const { usuario, sair } = useUsuarioGoogle()
+  const [aberto, setAberto] = useState(false)
+
+  if (!usuario) {
+    return (
+      <>
+        <BotaoGoogle compacto className="lg:hidden" />
+        <BotaoGoogle className="hidden lg:block" />
+      </>
+    )
+  }
+
+  return (
+    <div
+      className="relative"
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setAberto(false)
+      }}
+    >
+      <button
+        type="button"
+        onClick={() => setAberto((a) => !a)}
+        aria-expanded={aberto}
+        aria-label={`Conta de ${usuario.nome}`}
+        className="flex min-h-11 items-center gap-2 rounded-full px-2 font-semibold text-chocolate/85 hover:bg-pessego"
+      >
+        <Avatar usuario={usuario} />
+        <span className="hidden max-w-32 truncate lg:block">Olá, {usuario.nome.split(' ')[0]}</span>
+      </button>
+      {aberto && (
+        <div className="absolute right-0 top-full z-40 mt-2 w-64 rounded-2xl bg-creme p-4 shadow-xl ring-1 ring-chocolate/10">
+          <p className="font-semibold text-chocolate">{usuario.nome}</p>
+          <p className="truncate text-sm text-chocolate/75">{usuario.email}</p>
+          <p className="mt-2 text-sm text-chocolate/75">Seu nome e e-mail já vão preenchidos no pedido.</p>
+          <button
+            type="button"
+            onClick={() => {
+              setAberto(false)
+              sair()
+            }}
+            className="mt-3 min-h-11 w-full rounded-full border-[1.5px] border-vinho font-semibold text-vinho hover:bg-vinho hover:text-pessego"
+          >
+            Sair
+          </button>
+        </div>
+      )}
+    </div>
   )
 }

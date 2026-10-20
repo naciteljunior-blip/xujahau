@@ -1,7 +1,9 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { BotaoWhatsApp, IconeCarrinho, SeletorQuantidade } from './componentes'
 import { loja } from './config'
+import { Avatar, BotaoGoogle } from './BotaoGoogle'
+import { loginGoogleAtivo, useUsuarioGoogle } from './google'
 import { base, centavos, formatarPreco, linkWhatsApp, type ItemCarrinho } from './util'
 
 type Entrega = {
@@ -53,7 +55,7 @@ const obrigatorios: [keyof Entrega, string, (v: string) => boolean][] = [
 
 const camposFaltando = (e: Entrega) => obrigatorios.filter(([campo, , valido]) => !valido(e[campo]))
 
-function mensagemPedido(itens: ItemCarrinho[], subtotalCentavos: number, e: Entrega) {
+function mensagemPedido(itens: ItemCarrinho[], subtotalCentavos: number, e: Entrega, email?: string) {
   const linhas = itens.map(
     ({ produto, variacao, preco, quantidade }) =>
       `• ${quantidade}x ${produto.nome}${variacao ? ` (${variacao.nome})` : ''} — ${formatarPreco((centavos(preco) * quantidade) / 100)}`,
@@ -68,7 +70,7 @@ Subtotal: ${formatarPreco(subtotalCentavos / 100)}
 Entrega: ${formatarPreco(taxaCentavos / 100)}
 *Total: ${formatarPreco((subtotalCentavos + taxaCentavos) / 100)}*
 
-*Nome:* ${e.nome.trim()}
+*Nome:* ${e.nome.trim()}${email ? `\n*E-mail:* ${email}` : ''}
 *Endereço:*
 ${e.rua.trim()}, ${e.numero.trim()}${complemento}
 ${e.bairro.trim()} - ${e.cidade.trim()}/${e.uf.trim().toUpperCase()}
@@ -94,6 +96,7 @@ export default function Carrinho({
   const [entrega, setEntrega] = useLocalStorage<Entrega>('thinklab-entrega', entregaVazia)
   const [tentouEnviar, setTentouEnviar] = useState(false)
   const [statusCep, setStatusCep] = useState<StatusCep>('ocioso')
+  const { usuario, sair } = useUsuarioGoogle()
   const buscaAtual = useRef(0)
   const corpoRef = useRef<HTMLDivElement>(null)
 
@@ -108,6 +111,11 @@ export default function Carrinho({
     corpoRef.current?.scrollTo({ top: 0 })
   }
   const alterar = (campo: keyof Entrega, valor: string) => setEntrega((e) => ({ ...entregaVazia, ...e, [campo]: valor }))
+
+  // Ao entrar com o Google, o nome vem preenchido (sem apagar um nome que o cliente já tenha digitado).
+  useEffect(() => {
+    if (usuario) setEntrega((e) => (e?.nome?.trim() ? e : { ...entregaVazia, ...e, nome: usuario.nome }))
+  }, [usuario, setEntrega])
 
   async function buscarCep(cep: string) {
     const id = ++buscaAtual.current
@@ -240,6 +248,29 @@ export default function Carrinho({
                 ← Voltar ao carrinho
               </button>
 
+              {loginGoogleAtivo &&
+                (usuario ? (
+                  <div className="flex items-center gap-3 rounded-2xl bg-pessego/60 p-3">
+                    <Avatar usuario={usuario} className="h-10 w-10 shrink-0" />
+                    <p className="min-w-0 flex-1 text-base leading-snug">
+                      Comprando como <strong className="font-semibold">{usuario.nome}</strong>
+                      <span className="block truncate text-chocolate/75">{usuario.email}</span>
+                    </p>
+                    <button type="button" onClick={sair} className="min-h-11 shrink-0 px-2 text-base font-semibold text-vinho underline underline-offset-4">
+                      Sair
+                    </button>
+                  </div>
+                ) : (
+                  <div className="rounded-2xl bg-pessego/60 p-4">
+                    <p className="font-semibold text-chocolate">Como você quer comprar?</p>
+                    <p className="mt-1 text-base text-chocolate/75">Entre com o Google e seu nome e e-mail já vêm preenchidos.</p>
+                    <BotaoGoogle className="mt-3" />
+                    <p className="mt-3 text-base text-chocolate/75">
+                      Ou <strong className="font-semibold text-chocolate">continue sem login</strong>: é só preencher os dados abaixo.
+                    </p>
+                  </div>
+                ))}
+
               <fieldset className="space-y-4">
                 <legend className="text-xl font-extrabold text-chocolate">Para quem vamos entregar?</legend>
                 <Campo id="entrega-nome" label="Seu nome" autoComplete="name" value={dados.nome} onChange={(v) => alterar('nome', v)} erro={erroDe('nome')} />
@@ -330,7 +361,7 @@ export default function Carrinho({
                   Falta preencher: {faltando.map(([, nome]) => nome).join(', ')}.
                 </p>
               )}
-              <BotaoWhatsApp href={linkWhatsApp(mensagemPedido(itens, subtotalCentavos, dados))} onClick={aoEnviar} className="mt-3 w-full">
+              <BotaoWhatsApp href={linkWhatsApp(mensagemPedido(itens, subtotalCentavos, dados, usuario?.email))} onClick={aoEnviar} className="mt-3 w-full">
                 Enviar pedido pelo WhatsApp
               </BotaoWhatsApp>
             </div>
