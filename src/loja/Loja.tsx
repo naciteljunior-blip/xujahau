@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import Carrinho from './Carrinho'
 import { BarraCarrinho, IconeCarrinho, IconeWhatsApp, Logomarca, SeletorQuantidade } from './componentes'
 import { iconesCategorias, loja, produtos, type Produto } from './config'
@@ -9,6 +9,14 @@ import { base, chaveCarrinho, duvidas, QTD_MAXIMA, formatarPreco, linkWhatsApp, 
 type Ordem = 'relevancia' | 'menor-preco' | 'maior-preco' | 'desconto'
 
 const normalizar = (texto: string) => texto.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
+
+/** Todas as palavras digitadas precisam aparecer no produto, em qualquer ordem ("natal carimbo" acha "Kit Carimbos Natal"). */
+const combina = (p: Produto, palavras: string[]) => {
+  const texto = normalizar(`${p.nome} ${p.descricao} ${p.categoria}`)
+  return palavras.every((w) => texto.includes(w))
+}
+
+const MAX_SUGESTOES = 6
 
 const msgEmpresa = `Olá! Vim pelo site da ${loja.nome} e gostaria de um orçamento para a minha empresa.
 
@@ -34,9 +42,16 @@ export default function Loja() {
   )
 
   const termo = normalizar(busca.trim())
+  const palavras = termo.split(/\s+/).filter(Boolean)
   const lista = produtos
     .filter((p) => categoria === 'Todos' || p.categoria === categoria)
-    .filter((p) => !termo || normalizar(`${p.nome} ${p.descricao} ${p.categoria}`).includes(termo))
+    .filter((p) => combina(p, palavras))
+  // Sugestões embaixo da barra: em todas as categorias, com quem tem a palavra no nome primeiro.
+  const sugestoes = palavras.length
+    ? produtos
+        .filter((p) => combina(p, palavras))
+        .sort((a, b) => Number(palavras.every((w) => normalizar(b.nome).includes(w))) - Number(palavras.every((w) => normalizar(a.nome).includes(w))))
+    : []
   const ordenada =
     ordem === 'relevancia'
       ? lista
@@ -77,7 +92,14 @@ export default function Loja() {
           <a href="#" onClick={(e) => (e.preventDefault(), window.scrollTo({ top: 0, behavior: 'smooth' }))} aria-label={`${loja.nome}, voltar ao topo`} className="flex shrink-0 items-center py-1">
             <Logomarca tamanho={32} />
           </a>
-          <CampoBusca valor={busca} onMudar={setBusca} onEnviar={irParaGrade} className="hidden flex-1 md:flex" />
+          <CampoBusca
+            valor={busca}
+            onMudar={setBusca} onEnviar={() => {
+              setCategoria('Todos')
+              irParaGrade()
+            }}
+            sugestoes={sugestoes}
+            onEscolher={setDetalhe} className="hidden flex-1 md:flex" />
           <div className="ml-auto flex items-center gap-1 md:ml-0">
             <a
               href={linkWhatsApp(mensagemGeral)}
@@ -113,7 +135,14 @@ export default function Loja() {
           </div>
         </div>
         <div className="px-4 pb-3 md:hidden">
-          <CampoBusca valor={busca} onMudar={setBusca} onEnviar={irParaGrade} />
+          <CampoBusca
+            valor={busca}
+            onMudar={setBusca} onEnviar={() => {
+              setCategoria('Todos')
+              irParaGrade()
+            }}
+            sugestoes={sugestoes}
+            onEscolher={setDetalhe} />
         </div>
         <nav aria-label="Categorias" className="border-t border-chocolate/10">
           <ul className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-2">
@@ -372,29 +401,75 @@ function CampoBusca({
   valor,
   onMudar,
   onEnviar,
+  sugestoes,
+  onEscolher,
   className = '',
 }: {
   valor: string
   onMudar: (v: string) => void
   onEnviar: () => void
+  sugestoes: Produto[]
+  onEscolher: (p: Produto) => void
   className?: string
 }) {
+  const [aberto, setAberto] = useState(false)
+  const [ativo, setAtivo] = useState(-1)
+  const id = useId()
+  const visiveis = sugestoes.slice(0, MAX_SUGESTOES)
+  const mostrar = aberto && valor.trim().length > 0
+
+  const escolher = (p: Produto) => {
+    setAberto(false)
+    setAtivo(-1)
+    onEscolher(p)
+  }
+  const verTodos = () => {
+    setAberto(false)
+    setAtivo(-1)
+    onEnviar()
+  }
+
   return (
     <form
       role="search"
       onSubmit={(e) => {
         e.preventDefault()
-        onEnviar()
+        if (mostrar && visiveis[ativo]) escolher(visiveis[ativo])
+        else verTodos()
       }}
-      className={`flex ${className}`}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setAberto(false)
+      }}
+      className={`relative flex ${className}`}
     >
       <input
         type="search"
+        role="combobox"
+        aria-expanded={mostrar}
+        aria-controls={`${id}-lista`}
+        aria-autocomplete="list"
+        aria-activedescendant={mostrar && ativo >= 0 ? `${id}-${ativo}` : undefined}
         value={valor}
-        onChange={(e) => onMudar(e.target.value)}
+        onChange={(e) => {
+          onMudar(e.target.value)
+          setAberto(true)
+          setAtivo(-1)
+        }}
+        onFocus={() => setAberto(true)}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') setAberto(false)
+          if (!mostrar || !visiveis.length) return
+          if (e.key === 'ArrowDown') {
+            e.preventDefault()
+            setAtivo((i) => (i + 1) % visiveis.length)
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault()
+            setAtivo((i) => (i <= 0 ? visiveis.length - 1 : i - 1))
+          }
+        }}
         placeholder="O que você procura? Ex.: carimbo, Natal…"
         aria-label="Buscar produtos"
-        className="min-h-12 w-full min-w-0 rounded-l-full border-2 border-r-0 border-chocolate/20 px-4 text-base focus:border-vinho focus:outline-none"
+        className="min-h-12 w-full min-w-0 rounded-l-full border-2 border-r-0 border-chocolate/20 bg-creme px-4 text-base focus:border-vinho focus:outline-none"
       />
       <button type="submit" aria-label="Buscar" className="flex min-h-12 w-14 shrink-0 items-center justify-center rounded-r-full bg-vinho text-pessego hover:bg-vinho-escuro">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" aria-hidden className="h-6 w-6">
@@ -402,6 +477,62 @@ function CampoBusca({
           <path d="m20 20-4-4" />
         </svg>
       </button>
+
+      {mostrar && (
+        <div className="absolute inset-x-0 top-full z-40 mt-2 overflow-hidden rounded-2xl bg-creme shadow-xl ring-1 ring-chocolate/10">
+          {visiveis.length === 0 ? (
+            <p className="px-4 py-4 text-chocolate/75" role="status">
+              Nenhum produto com “{valor.trim()}”. Tente outra palavra ou peça sob encomenda pelo WhatsApp.
+            </p>
+          ) : (
+            <>
+              <ul id={`${id}-lista`} role="listbox" aria-label="Produtos encontrados" className="max-h-[60vh] overflow-y-auto py-1">
+                {visiveis.map((p, i) => (
+                  <li
+                    key={p.id}
+                    id={`${id}-${i}`}
+                    role="option"
+                    aria-selected={i === ativo}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => escolher(p)}
+                    onMouseEnter={() => setAtivo(i)}
+                    className={`flex cursor-pointer items-center gap-3 px-3 py-2 ${i === ativo ? 'bg-pessego' : ''}`}
+                  >
+                    <span className="h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-pessego ring-1 ring-chocolate/10">
+                      {p.fotos?.[0] ? (
+                        <img src={`${base}produtos/${p.fotos[0]}`} alt="" loading="lazy" className="h-full w-full object-cover" />
+                      ) : (
+                        <span className="flex h-full items-center justify-center text-2xl" aria-hidden>{p.emoji ?? '📦'}</span>
+                      )}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="line-clamp-2 text-[15px] font-semibold leading-snug text-chocolate">{p.nome}</span>
+                      <span className="text-sm lowercase text-chocolate/70">{p.categoria}</span>
+                    </span>
+                    {p.preco && (
+                      <span className="shrink-0 text-right font-extrabold text-magenta">
+                        {temPrecosDiferentes(p) && <span className="block text-xs font-semibold text-chocolate/70">a partir de</span>}
+                        {formatarPreco(p.preco)}
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={verTodos}
+                className="flex min-h-12 w-full items-center justify-between border-t border-chocolate/10 px-4 font-semibold text-vinho hover:bg-pessego"
+              >
+                <span>
+                  {sugestoes.length === 1 ? 'Ver 1 resultado na lista' : `Ver todos os ${sugestoes.length} resultados`}
+                </span>
+                <span aria-hidden>→</span>
+              </button>
+            </>
+          )}
+        </div>
+      )}
     </form>
   )
 }
