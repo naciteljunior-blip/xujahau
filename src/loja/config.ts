@@ -56,7 +56,7 @@ export const loja = {
    * ID do cliente do Google para o botão "Fazer login com o Google" (termina em .apps.googleusercontent.com).
    * Vazio = o login não aparece. Veja como criar em https://console.cloud.google.com/apis/credentials
    */
-  googleClientId: '',
+  googleClientId: '1058175633754-gjdanefihaf0f0tbss9hn1nfv467domh.apps.googleusercontent.com',
   /** Taxa fixa de entrega em reais, somada ao total do carrinho. */
   taxaEntrega: 10,
   formasPagamento: ['Pix', 'Cartão de crédito', 'Boleto'],
