@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Carrinho from './Carrinho'
-import { BarraCarrinho, IconeCarrinho, IconeWhatsApp } from './componentes'
+import { BarraCarrinho, IconeCarrinho, IconeWhatsApp, SeletorQuantidade } from './componentes'
 import { iconesCategorias, loja, produtos, type Produto } from './config'
 import { DetalhesProduto, SeloDesconto } from './produto'
 import { useCarrinho } from './useCarrinho'
@@ -61,7 +61,7 @@ export default function Loja() {
     produto: p,
     noCarrinho: carrinho.noCarrinho(p.id),
     onAbrir: () => setDetalhe(p),
-    onAdicionar: () => carrinho.alterarQuantidade(chaveCarrinho(p), 1),
+    onAlterar: (delta: number) => carrinho.alterarQuantidade(chaveCarrinho(p), delta),
   })
 
   return (
@@ -347,7 +347,7 @@ export default function Loja() {
           key={detalhe.id}
           produto={detalhe}
           noCarrinho={carrinho.noCarrinho(detalhe.id)}
-          onAdicionar={(v) => carrinho.alterarQuantidade(chaveCarrinho(detalhe, v), 1)}
+          onAdicionar={(v, quantidade) => carrinho.alterarQuantidade(chaveCarrinho(detalhe, v), quantidade)}
           onVerCarrinho={carrinho.abrir}
           onFechar={() => setDetalhe(null)}
         />
@@ -406,20 +406,13 @@ function CartaoCompacto({
   produto: p,
   noCarrinho,
   onAbrir,
-  onAdicionar,
+  onAlterar,
 }: {
   produto: Produto
   noCarrinho: number
   onAbrir: () => void
-  onAdicionar: () => void
+  onAlterar: (delta: number) => void
 }) {
-  const [adicionado, setAdicionado] = useState(0)
-  useEffect(() => {
-    if (!adicionado) return
-    const t = setTimeout(() => setAdicionado(0), 1500)
-    return () => clearTimeout(t)
-  }, [adicionado])
-
   const pct = percentualDesconto(p)
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200 transition hover:shadow-lg">
@@ -448,24 +441,15 @@ function CartaoCompacto({
         </span>
       </button>
       <div className="px-3 pb-3">
-        {p.preco && !p.variacoes ? (
+        {p.preco && !p.variacoes && noCarrinho > 0 ? (
+          <SeletorQuantidade quantidade={noCarrinho} nome={p.nome} onAlterar={onAlterar} minimo={0} tamanho="pequeno" />
+        ) : p.preco && !p.variacoes ? (
           <button
             type="button"
-            onClick={() => {
-              onAdicionar()
-              setAdicionado((n) => n + 1)
-            }}
-            className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-xl font-bold text-white transition ${
-              adicionado ? 'bg-brand-600' : 'bg-slate-900 hover:bg-slate-700'
-            }`}
+            onClick={() => onAlterar(1)}
+            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-slate-900 font-bold text-white transition hover:bg-slate-700"
           >
-            {adicionado ? (
-              '✓ Adicionado'
-            ) : (
-              <>
-                <IconeCarrinho className="h-5 w-5" /> Adicionar
-              </>
-            )}
+            <IconeCarrinho className="h-5 w-5" /> Adicionar
           </button>
         ) : (
           <button
