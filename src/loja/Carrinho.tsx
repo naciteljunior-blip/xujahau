@@ -163,17 +163,17 @@ export default function Carrinho({
         setEtapa('itens')
         setTentouEnviar(false)
       }}
-      className="my-0 ml-auto mr-0 h-dvh max-h-dvh w-full max-w-md bg-white p-0 text-lg text-slate-800 shadow-2xl backdrop:bg-slate-900/60 sm:rounded-l-3xl"
+      className="my-0 ml-auto mr-0 h-dvh max-h-dvh w-full max-w-md bg-creme p-0 text-lg text-chocolate shadow-2xl backdrop:bg-chocolate/60 sm:rounded-l-3xl"
     >
       <div className="flex h-full flex-col">
-        <div className="flex items-center justify-between gap-3 border-b border-stone-200 px-5 py-3">
-          <h2 id="titulo-carrinho" className="flex items-center gap-2 text-2xl font-extrabold text-slate-900">
-            <IconeCarrinho className="h-7 w-7" /> {etapa === 'itens' ? 'Seu carrinho' : 'Entrega'}
+        <div className="flex items-center justify-between gap-3 border-b border-chocolate/10 px-5 py-3">
+          <h2 id="titulo-carrinho" className="flex items-center gap-2 text-3xl font-extrabold tracking-[-0.03em] text-chocolate">
+            <IconeCarrinho className="h-7 w-7" /> {etapa === 'itens' ? 'seu carrinho.' : 'entrega.'}
           </h2>
           <button
             type="button"
             onClick={fechar}
-            className="min-h-12 rounded-2xl bg-stone-100 px-5 font-bold text-slate-700 hover:bg-stone-200 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400"
+            className="min-h-12 rounded-full bg-pessego px-5 font-semibold text-chocolate/85 hover:bg-pessego-escuro focus-visible:outline focus-visible:outline-4 focus-visible:outline-magenta"
           >
             ✕ Fechar
           </button>
@@ -182,12 +182,12 @@ export default function Carrinho({
         {itens.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
             <span className="text-6xl" aria-hidden>🛒</span>
-            <p className="text-xl font-bold text-slate-900">Seu carrinho está vazio</p>
-            <p className="text-slate-600">Toque em “Adicionar ao carrinho” nos produtos que você gostar.</p>
+            <p className="text-xl font-bold text-chocolate">Seu carrinho está vazio</p>
+            <p className="text-chocolate/75">Toque em “Adicionar ao carrinho” nos produtos que você gostar.</p>
             <a
               href="#produtos"
               onClick={fechar}
-              className="mt-2 inline-flex min-h-14 items-center justify-center rounded-2xl bg-slate-900 px-8 font-bold text-white hover:bg-slate-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+              className="mt-2 inline-flex min-h-14 items-center justify-center rounded-full bg-vinho px-8 font-semibold text-pessego hover:bg-vinho-escuro focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-magenta"
             >
               Ver produtos
             </a>
@@ -195,19 +195,19 @@ export default function Carrinho({
         ) : etapa === 'itens' ? (
           <>
             <div ref={corpoRef} className="flex-1 overflow-y-auto px-5">
-              <ul className="divide-y divide-stone-200">
+              <ul className="divide-y divide-chocolate/10">
                 {itens.map((item) => (
                   <LinhaCarrinho key={item.chave} {...item} onAlterar={onAlterar} />
                 ))}
               </ul>
             </div>
 
-            <div className="border-t border-stone-200 bg-stone-50 px-5 py-4">
+            <div className="border-t border-chocolate/10 bg-pessego/50 px-5 py-4">
               <Resumo subtotalCentavos={subtotalCentavos} />
               <button
                 type="button"
                 onClick={() => irPara('dados')}
-                className="mt-4 inline-flex min-h-14 w-full items-center justify-center rounded-2xl bg-slate-900 px-5 text-lg font-bold text-white shadow-md transition hover:bg-slate-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+                className="mt-4 inline-flex min-h-14 w-full items-center justify-center rounded-full bg-vinho px-5 text-lg font-semibold text-pessego transition hover:bg-vinho-escuro focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-magenta"
               >
                 Continuar →
               </button>
@@ -215,14 +215,14 @@ export default function Carrinho({
                 <button
                   type="button"
                   onClick={fechar}
-                  className="min-h-12 rounded-2xl border-2 border-slate-300 px-4 font-bold text-slate-700 hover:border-slate-500 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400"
+                  className="min-h-12 rounded-full border-[1.5px] border-vinho px-4 font-semibold text-vinho hover:bg-vinho hover:text-pessego focus-visible:outline focus-visible:outline-4 focus-visible:outline-magenta"
                 >
                   Continuar comprando
                 </button>
                 <button
                   type="button"
                   onClick={() => window.confirm('Tirar todos os produtos do carrinho?') && onEsvaziar()}
-                  className="min-h-12 px-2 text-base font-semibold text-slate-500 underline underline-offset-4 hover:text-slate-800"
+                  className="min-h-12 px-2 text-base font-semibold text-chocolate/70 underline underline-offset-4 hover:text-chocolate"
                 >
                   Esvaziar
                 </button>
@@ -235,13 +235,13 @@ export default function Carrinho({
               <button
                 type="button"
                 onClick={() => irPara('itens')}
-                className="min-h-12 font-bold text-slate-700 underline underline-offset-4 hover:text-slate-900"
+                className="min-h-12 font-bold text-chocolate/85 underline underline-offset-4 hover:text-chocolate"
               >
                 ← Voltar ao carrinho
               </button>
 
               <fieldset className="space-y-4">
-                <legend className="text-xl font-extrabold text-slate-900">Para quem vamos entregar?</legend>
+                <legend className="text-xl font-extrabold text-chocolate">Para quem vamos entregar?</legend>
                 <Campo id="entrega-nome" label="Seu nome" autoComplete="name" value={dados.nome} onChange={(v) => alterar('nome', v)} erro={erroDe('nome')} />
                 <div>
                   <Campo
@@ -256,8 +256,8 @@ export default function Carrinho({
                     className="max-w-[12rem]"
                   />
                   <p className="mt-2 min-h-6 text-base" role="status">
-                    {statusCep === 'buscando' && <span className="text-slate-600">Buscando endereço…</span>}
-                    {statusCep === 'encontrado' && <span className="font-semibold text-brand-700">✓ Endereço encontrado. Confira e coloque o número.</span>}
+                    {statusCep === 'buscando' && <span className="text-chocolate/75">Buscando endereço…</span>}
+                    {statusCep === 'encontrado' && <span className="font-semibold text-vinho">✓ Endereço encontrado. Confira e coloque o número.</span>}
                     {statusCep === 'nao-encontrado' && <span className="font-semibold text-red-700">CEP não encontrado. Confira o número ou preencha o endereço abaixo.</span>}
                     {statusCep === 'erro' && <span className="font-semibold text-red-700">Não conseguimos buscar o CEP agora. Preencha o endereço abaixo.</span>}
                   </p>
@@ -275,17 +275,17 @@ export default function Carrinho({
               </fieldset>
 
               <fieldset>
-                <legend className="text-xl font-extrabold text-slate-900">Como você quer pagar?</legend>
+                <legend className="text-xl font-extrabold text-chocolate">Como você quer pagar?</legend>
                 <div className="mt-3 grid gap-2" role="radiogroup" aria-invalid={erroDe('pagamento') || undefined}>
                   {loja.formasPagamento.map((forma, i) => (
                     <label
                       key={forma}
-                      className={`flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl px-4 font-bold ring-2 transition has-[:focus-visible]:outline has-[:focus-visible]:outline-4 has-[:focus-visible]:outline-slate-400 ${
+                      className={`flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl px-4 font-bold ring-2 transition has-[:focus-visible]:outline has-[:focus-visible]:outline-4 has-[:focus-visible]:outline-magenta ${
                         dados.pagamento === forma
-                          ? 'bg-brand-50 text-brand-900 ring-brand-600'
+                          ? 'bg-salvia/15 text-vinho-escuro ring-vinho'
                           : erroDe('pagamento')
                             ? 'ring-red-400'
-                            : 'ring-stone-200 hover:ring-stone-400'
+                            : 'ring-chocolate/10 hover:ring-chocolate/30'
                       }`}
                     >
                       <input
@@ -295,7 +295,7 @@ export default function Carrinho({
                         value={forma}
                         checked={dados.pagamento === forma}
                         onChange={() => alterar('pagamento', forma)}
-                        className="h-6 w-6 accent-brand-600"
+                        className="h-6 w-6 accent-vinho"
                       />
                       {forma}
                     </label>
@@ -305,8 +305,8 @@ export default function Carrinho({
               </fieldset>
 
               <div>
-                <label htmlFor="entrega-observacoes" className="block font-bold text-slate-900">
-                  Observações <span className="font-normal text-slate-500">(opcional)</span>
+                <label htmlFor="entrega-observacoes" className="block font-bold text-chocolate">
+                  Observações <span className="font-normal text-chocolate/70">(opcional)</span>
                 </label>
                 <textarea
                   id="entrega-observacoes"
@@ -314,17 +314,17 @@ export default function Carrinho({
                   value={dados.observacoes}
                   onChange={(e) => alterar('observacoes', e.target.value)}
                   placeholder="Ex.: é para presente, entregar à tarde…"
-                  className="mt-2 w-full rounded-2xl border-2 border-stone-300 px-4 py-3 text-lg focus:border-brand-600 focus:outline-none focus:ring-4 focus:ring-brand-100"
+                  className="mt-2 w-full rounded-2xl border-2 border-chocolate/20 px-4 py-3 text-lg focus:border-vinho focus:outline-none focus:ring-4 focus:ring-vinho/15"
                 />
               </div>
             </div>
 
-            <div className="border-t border-stone-200 bg-stone-50 px-5 py-4">
+            <div className="border-t border-chocolate/10 bg-pessego/50 px-5 py-4">
               <div className="flex items-baseline justify-between">
-                <span className="text-xl font-bold text-slate-900">Total</span>
-                <span className="text-3xl font-extrabold text-slate-900">{formatarPreco(totalCentavos / 100)}</span>
+                <span className="text-xl font-bold text-chocolate">Total</span>
+                <span className="text-3xl font-extrabold text-chocolate">{formatarPreco(totalCentavos / 100)}</span>
               </div>
-              <p className="text-base text-slate-600">Inclui {formatarPreco(taxaCentavos / 100)} de entrega.</p>
+              <p className="text-base text-chocolate/75">Inclui {formatarPreco(taxaCentavos / 100)} de entrega.</p>
               {tentouEnviar && faltando.length > 0 && (
                 <p className="mt-2 text-base font-semibold text-red-700" role="alert">
                   Falta preencher: {faltando.map(([, nome]) => nome).join(', ')}.
@@ -344,17 +344,17 @@ export default function Carrinho({
 function Resumo({ subtotalCentavos }: { subtotalCentavos: number }) {
   return (
     <dl className="space-y-1">
-      <div className="flex justify-between text-base text-slate-600">
+      <div className="flex justify-between text-base text-chocolate/75">
         <dt>Produtos</dt>
         <dd>{formatarPreco(subtotalCentavos / 100)}</dd>
       </div>
-      <div className="flex justify-between text-base text-slate-600">
+      <div className="flex justify-between text-base text-chocolate/75">
         <dt>Entrega</dt>
         <dd>{formatarPreco(taxaCentavos / 100)}</dd>
       </div>
       <div className="flex items-baseline justify-between pt-1">
-        <dt className="text-xl font-bold text-slate-900">Total</dt>
-        <dd className="text-3xl font-extrabold text-slate-900">{formatarPreco((subtotalCentavos + taxaCentavos) / 100)}</dd>
+        <dt className="text-xl font-bold text-chocolate">Total</dt>
+        <dd className="text-3xl font-extrabold text-chocolate">{formatarPreco((subtotalCentavos + taxaCentavos) / 100)}</dd>
       </div>
     </dl>
   )
@@ -370,17 +370,17 @@ function LinhaCarrinho({
 }: ItemCarrinho & { onAlterar: (id: string, delta: number) => void }) {
   return (
     <li className="flex gap-4 py-4">
-      <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl ring-1 ring-stone-200">
+      <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl ring-1 ring-chocolate/10">
         {variacao?.foto ?? p.fotos?.[0] ? (
-          <img src={`${base}produtos/${variacao?.foto ?? p.fotos![0]}`} alt="" className="h-full w-full bg-white object-cover" />
+          <img src={`${base}produtos/${variacao?.foto ?? p.fotos![0]}`} alt="" className="h-full w-full bg-creme object-cover" />
         ) : (
           <span className="flex h-full items-center justify-center text-4xl" aria-hidden>{p.emoji ?? '📦'}</span>
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="font-bold leading-snug text-slate-900">{p.nome}</p>
-        {variacao && <p className="mt-1 text-base font-semibold text-slate-700">Opção: {variacao.nome}</p>}
-        <p className="mt-1 text-base text-slate-600">{formatarPreco(preco)} cada</p>
+        <p className="font-bold leading-snug text-chocolate">{p.nome}</p>
+        {variacao && <p className="mt-1 text-base font-semibold text-chocolate/85">Opção: {variacao.nome}</p>}
+        <p className="mt-1 text-base text-chocolate/75">{formatarPreco(preco)} cada</p>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
           <SeletorQuantidade
             quantidade={quantidade}
@@ -388,7 +388,7 @@ function LinhaCarrinho({
             onAlterar={(delta) => onAlterar(chave, delta)}
             minimo={0}
           />
-          <p className="text-xl font-extrabold text-slate-900">{formatarPreco((centavos(preco) * quantidade) / 100)}</p>
+          <p className="text-xl font-extrabold text-chocolate">{formatarPreco((centavos(preco) * quantidade) / 100)}</p>
         </div>
         <button
           type="button"
@@ -422,8 +422,8 @@ function Campo({
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'id' | 'className'>) {
   return (
     <div>
-      <label htmlFor={id} className="block font-bold text-slate-900">
-        {label} {opcional && <span className="font-normal text-slate-500">(opcional)</span>}
+      <label htmlFor={id} className="block font-bold text-chocolate">
+        {label} {opcional && <span className="font-normal text-chocolate/70">(opcional)</span>}
       </label>
       <input
         id={id}
@@ -431,7 +431,7 @@ function Campo({
         onChange={(e) => onChange(e.target.value)}
         aria-invalid={erro || undefined}
         className={`mt-2 min-h-14 w-full rounded-2xl border-2 px-4 text-lg focus:outline-none focus:ring-4 ${
-          erro ? 'border-red-500 focus:ring-red-100' : 'border-stone-300 focus:border-brand-600 focus:ring-brand-100'
+          erro ? 'border-red-500 focus:ring-red-100' : 'border-chocolate/20 focus:border-vinho focus:ring-vinho/15'
         } ${className}`}
         {...props}
       />

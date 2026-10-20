@@ -1,5 +1,68 @@
 import { formatarPreco, linkWhatsApp, mensagemGeral, QTD_MAXIMA } from './util'
 
+/**
+ * Logo "plissê lab": "plissê" listrado (as camadas) e "lab" menor em magenta.
+ * As listras seguem o guia: faixa ≈ 6% do tamanho da fonte e espaço ≈ 2,5%; abaixo de 28px o logo fica sólido.
+ */
+export function Logomarca({ tamanho = 32, claro = false, className = '' }: { tamanho?: number; claro?: boolean; className?: string }) {
+  const cor = claro ? '#F3E3D3' : '#7A1030'
+  const faixa = Math.max(2, Math.round(tamanho * 0.06))
+  const espaco = Math.max(1, Math.round(tamanho * 0.025))
+  const listras = tamanho >= 28
+  return (
+    <span
+      className={`whitespace-nowrap font-marca font-extrabold ${className}`}
+      style={{
+        fontSize: tamanho,
+        lineHeight: 0.9,
+        letterSpacing: '-0.04em',
+        ...(listras
+          ? {
+              background: `repeating-linear-gradient(to bottom, ${cor} 0 ${faixa}px, transparent ${faixa}px ${faixa + espaco}px)`,
+              WebkitBackgroundClip: 'text',
+              backgroundClip: 'text',
+              color: 'transparent',
+            }
+          : { color: cor }),
+      }}
+    >
+      plissê
+      <span className="text-magenta" style={{ WebkitTextFillColor: '#D4336C', fontSize: '0.46em', letterSpacing: '-0.02em', marginLeft: '0.12em' }}>
+        {' '}
+        lab
+      </span>
+    </span>
+  )
+}
+
+/** Monograma "pl." listrado em pêssego sobre vinho, com o ponto em magenta. */
+export function Monograma({ tamanho = 40, className = '' }: { tamanho?: number; className?: string }) {
+  const fonte = Math.round(tamanho * 0.47)
+  const faixa = Math.max(2, Math.round(fonte * 0.07))
+  return (
+    <span
+      aria-hidden
+      className={`flex shrink-0 items-center justify-center rounded-full bg-vinho ${className}`}
+      style={{ width: tamanho, height: tamanho }}
+    >
+      <span
+        className="font-marca font-extrabold"
+        style={{
+          fontSize: fonte,
+          lineHeight: 1,
+          letterSpacing: '-0.06em',
+          background: `repeating-linear-gradient(to bottom, #F3E3D3 0 ${faixa}px, transparent ${faixa}px ${faixa + 1}px)`,
+          WebkitBackgroundClip: 'text',
+          backgroundClip: 'text',
+          color: 'transparent',
+        }}
+      >
+        pl<b style={{ WebkitTextFillColor: '#D4336C', color: '#D4336C' }}>.</b>
+      </span>
+    </span>
+  )
+}
+
 /** Botões − e + em volta da quantidade. `nome` completa o texto lido pelo leitor de tela. */
 export function SeletorQuantidade({
   quantidade,
@@ -18,15 +81,15 @@ export function SeletorQuantidade({
   tamanho?: 'grande' | 'pequeno'
   className?: string
 }) {
-  const botao = `${tamanho === 'grande' ? 'h-12 w-12 text-2xl' : 'h-11 w-11 text-xl'} font-bold text-slate-700 hover:bg-stone-100 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400 disabled:opacity-40`
+  const botao = `${tamanho === 'grande' ? 'h-12 w-12 text-2xl' : 'h-11 w-11 text-xl'} font-bold text-chocolate/85 hover:bg-pessego focus-visible:outline focus-visible:outline-4 focus-visible:outline-magenta disabled:opacity-40`
   return (
-    <div className={`flex items-center justify-between rounded-2xl bg-white ring-2 ring-stone-200 ${className}`}>
+    <div className={`flex items-center justify-between rounded-full bg-creme ring-2 ring-chocolate/10 ${className}`}>
       <button
         type="button"
         onClick={() => onAlterar(-1)}
         disabled={quantidade <= minimo}
         aria-label={`Diminuir quantidade de ${nome}`}
-        className={`${botao} rounded-l-2xl`}
+        className={`${botao} rounded-l-full`}
       >
         −
       </button>
@@ -38,7 +101,7 @@ export function SeletorQuantidade({
         onClick={() => onAlterar(1)}
         disabled={quantidade >= maximo}
         aria-label={`Aumentar quantidade de ${nome}`}
-        className={`${botao} rounded-r-2xl`}
+        className={`${botao} rounded-r-full`}
       >
         +
       </button>
@@ -66,7 +129,7 @@ export function BotaoWhatsApp({
       target="_blank"
       rel="noopener noreferrer"
       onClick={onClick}
-      className={`inline-flex items-center justify-center rounded-2xl bg-[#25D366] text-center leading-tight font-bold text-white shadow-md transition hover:bg-[#1ebe5a] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-brand-700 ${tam} ${className}`}
+      className={`inline-flex items-center justify-center rounded-full bg-[#25D366] text-center leading-tight font-bold text-chocolate shadow-sm transition hover:bg-[#1ebe5a] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-vinho ${tam} ${className}`}
     >
       <IconeWhatsApp className={`shrink-0 ${tamanho === 'grande' ? 'h-7 w-7' : 'h-5 w-5'}`} />
       <span>{children}</span>
@@ -94,11 +157,11 @@ export function IconeCarrinho({ className }: { className?: string }) {
 
 export function BarraCarrinho({ totalItens, totalCentavos, onAbrir }: { totalItens: number; totalCentavos: number; onAbrir: () => void }) {
   return totalItens > 0 ? (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-white/95 p-3 backdrop-blur">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-chocolate/10 bg-creme/95 p-3 backdrop-blur">
       <button
         type="button"
         onClick={onAbrir}
-        className="mx-auto flex min-h-14 w-full max-w-xl items-center justify-between gap-3 rounded-2xl bg-slate-900 px-5 text-lg font-bold text-white shadow-lg transition hover:bg-slate-700 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+        className="mx-auto flex min-h-14 w-full max-w-xl items-center justify-between gap-3 rounded-full bg-vinho px-5 text-lg font-bold text-pessego shadow-lg transition hover:bg-vinho-escuro focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-magenta"
       >
         <span className="flex items-center gap-3">
           <IconeCarrinho className="h-6 w-6" />
@@ -115,7 +178,7 @@ export function BarraCarrinho({ totalItens, totalCentavos, onAbrir }: { totalIte
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Conversar no WhatsApp"
-      className="fixed bottom-5 right-5 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl ring-4 ring-white transition hover:scale-105 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+      className="fixed bottom-5 right-5 z-40 flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] text-pessego shadow-xl ring-4 ring-creme transition hover:scale-105 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-vinho"
     >
       <IconeWhatsApp className="h-9 w-9" />
     </a>
