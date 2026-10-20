@@ -45,12 +45,13 @@ export const iconesCategorias: Record<string, string> = {
 }
 
 export const loja = {
-  nome: 'Think Lab',
-  slogan: 'Peças impressas em 3D com carinho, do jeitinho que você precisa.',
+  /** Sempre em minúsculas, como no guia de marca. */
+  nome: 'plissê lab',
+  slogan: 'objetos feitos camada por camada.',
   /** Número com código do país e DDD, só números. */
   whatsapp: '5511916133318',
   cidade: 'Enviamos para todo o Brasil',
-  instagram: '', // ex.: 'https://instagram.com/thinklab'
+  instagram: 'https://instagram.com/plisselab',
   /** Taxa fixa de entrega em reais, somada ao total do carrinho. */
   taxaEntrega: 10,
   formasPagamento: ['Pix', 'Cartão de crédito', 'Boleto'],

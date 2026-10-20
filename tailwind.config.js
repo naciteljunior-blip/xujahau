@@ -5,6 +5,13 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Identidade plissê lab (usada na loja). Ver o guia de marca.
+        vinho: { DEFAULT: '#7A1030', escuro: '#5F0C25' },
+        magenta: '#D4336C',
+        pessego: { DEFAULT: '#F3E3D3', escuro: '#EAD3BE' },
+        salvia: '#7FA89A',
+        chocolate: '#2B1418',
+        creme: '#FAF1E8',
         brand: {
           50: '#eefdf4',
           100: '#d6fae3',
@@ -21,6 +28,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        marca: ['"Bricolage Grotesque"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         'save-pop': {
