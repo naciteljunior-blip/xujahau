@@ -1,4 +1,50 @@
-import { formatarPreco, linkWhatsApp, mensagemGeral } from './util'
+import { formatarPreco, linkWhatsApp, mensagemGeral, QTD_MAXIMA } from './util'
+
+/** Botões − e + em volta da quantidade. `nome` completa o texto lido pelo leitor de tela. */
+export function SeletorQuantidade({
+  quantidade,
+  nome,
+  onAlterar,
+  minimo = 1,
+  maximo = QTD_MAXIMA,
+  tamanho = 'grande',
+  className = '',
+}: {
+  quantidade: number
+  nome: string
+  onAlterar: (delta: number) => void
+  minimo?: number
+  maximo?: number
+  tamanho?: 'grande' | 'pequeno'
+  className?: string
+}) {
+  const botao = `${tamanho === 'grande' ? 'h-12 w-12 text-2xl' : 'h-11 w-11 text-xl'} font-bold text-slate-700 hover:bg-stone-100 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400 disabled:opacity-40`
+  return (
+    <div className={`flex items-center justify-between rounded-2xl bg-white ring-2 ring-stone-200 ${className}`}>
+      <button
+        type="button"
+        onClick={() => onAlterar(-1)}
+        disabled={quantidade <= minimo}
+        aria-label={`Diminuir quantidade de ${nome}`}
+        className={`${botao} rounded-l-2xl`}
+      >
+        −
+      </button>
+      <span className="min-w-10 text-center text-xl font-extrabold" aria-live="polite" aria-label={`Quantidade: ${quantidade}`}>
+        {quantidade}
+      </span>
+      <button
+        type="button"
+        onClick={() => onAlterar(1)}
+        disabled={quantidade >= maximo}
+        aria-label={`Aumentar quantidade de ${nome}`}
+        className={`${botao} rounded-r-2xl`}
+      >
+        +
+      </button>
+    </div>
+  )
+}
 
 export function BotaoWhatsApp({
   href,

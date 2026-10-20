@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
-import { BotaoWhatsApp, IconeCarrinho } from './componentes'
+import { BotaoWhatsApp, IconeCarrinho, SeletorQuantidade } from './componentes'
 import { loja } from './config'
-import { base, centavos, formatarPreco, linkWhatsApp, QTD_MAXIMA, type ItemCarrinho } from './util'
+import { base, centavos, formatarPreco, linkWhatsApp, type ItemCarrinho } from './util'
 
 type Entrega = {
   nome: string
@@ -382,28 +382,12 @@ function LinhaCarrinho({
         {variacao && <p className="mt-1 text-base font-semibold text-slate-700">Opção: {variacao.nome}</p>}
         <p className="mt-1 text-base text-slate-600">{formatarPreco(preco)} cada</p>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center rounded-2xl ring-2 ring-stone-200">
-            <button
-              type="button"
-              onClick={() => onAlterar(chave, -1)}
-              aria-label={`Diminuir quantidade de ${p.nome}${variacao ? `, ${variacao.nome}` : ''}`}
-              className="h-12 w-12 rounded-l-2xl text-2xl font-bold text-slate-700 hover:bg-stone-100 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400"
-            >
-              −
-            </button>
-            <span className="w-10 text-center text-xl font-extrabold" aria-live="polite" aria-label={`Quantidade: ${quantidade}`}>
-              {quantidade}
-            </span>
-            <button
-              type="button"
-              onClick={() => onAlterar(chave, 1)}
-              disabled={quantidade >= QTD_MAXIMA}
-              aria-label={`Aumentar quantidade de ${p.nome}${variacao ? `, ${variacao.nome}` : ''}`}
-              className="h-12 w-12 rounded-r-2xl text-2xl font-bold text-slate-700 hover:bg-stone-100 focus-visible:outline focus-visible:outline-4 focus-visible:outline-slate-400 disabled:opacity-40"
-            >
-              +
-            </button>
-          </div>
+          <SeletorQuantidade
+            quantidade={quantidade}
+            nome={`${p.nome}${variacao ? `, ${variacao.nome}` : ''}`}
+            onAlterar={(delta) => onAlterar(chave, delta)}
+            minimo={0}
+          />
           <p className="text-xl font-extrabold text-slate-900">{formatarPreco((centavos(preco) * quantidade) / 100)}</p>
         </div>
         <button

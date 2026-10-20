@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { BotaoWhatsApp, IconeCarrinho } from './componentes'
+import { BotaoWhatsApp, IconeCarrinho, SeletorQuantidade } from './componentes'
 import type { Produto, Variacao } from './config'
 import { base, comVariacao, formatarPreco, linkWhatsApp, mensagemProduto, percentualDesconto, QTD_MAXIMA, temPrecosDiferentes } from './util'
 
-export type PropsCarrinho = { noCarrinho: number; onAdicionar: (v?: Variacao) => void; onVerCarrinho: () => void }
+export type PropsCarrinho = { noCarrinho: number; onAdicionar: (v: Variacao | undefined, quantidade: number) => void; onVerCarrinho: () => void }
 
 function BotaoAdicionar({
   produto,
@@ -126,6 +126,8 @@ export function DetalhesProduto({
   const [fotoAtual, setFotoAtual] = useState(0)
   const [escolhida, setEscolhida] = useState<Variacao | null>(null)
   const [faltaEscolher, setFaltaEscolher] = useState(false)
+  const [quantidade, setQuantidade] = useState(1)
+  const maximo = Math.max(1, QTD_MAXIMA - noCarrinho)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const fotos = p.fotos ?? []
   const fechar = () => dialogRef.current?.close()
@@ -144,7 +146,8 @@ export function DetalhesProduto({
       document.getElementById(`opcao-${p.id}-0`)?.focus()
       return false
     }
-    onAdicionar(escolhida ?? undefined)
+    onAdicionar(escolhida ?? undefined, Math.min(quantidade, maximo))
+    setQuantidade(1)
   }
 
   useEffect(() => {
@@ -233,6 +236,20 @@ export function DetalhesProduto({
                 </p>
               )}
             </fieldset>
+          )}
+          {exibido.preco && (
+            <div role="group" aria-labelledby={`qtd-${p.id}`} className="mt-5 flex items-center gap-4">
+              <span id={`qtd-${p.id}`} className="text-lg font-extrabold text-slate-900">
+                Quantidade
+              </span>
+              <SeletorQuantidade
+                quantidade={Math.min(quantidade, maximo)}
+                nome={p.nome}
+                onAlterar={(delta) => setQuantidade((q) => Math.min(Math.max(q + delta, 1), maximo))}
+                maximo={maximo}
+                className="w-40"
+              />
+            </div>
           )}
           <BotaoAdicionar
             produto={exibido}
