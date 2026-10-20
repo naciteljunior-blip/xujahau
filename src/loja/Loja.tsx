@@ -4,7 +4,7 @@ import { BarraCarrinho, IconeCarrinho, IconeWhatsApp, SeletorQuantidade } from '
 import { iconesCategorias, loja, produtos, type Produto } from './config'
 import { DetalhesProduto, SeloDesconto } from './produto'
 import { useCarrinho } from './useCarrinho'
-import { base, chaveCarrinho, duvidas, formatarPreco, linkWhatsApp, mensagemGeral, percentualDesconto, temPrecosDiferentes } from './util'
+import { base, chaveCarrinho, duvidas, QTD_MAXIMA, formatarPreco, linkWhatsApp, mensagemGeral, percentualDesconto, temPrecosDiferentes } from './util'
 
 type Ordem = 'relevancia' | 'menor-preco' | 'maior-preco' | 'desconto'
 
@@ -413,6 +413,15 @@ function CartaoCompacto({
   onAbrir: () => void
   onAlterar: (delta: number) => void
 }) {
+  const [quantidade, setQuantidade] = useState(1)
+  const [adicionado, setAdicionado] = useState(0)
+  useEffect(() => {
+    if (!adicionado) return
+    const t = setTimeout(() => setAdicionado(0), 1500)
+    return () => clearTimeout(t)
+  }, [adicionado])
+  const maximo = Math.max(1, QTD_MAXIMA - noCarrinho)
+
   const pct = percentualDesconto(p)
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-stone-200 transition hover:shadow-lg">
@@ -441,16 +450,37 @@ function CartaoCompacto({
         </span>
       </button>
       <div className="px-3 pb-3">
-        {p.preco && !p.variacoes && noCarrinho > 0 ? (
-          <SeletorQuantidade quantidade={noCarrinho} nome={p.nome} onAlterar={onAlterar} minimo={0} tamanho="pequeno" />
-        ) : p.preco && !p.variacoes ? (
-          <button
-            type="button"
-            onClick={() => onAlterar(1)}
-            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-slate-900 font-bold text-white transition hover:bg-slate-700"
-          >
-            <IconeCarrinho className="h-5 w-5" /> Adicionar
-          </button>
+        {p.preco && !p.variacoes ? (
+          <>
+            <SeletorQuantidade
+              quantidade={Math.min(quantidade, maximo)}
+              nome={p.nome}
+              onAlterar={(delta) => setQuantidade((q) => Math.min(Math.max(q + delta, 1), maximo))}
+              maximo={maximo}
+              tamanho="pequeno"
+              className="mb-2"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                onAlterar(Math.min(quantidade, maximo))
+                setQuantidade(1)
+                setAdicionado((n) => n + 1)
+              }}
+              disabled={noCarrinho >= QTD_MAXIMA}
+              className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-xl font-bold text-white transition disabled:opacity-50 ${
+                adicionado ? 'bg-brand-600' : 'bg-slate-900 hover:bg-slate-700'
+              }`}
+            >
+              {adicionado ? (
+                '✓ Adicionado'
+              ) : (
+                <>
+                  <IconeCarrinho className="h-5 w-5" /> Adicionar
+                </>
+              )}
+            </button>
+          </>
         ) : (
           <button
             type="button"
