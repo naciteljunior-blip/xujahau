@@ -58,10 +58,12 @@ export const loja = {
    * Com apiKey vazio, o botão "Login / Criar conta" não aparece.
    */
   firebase: {
-    apiKey: '',
-    authDomain: '',
-    projectId: '',
-    appId: '',
+    apiKey: 'AIzaSyDp8o6qRIkDxboC2cQnIWQMavlyXkIgEdc',
+    authDomain: 'plisselab.firebaseapp.com',
+    projectId: 'plisselab',
+    storageBucket: 'plisselab.firebasestorage.app',
+    messagingSenderId: '185872297108',
+    appId: '1:185872297108:web:ad512dea5763458a6a9881',
   },
   /** Mostra "Continuar com o Google" na tela de login (ative o provedor Google no Firebase). */
   loginComGoogle: true,
