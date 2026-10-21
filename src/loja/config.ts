@@ -65,6 +65,8 @@ export const loja = {
     messagingSenderId: '185872297108',
     appId: '1:185872297108:web:ad512dea5763458a6a9881',
   },
+  /** Tema de Natal: neve, luzinhas, contagem e seção de presentes. Troque para false depois das festas. */
+  temaNatal: true,
   /** Mostra "Continuar com o Google" na tela de login (ative o provedor Google no Firebase). */
   loginComGoogle: true,
   /** Taxa fixa de entrega em reais, somada ao total do carrinho. */

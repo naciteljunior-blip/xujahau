@@ -22,3 +22,41 @@ body {
   cursor: pointer;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237A1030' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E") center / contain no-repeat;
 }
+
+/* Tema de Natal da loja (src/loja/Natal.tsx). */
+@keyframes natal-cair {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(var(--deriva, 0px), 720px, 0); }
+}
+@keyframes natal-piscar {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px currentColor); }
+  50% { opacity: 0.35; filter: none; }
+}
+@keyframes natal-cintilar {
+  0%, 100% { transform: scale(0.4) rotate(0deg); opacity: 0.25; }
+  50% { transform: scale(1) rotate(45deg); opacity: 1; }
+}
+@keyframes natal-reluzir {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@keyframes natal-estourar {
+  from { transform: translate(-50%, -50%) rotate(var(--angulo)) translateY(0) scale(0.4); opacity: 1; }
+  to { transform: translate(-50%, -50%) rotate(var(--angulo)) translateY(-42px) scale(1.1); opacity: 0; }
+}
+.natal-floco { animation: natal-cair linear infinite; }
+.natal-luz { animation: natal-piscar 1.5s ease-in-out infinite; }
+.natal-brilho { animation: natal-cintilar 2.2s ease-in-out infinite; }
+.natal-estouro { animation: natal-estourar 0.8s ease-out forwards; font-size: 18px; }
+.natal-reluz {
+  /* só a imagem: a cor de fundo (vinho) continua vindo da classe bg-vinho */
+  background-image: linear-gradient(110deg, transparent 35%, rgba(243, 227, 211, 0.3) 50%, transparent 65%);
+  background-repeat: no-repeat;
+  background-size: 200% 100%;
+  animation: natal-reluzir 4s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .natal-floco { display: none; }
+  .natal-anim *, .natal-reluz { animation: none !important; }
+  .natal-luz { opacity: 1; }
+}
