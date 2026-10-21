@@ -53,10 +53,20 @@ export const loja = {
   cidade: 'Enviamos para todo o Brasil',
   instagram: 'https://instagram.com/plisselab',
   /**
-   * ID do cliente do Google para o botão "Fazer login com o Google" (termina em .apps.googleusercontent.com).
-   * Vazio = o login não aparece. Veja como criar em https://console.cloud.google.com/apis/credentials
+   * Contas de clientes (login, criar conta, histórico de pedidos) com Firebase — grátis.
+   * Copie os valores de "firebaseConfig" em Configurações do projeto → Seus apps → Web.
+   * Com apiKey vazio, o botão "Login / Criar conta" não aparece.
    */
-  googleClientId: '1058175633754-gjdanefihaf0f0tbss9hn1nfv467domh.apps.googleusercontent.com',
+  firebase: {
+    apiKey: 'AIzaSyDp8o6qRIkDxboC2cQnIWQMavlyXkIgEdc',
+    authDomain: 'plisselab.firebaseapp.com',
+    projectId: 'plisselab',
+    storageBucket: 'plisselab.firebasestorage.app',
+    messagingSenderId: '185872297108',
+    appId: '1:185872297108:web:ad512dea5763458a6a9881',
+  },
+  /** Mostra "Continuar com o Google" na tela de login (ative o provedor Google no Firebase). */
+  loginComGoogle: true,
   /** Taxa fixa de entrega em reais, somada ao total do carrinho. */
   taxaEntrega: 10,
   formasPagamento: ['Pix', 'Cartão de crédito', 'Boleto'],
