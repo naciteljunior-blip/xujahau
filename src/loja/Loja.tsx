@@ -5,6 +5,8 @@ import { iconesCategorias, loja, produtos, type Produto } from './config'
 import { DetalhesProduto, SeloDesconto } from './produto'
 import { Avatar, DialogoLogin, MinhaConta } from './ContaUI'
 import { contasAtivas, prepararLogin, sair, useConta, type Pedido } from './conta'
+import { Brilhos, EstouroBrilhos, Luzinhas, Neve } from './Natal'
+import { diasParaNatal, ehNatal, temaNatal } from './natal'
 import { useCarrinho } from './useCarrinho'
 import { base, chaveCarrinho, duvidas, QTD_MAXIMA, formatarPreco, linkWhatsApp, mensagemGeral, percentualDesconto, temPrecosDiferentes } from './util'
 
@@ -44,6 +46,10 @@ export default function Loja() {
     () => [...produtos].filter((p) => percentualDesconto(p) > 0).sort((a, b) => percentualDesconto(b) - percentualDesconto(a)).slice(0, 12),
     [],
   )
+
+  const natalinos = useMemo(() => (temaNatal ? produtos.filter(ehNatal) : []), [])
+  const dias = diasParaNatal()
+  const natalRef = useRef<HTMLElement>(null)
 
   const termo = normalizar(busca.trim())
   const palavras = termo.split(/\s+/).filter(Boolean)
@@ -85,8 +91,13 @@ export default function Loja() {
 
   return (
     <div className={`min-h-screen bg-pessego font-marca text-base text-chocolate ${carrinho.totalItens > 0 ? 'pb-24' : ''}`}>
-      <div className="bg-vinho px-4 py-2 text-center text-sm font-semibold text-pessego sm:text-base">
-        <span>🚚 Entrega para todo o Brasil por {formatarPreco(loja.taxaEntrega)}</span>
+      <div className={`bg-vinho px-4 py-2 text-center text-sm font-semibold text-pessego sm:text-base ${temaNatal ? 'natal-reluz' : ''}`}>
+        {temaNatal && dias !== null && (
+          <span className="mr-1">
+            ✦ {dias === 0 ? 'feliz natal!' : `faltam ${dias} ${dias === 1 ? 'dia' : 'dias'} pro natal`} ✦<span className="hidden sm:inline"> · </span>
+          </span>
+        )}
+        <span className={temaNatal && dias !== null ? 'hidden sm:inline' : ''}>🚚 Entrega para todo o Brasil por {formatarPreco(loja.taxaEntrega)}</span>
         <span className="hidden sm:inline"> · 💳 Pix, cartão ou boleto</span>
         <span className="hidden lg:inline"> · 💬 Atendimento pelo WhatsApp</span>
       </div>
@@ -171,21 +182,46 @@ export default function Loja() {
       </header>
 
       <main className="mx-auto max-w-7xl space-y-8 px-4 py-6">
-        <section className="grid items-center gap-6 overflow-hidden rounded-3xl bg-vinho p-6 text-pessego md:grid-cols-2 md:p-10">
-          <div>
-            <p className="inline-block rounded-full bg-magenta px-3 py-1 text-sm font-semibold text-pessego">presentes, decor e mimos ♡</p>
-            <h1 className="mt-4 text-4xl font-extrabold leading-[0.95] tracking-[-0.035em] md:text-6xl">carimbos, moldes e mimos feitos pra você.</h1>
-            <p className="mt-4 text-lg text-pessego/90">{loja.slogan}</p>
+        <section
+          className={`relative grid items-center gap-6 overflow-hidden rounded-3xl bg-vinho p-6 text-pessego md:grid-cols-2 md:p-10 ${temaNatal ? 'pt-14 md:pt-16' : ''}`}
+        >
+          {temaNatal && (
+            <>
+              <Neve />
+              <Luzinhas />
+            </>
+          )}
+          <div className="relative">
+            {temaNatal && (
+              <Brilhos
+                pontos={[
+                  [-5, 12, 16],
+                  [94, -4, 14],
+                  [-6, 70, 12],
+                  [98, 96, 18],
+                ]}
+              />
+            )}
+            <p className="inline-block rounded-full bg-magenta px-3 py-1 text-sm font-semibold text-pessego">
+              {temaNatal ? 'coleção de natal ✦' : 'presentes, decor e mimos ♡'}
+            </p>
+            <h1 className="mt-4 text-4xl font-extrabold leading-[0.95] tracking-[-0.035em] md:text-6xl">
+              {temaNatal ? 'um natal feito camada por camada.' : 'carimbos, moldes e mimos feitos pra você.'}
+            </h1>
+            <p className="mt-4 text-lg text-pessego/90">
+              {temaNatal ? 'carimbos, moldes e enfeites pra deixar a ceia e os presentes com a sua cara.' : loja.slogan}
+            </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <button
                 type="button"
                 onClick={() => {
+                  if (temaNatal && natalinos.length) return natalRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                   setOrdem('desconto')
                   escolherCategoria('Todos')
                 }}
                 className="min-h-12 rounded-full bg-pessego px-6 font-semibold text-vinho hover:bg-pessego-escuro"
               >
-                Ver ofertas
+                {temaNatal && natalinos.length ? 'Ver presentes de natal' : 'Ver ofertas'}
               </button>
               <a
                 href={linkWhatsApp(mensagemGeral)}
@@ -197,8 +233,8 @@ export default function Loja() {
               </a>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            {ofertas.slice(0, 3).map((p, i) => (
+          <div className="relative grid grid-cols-3 gap-3">
+            {(temaNatal && natalinos.length >= 3 ? natalinos : ofertas).slice(0, 3).map((p, i) => (
               <button
                 key={p.id}
                 type="button"
@@ -228,6 +264,33 @@ export default function Loja() {
             </li>
           ))}
         </ul>
+
+        {natalinos.length > 0 && !termo && categoria === 'Todos' && (
+          <section ref={natalRef} aria-labelledby="titulo-natal" className="relative scroll-mt-48 overflow-hidden rounded-3xl bg-salvia/25 p-4 md:p-6">
+            <Brilhos
+              pontos={[
+                [2, 6, 14],
+                [97, 10, 18],
+                [55, 3, 12],
+              ]}
+            />
+            <div className="relative mb-3">
+              <h2 id="titulo-natal" className="text-3xl font-extrabold leading-none tracking-[-0.03em] text-chocolate">
+                presentes de natal. <span className="text-magenta" aria-hidden>✦</span>
+              </h2>
+              <p className="mt-1 text-chocolate/75">
+                Peça com antecedência{dias ? `: faltam ${dias} ${dias === 1 ? 'dia' : 'dias'} pro natal` : ''}.
+              </p>
+            </div>
+            <ul className="relative -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 md:-mx-6 md:px-6">
+              {natalinos.map((p) => (
+                <li key={p.id} className="w-44 shrink-0 snap-start sm:w-52">
+                  <CartaoCompacto {...propsCartao(p)} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {ofertas.length > 0 && !termo && categoria === 'Todos' && (
           <section aria-labelledby="titulo-ofertas">
@@ -590,6 +653,9 @@ function CartaoCompacto({
             <span className="flex h-full items-center justify-center text-6xl" aria-hidden>{p.emoji ?? '📦'}</span>
           )}
           <SeloDesconto produto={p} className="absolute left-2 top-2 !px-2 !py-0.5 !text-sm" />
+          {temaNatal && ehNatal(p) && (
+            <span className="absolute bottom-2 left-2 rounded-full bg-vinho px-2 py-0.5 text-xs font-semibold text-pessego">natal ✦</span>
+          )}
         </span>
         <span className="flex flex-1 flex-col p-3">
           <span className="line-clamp-2 h-[2.75em] text-[15px] font-semibold leading-snug text-chocolate">{p.nome}</span>
@@ -625,12 +691,15 @@ function CartaoCompacto({
                 setAdicionado((n) => n + 1)
               }}
               disabled={noCarrinho >= QTD_MAXIMA}
-              className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-full font-semibold text-pessego transition disabled:opacity-50 ${
+              className={`relative flex min-h-11 w-full items-center justify-center gap-2 rounded-full font-semibold text-pessego transition disabled:opacity-50 ${
                 adicionado ? 'bg-magenta' : 'bg-vinho hover:bg-vinho-escuro'
               }`}
             >
               {adicionado ? (
-                '✓ Adicionado'
+                <>
+                  ✓ Adicionado
+                  {temaNatal && <EstouroBrilhos key={adicionado} />}
+                </>
               ) : (
                 <>
                   <IconeCarrinho className="h-5 w-5" /> Adicionar
